@@ -1,0 +1,17 @@
+version: '3'
+services:
+  everything:
+    build: .
+    container_name: everything-wine
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+      - WINEDEBUG=-fixme-all
+    volumes:
+      - ./config:/app/.everything
+      - ./cache:/tmp
+      - ./app:/app/everything
+    ports:
+      - "6373:6373"
+    mem_limit: 2048M
+    mem_reservation: 1024M
