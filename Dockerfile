@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:noble
 
 # Enable multi-architecture support
 RUN dpkg --add-architecture i386
