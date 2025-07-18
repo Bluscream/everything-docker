@@ -1,17 +1,21 @@
-version: '3'
+version: '3.8'
 services:
   everything:
     build: .
-    container_name: everything-wine
-    restart: unless-stopped
+    container_name: everything-search
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "14630:14630"
+      - "21:21"
     environment:
+      - DISPLAY=:1
       - TZ=UTC
       - WINEDEBUG=-fixme-all
     volumes:
       - ./config:/app/.everything
       - ./cache:/tmp
       - ./app:/app/everything
-    ports:
-      - "6373:6373"
+    restart: unless-stopped 
     mem_limit: 2048M
     mem_reservation: 1024M

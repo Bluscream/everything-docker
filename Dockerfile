@@ -1,88 +1,47 @@
-FROM ubuntu:focal
+FROM ubuntu:22.04
 
-# Enable multi-architecture support
-RUN dpkg --add-architecture i386
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        wine-stable \
-        winetricks \
-        wget \
-        cabextract \
-        zenity \
-        xvfb \
-        fonts-wine \
-        ttf-mscorefonts-installer \
-        libwine:i386 \
-        libwine-dbg:i386 \
-        wine32 \
-        wine64 \
-        fonts-liberation \
-        libvulkan1 \
-        libvulkan1:i386 \
-        libgbm1 \
-        libgbm1:i386 \
-        libgl1-mesa-glx \
-        libgl1-mesa-glx:i386 \
-        libegl1-mesa \
-        libegl1-mesa:i386 \
-        libxi6 \
-        libxi6:i386 \
-        libglib2.0-0 \
-        libglib2.0-0:i386 \
-        libsm6 \
-        libsm6:i386 \
-        libxinerama1 \
-        libxinerama1:i386 \
-        libxrandr2 \
-        libxrandr2:i386 \
-        libxcursor1 \
-        libxcursor1:i386 \
-        libxcomposite1 \
-        libxcomposite1:i386 \
-        libxfixes3 \
-        libxfixes3:i386 \
-        libxdamage1 \
-        libxdamage1:i386 \
-        libxext6 \
-        libxext6:i386 \
-        libxxf86vm1 \
-        libxxf86vm1:i386 \
-    && apt-get clean
+RUN apt-get update && apt-get install -y \
+    wine64 \
+    wget \
+    unzip \
+    fluxbox \
+    tigervnc-standalone-server \
+    tigervnc-common \
+    xterm \
+    python3 \
+    python3-websockify \
+    git \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up Wine prefix
-ENV WINEARCH=win64
-ENV WINEPREFIX=/app/.everything
-ENV HOME=/app
+# Install noVNC
+RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
+    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
 
-# Create directories
-RUN mkdir -p ${WINEPREFIX}/drive_c/app/everything \
-                ${WINEPREFIX}/dosdevices/c \
-                ${WINEPREFIX}/dosdevices/z
+# Download Everything portable
+RUN wget -O /tmp/Everything.zip "https://www.voidtools.com/Everything-1.4.1.1024.x64.zip" && \
+    unzip /tmp/Everything.zip -d /opt/everything && \
+    rm /tmp/Everything.zip
 
-# Link drives
-RUN ln -sf /app ${WINEPREFIX}/dosdevices/z \
-    && ln -sf /app/everything ${WINEPREFIX}/dosdevices/c/drive_c/app/everything
+# Create Plugins directory
+RUN mkdir -p /opt/everything/Plugins
 
-# Download Everything
-WORKDIR /tmp
-RUN wget https://www.voidtools.com/downloads/everything-1.4.1.1005.x64-setup.exe \
-    && wine everything-1.4.1.1005.x64-setup.exe /S /D=C:\\everything
+# Download Everything HTTP Server
+RUN wget -O /tmp/Everything-HTTP-Server.zip "https://www.voidtools.com/Everything-HTTP-Server-1.0.3.4.x64.zip" && \
+    unzip /tmp/Everything-HTTP-Server.zip -d /opt/everything/Plugins && \
+    rm /tmp/Everything-HTTP-Server.zip
 
-# Configure Everything
-RUN [ "${WINEDEBUG}" = "" ] || export WINEDEBUG=-fixme-all \
-    && wine C:\\everything\\Everything.exe -config \
-    && echo "[Options]" > ${WINEPREFIX}/drive_c/everything/Everything.ini \
-    && echo "db_location=z:" >> ${WINEPREFIX}/drive_c/everything/Everything.ini \
-    && echo "start_minimized=true" >> ${WINEPREFIX}/drive_c/everything/Everything.ini \
-    && echo "start_with_windows=false" >> ${WINEPREFIX}/drive_c/everything/Everything.ini
+# Download Everything ETP Server
+RUN wget -O /tmp/Everything-ETP-Server.zip "https://www.voidtools.com/Everything-ETP-Server-1.0.1.4.x64.zip" && \
+    unzip /tmp/Everything-ETP-Server.zip -d /opt/everything/Plugins && \
+    rm /tmp/Everything-ETP-Server.zip
 
-# Cleanup
-RUN rm -rf /tmp/*
+# Create a script to start all services
+RUN echo '#!/bin/bash\n\n# Start fluxbox\nfluxbox &\n\n# Start VNC server\nvncserver :1 -geometry 1280x800 -depth 24\n\n# Start noVNC\n/opt/novnc/utils/novnc_proxy --vnc localhost:5901 --listen 80 &\n\n# Start Everything HTTP Server via Wine\nexport DISPLAY=:1\nwine /opt/everything/Everything-HTTP-Server.exe &\n\n# Start Everything via Wine\nwine /opt/everything/Everything.exe\n' > /start.sh && chmod +x /start.sh
 
-# Expose port for Everything service
-EXPOSE 6373
+EXPOSE 80 8080 14630 21
 
-# Start command
-CMD ["wine", "C:\\everything\\Everything.exe"]
+CMD ["/start.sh"] 
