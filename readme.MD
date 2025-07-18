@@ -13,7 +13,7 @@ This project runs the Everything Search software (Windows-only) inside a Docker 
 ### 1. Build and Start the Container
 
 ```sh
-docker-compose up --build
+docker-compose up --build --no-cache
 ```
 
 ### 2. Access the UI
