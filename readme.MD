@@ -52,6 +52,16 @@ If you enable or start these servers from the VNC desktop, they will be accessib
 - The UI is accessible via any modern web browser using noVNC.
 - Data is not persisted by default. For persistent settings or databases, mount a volume to `/opt/everything`.
 
+## Development
+
+| Step  | Docker Hub | GHCR |
+|-------|--------------------|--------------|
+| Build | `docker build -t everything-wine:latest .` | `docker build -t everything-wine:latest .` |
+| Repo | https://hub.docker.com/repository/create | `gh repo create mygithubuser/everything-win` |
+| Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest` |
+| Login | `docker login` | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin` |
+| Push  | `docker push mydockeruser/everything-wine:latest` | `docker push ghcr.io/mygithubuser/everything-wine:latest` |
+
 ## Credits
 - [Everything Search](https://www.voidtools.com/)
 - [Wine](https://www.winehq.org/)
