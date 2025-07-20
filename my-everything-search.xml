@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>Everything-Search</Name>
-  <Repository>everything-search:latest</Repository>
+  <Repository>bluscream1/everything-wine:latest</Repository>
   <Registry>https://github.com/bluscream/everything-docker</Registry>
   <Network>bridge</Network>
   <MyIP/>
