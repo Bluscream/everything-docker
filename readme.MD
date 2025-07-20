@@ -95,7 +95,7 @@ You can choose between 32-bit (x86) and 64-bit (x64) versions of Everything:
 | Step  | Docker Hub | GHCR |
 |-------|--------------------|--------------|
 | Build | `docker build -t everything-wine:latest .` | `docker build -t everything-wine:latest .` |
-| Repo | https://hub.docker.com/repository/create | `gh repo create mygithubuser/everything-win` |
+| Repo | https://hub.docker.com/repository/create | `gh repo create mygithubuser/everything-wine` |
 | Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest` |
 | Login | `docker login` | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin` |
 | Push  | `docker push mydockeruser/everything-wine:latest` | `docker push ghcr.io/mygithubuser/everything-wine:latest` |

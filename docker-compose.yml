@@ -9,19 +9,21 @@ services:
     env_file:
       - config.env
     ports:
-      - "5800:5800"  # VNC port
-      - "5900:5900"  # Alternative VNC port
-      - "8080:8080"  # Everything HTTP Server
-      - "14630:14630"  # Everything ETP Server
-      - "21:21"      # Everything Server
+      #
+      # Docker ports are defined in the format "HOST:CONTAINER".
+      - "5800:5800"    # VNC port (host 5800 -> container 5800)
+      - "5900:5900"    # Alternative VNC port (host 5900 -> container 5900)
+      - "5000:80"      # Everything HTTP Server (host 5000 -> container 80)
+      - "14630:14630"  # Everything ETP Server (host 14630 -> container 14630)
+      - "21:21"        # Everything Server (host 21 -> container 21)
     environment:
       - DISPLAY=:0
-      - TZ=UTC
+      - TZ=Europe/Berlin
       - WINEDEBUG=-fixme-all
       - EVERYTHING_ARCH=${EVERYTHING_ARCH:-x64}
     volumes:
       - ./config:/config
       - ./cache:/cache
-    restart: "no"
+    restart: "on-failure:2"
     mem_limit: 2048M
-    mem_reservation: 1024M
+    # mem_reservation: 512M
