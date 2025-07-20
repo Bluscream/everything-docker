@@ -14,7 +14,7 @@
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
-  <ExtraParams>--restart=unless-stopped --memory=2048m</ExtraParams>
+  <ExtraParams>--restart=unless-stopped --memory=2048m --memory-swap=2048m</ExtraParams>
   <PostArgs/>
   <CPUset/>
   <DateInstalled>1749587466</DateInstalled>
