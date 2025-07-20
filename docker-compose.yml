@@ -1,21 +1,27 @@
 version: '3.8'
 services:
   everything:
-    build: .
+    build:
+      context: .
+      args:
+        EVERYTHING_ARCH: ${EVERYTHING_ARCH:-x64}
     container_name: everything-search
+    env_file:
+      - config.env
     ports:
-      - "80:80"
-      - "8080:8080"
-      - "14630:14630"
-      - "21:21"
+      - "5800:5800"  # VNC port
+      - "5900:5900"  # Alternative VNC port
+      - "8080:8080"  # Everything HTTP Server
+      - "14630:14630"  # Everything ETP Server
+      - "21:21"      # Everything Server
     environment:
-      - DISPLAY=:1
+      - DISPLAY=:0
       - TZ=UTC
       - WINEDEBUG=-fixme-all
+      - EVERYTHING_ARCH=${EVERYTHING_ARCH:-x64}
     volumes:
-      - ./config:/app/.everything
-      - ./cache:/tmp
-      - ./app:/app/everything
-    restart: unless-stopped 
+      - ./config:/config
+      - ./cache:/cache
+    restart: "no"
     mem_limit: 2048M
     mem_reservation: 1024M
