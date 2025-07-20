@@ -27,8 +27,8 @@ remove_wine_config() {
 # Configure Wine architecture and clear existing config if needed
 if [ "${EVERYTHING_ARCH}" = "x64" ]; then
     export WINEARCH=win64
-    remove_wine_config
+    # remove_wine_config
 else
     export WINEARCH=win32
-    remove_wine_config
+    # remove_wine_config
 fi 
