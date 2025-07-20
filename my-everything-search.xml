@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>Everything-Search</Name>
+  <Name>everything-search</Name>
   <Repository>bluscream1/everything-wine:latest</Repository>
   <Registry>https://github.com/bluscream/everything-docker</Registry>
   <Network>bridge</Network>
@@ -14,8 +14,8 @@
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
-  <ExtraParams>--restart=unless-stopped</ExtraParams>
-  <PostArgs>--memory=2048m</PostArgs>
+  <ExtraParams>--restart=unless-stopped --memory=2048m</ExtraParams>
+  <PostArgs/>
   <CPUset/>
   <DateInstalled>1749587466</DateInstalled>
   <DonateText/>
