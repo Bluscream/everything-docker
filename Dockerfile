@@ -39,14 +39,8 @@ RUN dpkg --add-architecture i386 && \
 #########################################
 
 # Copy all Everything files (all architectures included) to image source location
+# Keep all files - users select binary via EVERYTHING_BINARY environment variable
 COPY opt/everything/ /opt/everything-image/
-
-# Set default executable to x64 (can be overridden at runtime)
-RUN if [ -f /opt/everything-image/everything-1.5_x64.exe ]; then \
-        cp /opt/everything-image/everything-1.5_x64.exe /opt/everything-image/Everything.exe; \
-    elif [ -f /opt/everything-image/es_x64.exe ]; then \
-        cp /opt/everything-image/es_x64.exe /opt/everything-image/Everything.exe; \
-    fi
 
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh

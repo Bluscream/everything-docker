@@ -9,7 +9,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/bluscream/everything-docker/issues</Support>
   <Project>https://www.voidtools.com/</Project>
-  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include configurable architecture (x86/x64), Everything HTTP Server, ETP Server, and Server components.</Overview>
+  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable (x86/x64 variants), Everything HTTP Server, ETP Server, and Server components. All architecture variants are included in a single image.</Overview>
   <Category>Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
@@ -23,18 +23,11 @@
   <Requires/>
   <Config Name="VNC Port" Target="5800" Default="5800" Mode="tcp" Description="VNC Web Interface port for accessing Everything Search GUI" Type="Port" Display="always" Required="true" Mask="false">5800</Config>
   <Config Name="Alternative VNC Port" Target="5900" Default="5900" Mode="tcp" Description="Alternative VNC port for direct VNC access" Type="Port" Display="always" Required="false" Mask="false">5900</Config>
-  <Config Name="HTTP Server Port" Target="80" Default="5000" Mode="tcp" Description="Everything HTTP Server port for web-based search interface" Type="Port" Display="always" Required="false" Mask="false">5000</Config>
-  <Config Name="ETP Server Port" Target="14630" Default="14630" Mode="tcp" Description="Everything ETP Server port for Everything Transfer Protocol" Type="Port" Display="always" Required="false" Mask="false">14630</Config>
-  <Config Name="Everything Server Port" Target="21" Default="21" Mode="tcp" Description="Everything Server port for FTP-like access" Type="Port" Display="always" Required="false" Mask="false">21</Config>
-  <Config Name="Everything Data Directory" Target="/opt/everything" Default="/mnt/user/appdata/everything-search/data" Mode="rw" Description="Everything Search data directory (Everything.ini, Everything.db, Everything.exe, Plugins/)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/data</Config>
-  <Config Name="Everything Architecture" Target="EVERYTHING_ARCH" Default="x64" Mode="" Description="Select the architecture for Everything Search (x64 or x86)" Type="Variable" Display="always" Required="true" Mask="false">x64</Config>
-  <Config Name="Everything Version" Target="EVERYTHING_VERSION" Default="1.4.1.1024" Mode="" Description="Everything Search version to install" Type="Variable" Display="advanced" Required="true" Mask="false">1.4.1.1024</Config>
-  <Config Name="Enable HTTP Server" Target="EVERYTHING_HTTP_USE" Default="1" Mode="" Description="Enable Everything HTTP Server (0=disabled, 1=enabled)" Type="Variable" Display="always" Required="true" Mask="false">1</Config>
-  <Config Name="HTTP Server Version" Target="EVERYTHING_HTTP_VERSION" Default="1.0.3.4" Mode="" Description="Everything HTTP Server version" Type="Variable" Display="advanced" Required="true" Mask="false">1.0.3.4</Config>
-  <Config Name="Enable ETP Server" Target="EVERYTHING_ETP_USE" Default="1" Mode="" Description="Enable Everything ETP Server (0=disabled, 1=enabled)" Type="Variable" Display="always" Required="true" Mask="false">1</Config>
-  <Config Name="ETP Server Version" Target="EVERYTHING_ETP_VERSION" Default="1.0.1.4" Mode="" Description="Everything ETP Server version" Type="Variable" Display="advanced" Required="true" Mask="false">1.0.1.4</Config>
-  <Config Name="Enable Everything Server" Target="EVERYTHING_SERVER_USE" Default="1" Mode="" Description="Enable Everything Server (0=disabled, 1=enabled)" Type="Variable" Display="always" Required="true" Mask="false">1</Config>
-  <Config Name="Everything Server Version" Target="EVERYTHING_SERVER_VERSION" Default="1.0.1.2" Mode="" Description="Everything Server version" Type="Variable" Display="advanced" Required="true" Mask="false">1.0.1.2</Config>
+  <Config Name="HTTP Server Port" Target="14680" Default="14680" Mode="tcp" Description="Everything HTTP Server port for web-based search interface" Type="Port" Display="always" Required="false" Mask="false">14680</Config>
+  <Config Name="ETP Server Port" Target="14620" Default="14620" Mode="tcp" Description="Everything ETP Server port for Everything Transfer Protocol" Type="Port" Display="always" Required="false" Mask="false">14620</Config>
+  <Config Name="Everything Server Port" Target="14630" Default="14630" Mode="tcp" Description="Everything Server port for network access" Type="Port" Display="always" Required="false" Mask="false">14630</Config>
+  <Config Name="Everything Data Directory" Target="/opt/everything" Default="/mnt/user/appdata/everything-search/data" Mode="rw" Description="Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/data</Config>
+  <Config Name="Everything Binary" Target="EVERYTHING_BINARY" Default="everything-1.5_x64.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5_x64.exe, everything-1.5_x86.exe, es_x64.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5_x64.exe</Config>
   <Config Name="Timezone" Target="TZ" Default="America/New_York" Mode="" Description="Timezone for the container (e.g., America/New_York, Europe/London)" Type="Variable" Display="always" Required="true" Mask="false">America/New_York</Config>
   <Config Name="Display Width" Target="DISPLAY_WIDTH" Default="1280" Mode="" Description="Display width for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">1280</Config>
   <Config Name="Display Height" Target="DISPLAY_HEIGHT" Default="720" Mode="" Description="Display height for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">720</Config>

@@ -8,8 +8,20 @@ if ! command -v wine >/dev/null 2>&1; then
     exit 1
 fi
 
+# Set default binary if not specified
+EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5.exe}"
+EVERYTHING_PATH="/opt/everything/${EVERYTHING_BINARY}"
+
+# Check if the specified binary exists
+if [ ! -f "$EVERYTHING_PATH" ]; then
+    echo "Error: Everything binary not found at $EVERYTHING_PATH"
+    echo "Available executables:"
+    ls -1 /opt/everything/*.exe 2>/dev/null | sed 's|/opt/everything/|  - |' || echo "  (none found)"
+    exit 1
+fi
+
 # Configure Wine architecture based on executable
-if [ -f "/opt/everything/Everything.exe" ] && file /opt/everything/Everything.exe 2>/dev/null | grep -q "PE32+"; then
+if file "$EVERYTHING_PATH" 2>/dev/null | grep -q "PE32+"; then
     export WINEARCH=win64
 else
     export WINEARCH=win32
@@ -22,4 +34,4 @@ fi
 
 # Run Everything from data directory
 cd /opt/everything
-exec env WINEARCH="${WINEARCH}" wine /opt/everything/Everything.exe 
+exec env WINEARCH="${WINEARCH}" wine "$EVERYTHING_PATH" 

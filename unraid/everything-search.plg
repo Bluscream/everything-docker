@@ -3,7 +3,7 @@
   <Name>Everything Search</Name>
   <Author>bluscream</Author>
   <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface.</Overview>
-  <Description>Everything Search is a fast file search utility that indexes files and folders by name instantly. This Docker container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include configurable architecture (x86/x64), Everything HTTP Server, ETP Server, and Server components.</Description>
+    <Description>Everything Search is a fast file search utility that indexes files and folders by name instantly. This Docker container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable (x86/x64 variants), Everything HTTP Server, ETP Server, and Server components. All architecture variants are included in a single image.</Description>
   <Category>Utilities</Category>
   <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
   <Registry>https://github.com/bluscream/everything-docker</Registry>
@@ -31,20 +31,20 @@
         <Description>Alternative VNC Port</Description>
       </Port>
       <Port>
-        <HostPort>5000</HostPort>
-        <ContainerPort>80</ContainerPort>
+        <HostPort>14680</HostPort>
+        <ContainerPort>14680</ContainerPort>
         <Protocol>tcp</Protocol>
         <Description>Everything HTTP Server</Description>
       </Port>
       <Port>
-        <HostPort>14630</HostPort>
-        <ContainerPort>14630</ContainerPort>
+        <HostPort>14620</HostPort>
+        <ContainerPort>14620</ContainerPort>
         <Protocol>tcp</Protocol>
         <Description>Everything ETP Server</Description>
       </Port>
       <Port>
-        <HostPort>21</HostPort>
-        <ContainerPort>21</ContainerPort>
+        <HostPort>14630</HostPort>
+        <ContainerPort>14630</ContainerPort>
         <Protocol>tcp</Protocol>
         <Description>Everything Server</Description>
       </Port>
@@ -52,44 +52,9 @@
   </Networking>
   <Environment>
     <Variable>
-      <Name>EVERYTHING_VERSION</Name>
-      <Value>1.4.1.1024</Value>
-      <Description>Everything Search version to install</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_ARCH</Name>
-      <Value>x64</Value>
-      <Description>Architecture: x64 or x86</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_HTTP_USE</Name>
-      <Value>1</Value>
-      <Description>Enable Everything HTTP Server (0=disabled, 1=enabled)</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_HTTP_VERSION</Name>
-      <Value>1.0.3.4</Value>
-      <Description>Everything HTTP Server version</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_ETP_USE</Name>
-      <Value>1</Value>
-      <Description>Enable Everything ETP Server (0=disabled, 1=enabled)</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_ETP_VERSION</Name>
-      <Value>1.0.1.4</Value>
-      <Description>Everything ETP Server version</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_SERVER_USE</Name>
-      <Value>1</Value>
-      <Description>Enable Everything Server (0=disabled, 1=enabled)</Description>
-    </Variable>
-    <Variable>
-      <Name>EVERYTHING_SERVER_VERSION</Name>
-      <Value>1.0.1.2</Value>
-      <Description>Everything Server version</Description>
+      <Name>EVERYTHING_BINARY</Name>
+      <Value>everything-1.5_x64.exe</Value>
+      <Description>Everything Search executable to run (e.g., everything-1.5_x64.exe, everything-1.5_x86.exe, es_x64.exe)</Description>
     </Variable>
     <Variable>
       <Name>TZ</Name>
@@ -135,34 +100,15 @@
   <Volume>
     <HostDir>/mnt/user/appdata/everything-search/data</HostDir>
     <ContainerDir>/opt/everything</ContainerDir>
-    <Description>Everything Search data directory (Everything.ini, Everything.db, Everything.exe, Plugins/)</Description>
+    <Description>Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)</Description>
   </Volume>
   <PostArgs>--memory=2048m</PostArgs>
   <Config>
     <Field>
-      <Name>EVERYTHING_ARCH</Name>
-      <Type>dropdown</Type>
-      <Values>x64|x86</Values>
-      <Default>x64</Default>
-      <Description>Select the architecture for Everything Search</Description>
-    </Field>
-    <Field>
-      <Name>EVERYTHING_HTTP_USE</Name>
-      <Type>checkbox</Type>
-      <Default>checked</Default>
-      <Description>Enable Everything HTTP Server</Description>
-    </Field>
-    <Field>
-      <Name>EVERYTHING_ETP_USE</Name>
-      <Type>checkbox</Type>
-      <Default>checked</Default>
-      <Description>Enable Everything ETP Server</Description>
-    </Field>
-    <Field>
-      <Name>EVERYTHING_SERVER_USE</Name>
-      <Type>checkbox</Type>
-      <Default>checked</Default>
-      <Description>Enable Everything Server</Description>
+      <Name>EVERYTHING_BINARY</Name>
+      <Type>text</Type>
+      <Default>everything-1.5_x64.exe</Default>
+      <Description>Everything Search executable (e.g., everything-1.5_x64.exe, everything-1.5_x86.exe, es_x64.exe)</Description>
     </Field>
     <Field>
       <Name>TZ</Name>

@@ -16,6 +16,7 @@ PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini plugins-1.5a.ini 
 # Initialize Everything data directory if volume is empty (first deployment)
 if [ -z "$(ls -A /opt/everything 2>/dev/null)" ]; then
     echo "Initializing Everything data directory from image (first deployment)..."
+    # Copy all files including all architecture variants
     cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
 else
     # Update binaries and static content, but preserve config/data files
@@ -31,7 +32,7 @@ else
         fi
     done
     
-    # Copy all files from image (overwrites binaries/static content)
+    # Copy all files from image (overwrites binaries/static content, keeps all arch variants)
     cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
     
     # Restore preserved config/data files
@@ -66,9 +67,11 @@ chown -R $USER_ID:$GROUP_ID /opt/everything 2>/dev/null || true
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
 
-# Configure Wine architecture based on executable
-if [ -f "/opt/everything/Everything.exe" ] && file /opt/everything/Everything.exe 2>/dev/null | grep -q "PE32+"; then
-    export WINEARCH=win64
-else
-    export WINEARCH=win32
+# Configure Wine architecture based on executable (if EVERYTHING_BINARY is set)
+if [ -n "${EVERYTHING_BINARY:-}" ] && [ -f "/opt/everything/${EVERYTHING_BINARY}" ]; then
+    if file "/opt/everything/${EVERYTHING_BINARY}" 2>/dev/null | grep -q "PE32+"; then
+        export WINEARCH=win64
+    else
+        export WINEARCH=win32
+    fi
 fi

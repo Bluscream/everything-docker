@@ -50,10 +50,20 @@ If you enable or start these servers from the VNC desktop, they will be accessib
 
 ### Architecture Selection
 
-This project includes all architectures (x64 and x86) in a single image. The container automatically detects and uses the appropriate executable based on the Everything.exe file. By default, it uses the x64 version, but all executables are available in the image.
+This project includes all architectures (x64 and x86) in a single image. You can select which executable to run using the `EVERYTHING_BINARY` environment variable. By default, it uses `everything-1.5_x64.exe`, but you can choose any available executable:
+
+- `everything-1.5_x64.exe` (default) - Everything 1.5 64-bit
+- `everything-1.5_x86.exe` - Everything 1.5 32-bit
+- `everything-1.4_x64.exe` - Everything 1.4 64-bit
+- `everything-1.4_x86.exe` - Everything 1.4 32-bit
+- `es_x64.exe` - ES 64-bit
+- `es_x86.exe` - ES 32-bit
+
+All executables are available in the image, and you can switch between them by changing the `EVERYTHING_BINARY` environment variable.
 
 ### Other Customization
 - To change the VNC or web port, edit the `docker-compose.yml` file.
+- To use a different Everything executable, set the `EVERYTHING_BINARY` environment variable (e.g., `EVERYTHING_BINARY=everything-1.5_x86.exe`).
 
 ## Notes
 - This container uses Wine to run Everything Search, which is a Windows application.
