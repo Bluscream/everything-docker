@@ -7,8 +7,11 @@ set -u # Treat unset variables as an error.
 mkdir -p "$XDG_CONFIG_HOME/Everything"
 mkdir -p "$XDG_DATA_HOME"
 
-# Adjust ownership of /config
-chown -R $USER_ID:$GROUP_ID /config
+# Adjust ownership of /wine (Wine prefix - separate mount, not nested)
+chown -R $USER_ID:$GROUP_ID /wine 2>/dev/null || true
+
+# Adjust ownership of /config (VNC passwords, certificates - not user data)
+chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
 
 # Files that should be preserved (config/data) - not overwritten on updates
 PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini plugins-1.5a.ini Everything.db Everything-1.5a.db"
@@ -99,19 +102,11 @@ timeout 10 chown -R $USER_ID:$GROUP_ID /opt/everything/html 2>/dev/null || true
 # Set up Wine environment
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
+export WINEPREFIX="/wine"
+export WINE_NO_ASYNC_DIRECTORY=1
 
-# Remove Wine config early to prevent architecture conflicts
-# This must happen before any Wine command is executed
-if [ -d "/config/.wine" ]; then
-    rm -rf /config/.wine
-fi
+# Note: Wine config is stored in /wine (separate mount, not nested)
+# Permissions are handled by the chown above
 
-# Configure Wine architecture based on executable (if EVERYTHING_BINARY is set)
-# This is informational only - actual WINEARCH will be set in startapp.sh
-if [ -n "${EVERYTHING_BINARY:-}" ] && [ -f "/opt/everything/${EVERYTHING_BINARY}" ]; then
-    if command -v file >/dev/null 2>&1 && file "/opt/everything/${EVERYTHING_BINARY}" 2>/dev/null | grep -q "PE32+"; then
-        export WINEARCH=win64
-    else
-        export WINEARCH=win32
-    fi
-fi
+# Note: WINEARCH is set in the Dockerfile at build time and doesn't need
+# to be detected at runtime. The architecture is fixed per container image.

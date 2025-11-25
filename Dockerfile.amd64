@@ -3,7 +3,7 @@ FROM jlesage/baseimage-gui:${DEBIAN_VERSION}
 
 ARG DEBIAN_VERSION=Debian-11
 
-MAINTAINER bluscream
+LABEL maintainer="bluscream"
 
 #########################################
 ##        ENVIRONMENTAL CONFIG         ##

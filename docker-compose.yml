@@ -19,6 +19,9 @@ services:
       - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
     volumes:
       - ./.data:/opt/everything         # Everything.ini, Everything.db, executables, and plugins/
+      - ./.wine:/wine                   # Wine prefix (direct mount, not nested)
+      - ./.config:/config               # Container config (VNC passwords, certificates)
+      - /mnt/user:/mnt/user:ro          # Unraid user shares (read-only for indexing)
     restart: "on-failure:2"
     mem_limit: 2048M
     # mem_reservation: 512M

@@ -98,7 +98,12 @@
     </Variable>
   </Environment>
   <Volume>
-    <HostDir>/mnt/user/appdata/everything-search/</HostDir>
+    <HostDir>/mnt/user/appdata/everything-search/config/</HostDir>
+    <ContainerDir>/config</ContainerDir>
+    <Description>Container configuration directory (VNC passwords, certificates, etc.) - separate from Everything data</Description>
+  </Volume>
+  <Volume>
+    <HostDir>/mnt/user/appdata/everything-search/data/</HostDir>
     <ContainerDir>/opt/everything</ContainerDir>
     <Description>Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)</Description>
   </Volume>

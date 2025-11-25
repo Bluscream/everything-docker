@@ -2,11 +2,15 @@
 export HOME=/config
 export WINEDEBUG=-fixme-all
 
-# Remove existing Wine configuration FIRST to avoid architecture conflicts
-# This must happen before any Wine command is executed
-if [ -d "/config/.wine" ]; then
-    rm -rf /config/.wine
-fi
+# Set Wine prefix explicitly (mounted directly to /wine, not nested)
+export WINEPREFIX="/wine"
+
+# Additional Wine environment variables to prevent deadlocks
+export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINE_NO_ASYNC_DIRECTORY=1
+
+# Note: Architecture is fixed at build time (via Dockerfile), so Wine config
+# will always match the container's architecture. No need to check/remove it.
 
 # Check if wine is available
 if ! command -v wine >/dev/null 2>&1; then
@@ -26,26 +30,50 @@ if [ ! -f "$EVERYTHING_PATH" ]; then
     exit 1
 fi
 
-# Configure Wine architecture based on executable
-# Use file command if available, otherwise default based on platform
-if command -v file >/dev/null 2>&1; then
-    if file "$EVERYTHING_PATH" 2>/dev/null | grep -q "PE32+"; then
-        export WINEARCH=win64
-    else
-        export WINEARCH=win32
-    fi
-else
-    # Fallback: assume 64-bit on amd64, 32-bit on i386
-    if [ "$(uname -m)" = "x86_64" ]; then
-        export WINEARCH=win64
-    else
-        export WINEARCH=win32
-    fi
+# WINEARCH is already set in the Dockerfile (win64 for amd64, win32 for i386)
+# No need to detect architecture at runtime - trust the build-time setting
+# Ensure WINEARCH is set (fallback for safety, though it should always be set)
+export WINEARCH="${WINEARCH:-win64}"
+
+# Initialize Wine prefix if it doesn't exist
+if [ ! -d "/wine" ]; then
+    echo "Initializing Wine prefix..."
+    wineboot --init 2>/dev/null || true
+    
+    # Wait a moment for Wine to fully initialize
+    sleep 2
 fi
 
-# Ensure WINEARCH is set before any Wine operation
-export WINEARCH="${WINEARCH:-win64}"
+# Apply registry tweaks to prevent deadlocks and COM marshalling issues
+# Apply these on every startup to ensure they're always set
+# Only apply if Wine prefix exists and is accessible
+if [ -d "/wine" ] && [ -f "/wine/system.reg" ]; then
+    echo "Applying Wine registry tweaks to prevent deadlocks..."
+    
+    # Ensure registry keys exist
+    wine reg add "HKCU\\Software\\Wine" /f >/dev/null 2>&1 || true
+    wine reg add "HKCU\\Software\\Wine\\DllOverrides" /f >/dev/null 2>&1 || true
+    wine reg add "HKCU\\Software\\Wine\\Debug" /f >/dev/null 2>&1 || true
+    wine reg add "HKCU\\Software\\Wine\\FileSystem" /f >/dev/null 2>&1 || true
+    
+    # Disable COM marshalling for problematic interfaces (fixes OLE errors)
+    wine reg add "HKCU\\Software\\Wine\\DllOverrides" /v "ole32" /t REG_SZ /d "builtin" /f >/dev/null 2>&1 || true
+    wine reg add "HKCU\\Software\\Wine\\DllOverrides" /v "oleaut32" /t REG_SZ /d "builtin" /f >/dev/null 2>&1 || true
+    
+    # Set file system options to prevent directory access deadlocks
+    wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "ReadOnly" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
+    wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "UseDType" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
+    
+    # Set Wine version to Windows 10 for better compatibility
+    wine reg add "HKCU\\Software\\Wine" /v "Version" /t REG_SZ /d "win10" /f >/dev/null 2>&1 || true
+    
+    # Increase timeout for critical sections (helps with directory.c deadlocks)
+    # This is a workaround for the RtlpWaitForCriticalSection timeout issue
+    wine reg add "HKCU\\Software\\Wine\\Debug" /v "RelayExclude" /t REG_SZ /d "ntdll.RtlEnterCriticalSection;ntdll.RtlLeaveCriticalSection" /f >/dev/null 2>&1 || true
+    
+    echo "Registry tweaks applied."
+fi
 
 # Run Everything from data directory
 cd /opt/everything
-exec env WINEARCH="${WINEARCH}" wine "$EVERYTHING_PATH" 
+exec env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" WINE_NO_ASYNC_DIRECTORY=1 wine "$EVERYTHING_PATH" 
