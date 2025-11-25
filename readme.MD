@@ -4,10 +4,11 @@ This project runs the Everything Search software (Windows-only) inside a Docker 
 
 ## Features
 - Everything Search (Windows version) via Wine
-- Separate images for x86 (32-bit) and amd64 (64-bit) architectures
+- Multi-arch support (amd64 and i386) with optimized architecture-specific images
 - Professional GUI base image with secure web access
 - TigerVNC server with noVNC web interface
 - Everything HTTP Server, ETP Server, and Server components included
+- Each architecture image only contains files for that architecture (smaller images)
 
 ## Usage
 
