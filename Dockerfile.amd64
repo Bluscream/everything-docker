@@ -30,28 +30,33 @@ ENV SECURE_CONNECTION=1
 ENV CLEAN_TMP_DIR=1
 
 # Install packages needed for app
-# Enable multiarch and install Wine (needed for both x64 and x86 executables)
-RUN dpkg --add-architecture i386 && \
-    add-pkg wine wine32 xterm python3 python3-websockify git xvfb jq
+# For amd64, we only need 64-bit Wine support
+RUN add-pkg wine xterm python3 python3-websockify git xvfb
 
 #########################################
 ##    REPOSITORIES AND DEPENDENCIES    ##
 #########################################
 
-# Copy all Everything files to temporary location (needed for mapping script to read)
-COPY opt/everything/ /tmp/everything-source/
+# Copy common files (from "all" section in mappings.json)
+RUN mkdir -p /opt/everything-image
+COPY opt/everything/html/ /opt/everything-image/html/
+COPY opt/everything/everything.chm /opt/everything-image/everything.chm
+COPY opt/everything/everything.lng /opt/everything-image/everything.lng
 
-# Copy mapping script and apply mappings based on architecture
-COPY --chmod=755 apply-mappings.sh /usr/local/bin/apply-mappings.sh
+# Copy and map amd64-specific files
+COPY opt/everything/everything-1.4_x64.exe /opt/everything-image/everything-1.4.exe
+COPY opt/everything/everything-1.5_x64.exe /opt/everything-image/everything-1.5.exe
+COPY opt/everything/es_x64.exe /opt/everything-image/es.exe
+COPY opt/everything/voidimageviewer_x64.exe /opt/everything-image/voidimageviewer.exe
 
-# Apply mappings to copy only files specified in mappings.json for this architecture
-# This keeps the image smaller by excluding architecture-specific files not needed
-ARG TARGETARCH=amd64
-ARG BUILDPLATFORM=linux/amd64
-RUN mkdir -p /opt/everything-image && \
-    /usr/local/bin/apply-mappings.sh /tmp/everything-source /opt/everything-image "${TARGETARCH}" || \
-    /usr/local/bin/apply-mappings.sh /tmp/everything-source /opt/everything-image "amd64" && \
-    rm -rf /tmp/everything-source
+# Copy and map amd64-specific plugins
+RUN mkdir -p /opt/everything-image/plugins
+COPY opt/everything/plugins/etp_server64.dll /opt/everything-image/plugins/etp_server.dll
+COPY opt/everything/plugins/everything_server64.dll /opt/everything-image/plugins/everything_server.dll
+COPY opt/everything/plugins/http_server64.dll /opt/everything-image/plugins/http_server.dll
+
+# Create default Everything.exe (mapped from everything-1.5.exe)
+RUN cp /opt/everything-image/everything-1.5.exe /opt/everything-image/Everything.exe
 
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh
@@ -59,7 +64,7 @@ COPY --chmod=777 startapp.sh /startapp.sh
 # Add everything init script
 COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 
-# Copy default Everything configuration templates directly (no need for separate defaults folder)
+# Copy default Everything configuration templates (used for first-time initialization)
 COPY opt/everything/Everything-1.5a.ini /opt/everything-defaults/Everything.ini
 COPY opt/everything/Plugins-1.5a.ini /opt/everything-defaults/plugins.ini
 
