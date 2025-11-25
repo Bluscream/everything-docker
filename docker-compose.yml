@@ -18,7 +18,7 @@ services:
       - WINEDEBUG=-fixme-all
       - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
     volumes:
-      - ./.data:/opt/everything         # Everything.ini, Everything.db, Everything.exe, and plugins/
+      - ./.data:/opt/everything         # Everything.ini, Everything.db, executables, and plugins/
     restart: "on-failure:2"
     mem_limit: 2048M
     # mem_reservation: 512M
