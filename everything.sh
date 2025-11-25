@@ -3,112 +3,67 @@
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error.
 
-# Make sure required directories exist
-mkdir -p "$XDG_CONFIG_HOME/Everything"
-mkdir -p "$XDG_DATA_HOME"
+# Create directory structure
+mkdir -p /bin /home/everything/.wine
 
-# Adjust ownership of /config (VNC passwords, certificates, Wine config)
-chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
-
-# Files that should be preserved (config/data) - not overwritten on updates
-# Note: Include both case variants for plugin files (Plugins-1.5a.ini from image, plugins-1.5a.ini might be created)
-PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini Plugins.ini plugins-1.5a.ini Plugins-1.5a.ini Everything.db Everything-1.5a.db"
-
-# Initialize Everything data directory if volume is empty (first deployment)
-if [ -z "$(ls -A /opt/everything 2>/dev/null)" ]; then
-    echo "Initializing Everything data directory from image (first deployment)..."
-    echo "Copying files from image (this may take a moment)..."
-    # Copy all files including all architecture variants
-    # Use rsync if available for better progress, otherwise use cp
-    if command -v rsync >/dev/null 2>&1; then
-        rsync -a --info=progress2 /opt/everything-image/ /opt/everything/ 2>&1 | head -1 || \
-        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
-    else
-        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
-    fi
-    echo "Files copied successfully."
-else
-    # Update binaries and static content, but preserve config/data files
-    echo "Updating binaries and static content from image..."
-    
-    # Create temporary directory for preserved files
-    mkdir -p /tmp/everything-preserve
-    
-    # Backup config/data files
-    echo "Backing up configuration files..."
-    for file in $PRESERVE_FILES; do
-        if [ -f "/opt/everything/$file" ]; then
-            cp "/opt/everything/$file" "/tmp/everything-preserve/$file" 2>/dev/null || true
-        fi
-    done
-    
-    # Copy all files from image (overwrites binaries/static content, keeps all arch variants)
-    echo "Copying files from image (this may take a moment)..."
-    if command -v rsync >/dev/null 2>&1; then
-        rsync -a --info=progress2 /opt/everything-image/ /opt/everything/ 2>&1 | head -1 || \
-        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
-    else
-        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
-    fi
-    
-    # Restore preserved config/data files
-    echo "Restoring configuration files..."
-    for file in $PRESERVE_FILES; do
-        if [ -f "/tmp/everything-preserve/$file" ]; then
-            cp "/tmp/everything-preserve/$file" "/opt/everything/$file" 2>/dev/null || true
-        fi
-    done
-    
-    # Cleanup
-    rm -rf /tmp/everything-preserve
-    echo "Update completed."
+# Create everything user if it doesn't exist (should already exist from Dockerfile, but ensure it)
+if ! id -u everything >/dev/null 2>&1; then
+    useradd -m -u 99 -g 100 -d /home/everything -s /bin/sh everything || true
 fi
 
-# Ensure config files exist (copy defaults if missing - first deployment only)
-# Use files from image if available, otherwise use defaults
-[ ! -f "/opt/everything/Everything.ini" ] && \
-    { [ -f "/opt/everything-image/Everything-1.5a.ini" ] && cp /opt/everything-image/Everything-1.5a.ini /opt/everything/Everything.ini || \
-      [ -f "/opt/everything-defaults/Everything.ini" ] && cp /opt/everything-defaults/Everything.ini /opt/everything/Everything.ini || true; }
-[ ! -f "/opt/everything/Everything-1.5a.ini" ] && \
-    { [ -f "/opt/everything-image/Everything-1.5a.ini" ] && cp /opt/everything-image/Everything-1.5a.ini /opt/everything/Everything-1.5a.ini || \
-      [ -f "/opt/everything-defaults/Everything.ini" ] && cp /opt/everything-defaults/Everything.ini /opt/everything/Everything-1.5a.ini || true; }
-[ ! -f "/opt/everything/plugins.ini" ] && \
-    { [ -f "/opt/everything-image/Plugins-1.5a.ini" ] && cp /opt/everything-image/Plugins-1.5a.ini /opt/everything/plugins.ini || \
-      [ -f "/opt/everything-defaults/plugins.ini" ] && cp /opt/everything-defaults/plugins.ini /opt/everything/plugins.ini || true; }
-[ ! -f "/opt/everything/plugins-1.5a.ini" ] && \
-    { [ -f "/opt/everything-image/Plugins-1.5a.ini" ] && cp /opt/everything-image/Plugins-1.5a.ini /opt/everything/plugins-1.5a.ini || \
-      [ -f "/opt/everything-defaults/plugins.ini" ] && cp /opt/everything-defaults/plugins.ini /opt/everything/plugins-1.5a.ini || true; }
+# Set up home directory and Wine prefix
+export HOME=/home/everything
+export WINEPREFIX=/home/everything/.wine
 
-# Ensure plugins directory exists and is writable
-echo "Setting up plugins directory..."
-mkdir -p /opt/everything/plugins
-chown -R $USER_ID:$GROUP_ID /opt/everything/plugins 2>/dev/null || true
+# Adjust ownership of directories
+chown -R $USER_ID:$GROUP_ID /home/everything 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /bin 2>/dev/null || true
 
-# Adjust ownership of Everything directory (skip if on slow network mount)
-echo "Setting file permissions..."
-# Ensure the directory itself is writable
-chown $USER_ID:$GROUP_ID /opt/everything 2>/dev/null || true
-chmod 755 /opt/everything 2>/dev/null || true
+# Get config path from environment variable (default to ~/everything.ini)
+# Support full paths (e.g., ~/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
+EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-~/everything.ini}"
 
-# Only chown specific directories/files to avoid hanging on large network mounts
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.exe 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.dll 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.ini 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.db 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.lng 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/*.chm 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /opt/everything/plugins 2>/dev/null || true
-# Try to chown html directory but don't fail if it's slow
-timeout 10 chown -R $USER_ID:$GROUP_ID /opt/everything/html 2>/dev/null || true
+# Expand ~ to home directory if present (portable method for /bin/sh)
+case "$EVERYTHING_CONFIG" in
+    ~/*) EVERYTHING_CONFIG="${HOME}${EVERYTHING_CONFIG#~}" ;;
+    ~) EVERYTHING_CONFIG="$HOME" ;;
+esac
+
+# If path is relative (doesn't start with /), assume it's relative to home directory
+if [ "${EVERYTHING_CONFIG#/}" = "${EVERYTHING_CONFIG}" ]; then
+    EVERYTHING_CONFIG="${HOME}/${EVERYTHING_CONFIG}"
+fi
+
+# Ensure parent directory exists
+CONFIG_DIR=$(dirname "$EVERYTHING_CONFIG")
+mkdir -p "$CONFIG_DIR"
+chown -R $USER_ID:$GROUP_ID "$CONFIG_DIR" 2>/dev/null || true
+
+# Ensure config file exists (copy default from image if file doesn't exist - first deployment only)
+if [ ! -f "$EVERYTHING_CONFIG" ]; then
+    # File doesn't exist, copy default from image
+    CONFIG_FILENAME=$(basename "$EVERYTHING_CONFIG")
+    if [ -f "/opt/everything-defaults/${CONFIG_FILENAME}" ]; then
+        cp "/opt/everything-defaults/${CONFIG_FILENAME}" "$EVERYTHING_CONFIG" 2>/dev/null || true
+    elif [ -f "/opt/everything-defaults/everything.ini" ]; then
+        # Fallback to default everything.ini if specific config not found
+        cp /opt/everything-defaults/everything.ini "$EVERYTHING_CONFIG" 2>/dev/null || true
+    elif [ -f "/opt/everything-defaults/Everything.ini" ]; then
+        # Fallback to legacy Everything.ini (capital E) if lowercase not found
+        cp /opt/everything-defaults/Everything.ini "$EVERYTHING_CONFIG" 2>/dev/null || true
+    fi
+    chown $USER_ID:$GROUP_ID "$EVERYTHING_CONFIG" 2>/dev/null || true
+fi
+
+# Ensure plugins directory exists in /bin (plugins are part of binaries)
+mkdir -p /bin/plugins
+chown -R $USER_ID:$GROUP_ID /bin/plugins 2>/dev/null || true
 
 # Set up Wine environment
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
-export WINEPREFIX="/config/.wine"
 export WINE_NO_ASYNC_DIRECTORY=1
-
-# Note: Wine config is stored in /config/.wine (subdirectory, not a nested mount)
-# Permissions are handled by the chown above
 
 # Note: WINEARCH is set in the Dockerfile at build time and doesn't need
 # to be detected at runtime. The architecture is fixed per container image.

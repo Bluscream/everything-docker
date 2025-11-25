@@ -1,0 +1,41 @@
+{
+  "all": {
+    "bin/html/": true,
+    "bin/everything.chm": true,
+    "bin/everything.lng": true,
+    "data/Everything.db": false,
+    "data/Everything-1.5a.db": false,
+    "config/Everything.ini": false,
+    "config/Everything-1.5a.ini": false,
+    "config/Plugins-1.5a.ini": false
+  },
+  "i386": {
+    "bin/everything-1.4_x86.exe": "bin/everything-1.4.exe",
+    "bin/everything-1.5_x86.exe": [
+      "bin/everything-1.5.exe",
+      "bin/everything.exe"
+    ],
+    "bin/es_x86.exe": "bin/es.exe",
+    "bin/voidimageviewer_x86.exe": "bin/voidimageviewer.exe",
+    "bin/plugins/etp_server32.dll": "bin/plugins/etp_server.dll",
+    "bin/plugins/everything_server32.dll": "bin/plugins/everything_server.dll",
+    "bin/plugins/http_server32.dll": "bin/plugins/http_server.dll"
+  },
+  "amd64": {
+    "bin/everything-1.4_x64.exe": "bin/everything-1.4.exe",
+    "bin/everything-1.5_x64.exe": "bin/everything-1.5.exe",
+    "bin/es_x64.exe": "bin/es.exe",
+    "bin/voidimageviewer_x64.exe": "bin/voidimageviewer.exe",
+    "bin/plugins/etp_server64.dll": "bin/plugins/etp_server.dll",
+    "bin/plugins/everything_server64.dll": "bin/plugins/everything_server.dll",
+    "bin/plugins/http_server64.dll": "bin/plugins/http_server.dll"
+  },
+  "arm32": {
+    "bin/es_arm32.exe": "bin/es.exe",
+    "bin/voidimageviewer_arm32.exe": "bin/voidimageviewer.exe"
+  },
+  "arm64": {
+    "bin/es_arm64.exe": "bin/es.exe",
+    "bin/voidimageviewer_arm64.exe": "bin/voidimageviewer.exe"
+  }
+}

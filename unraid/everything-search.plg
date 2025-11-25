@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <Plugin>
   <Name>Everything Search</Name>
   <Author>bluscream</Author>
   <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface.</Overview>
-    <Description>Everything Search is a fast file search utility that indexes files and folders by name instantly. This Docker container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Description>
+  <Description>Everything Search is a fast file search utility that indexes files and folders by name instantly. This Docker container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Description>
   <Category>Utilities</Category>
   <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
   <Registry>https://github.com/bluscream/everything-docker</Registry>
@@ -107,7 +107,7 @@
     <ContainerDir>/opt/everything</ContainerDir>
     <Description>Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)</Description>
   </Volume>
-  <PostArgs>--memory=2048m</PostArgs>
+  <PostArgs>--memory=4096m --memory-reservation=512m --memory-swap=4096m</PostArgs>
   <Config>
     <Field>
       <Name>EVERYTHING_BINARY</Name>
@@ -136,10 +136,10 @@
     <Field>
       <Name>SECURE_CONNECTION</Name>
       <Type>checkbox</Type>
-      <Default>checked</Default>
+      <Default>1</Default>
       <Description>Use secure connection to GUI</Description>
     </Field>
   </Config>
-  <ExtraParams>--restart=unless-stopped</ExtraParams>
+  <ExtraParams>--restart=on-failure:2</ExtraParams>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
-</Plugin> 
+</Plugin>

@@ -1,33 +1,36 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <Container version="2">
   <Name>everything-search</Name>
   <Repository>bluscream1/everything-wine:latest</Repository>
   <Registry>https://github.com/bluscream/everything-docker</Registry>
   <Network>bridge</Network>
-  <MyIP/>
+  <MyIP />
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
   <Support>https://github.com/bluscream/everything-docker/issues</Support>
   <Project>https://www.voidtools.com/</Project>
-  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Overview>
+  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images. Uses -noapp-data, -config, and -db command line options to separate binaries (/bin), config (/config), and database (/data).</Overview>
   <Category>Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/unraid/my-everything-search.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
-  <ExtraParams>--restart=unless-stopped --memory=2048m --memory-swap=2048m</ExtraParams>
-  <PostArgs/>
-  <CPUset/>
+  <ExtraParams>--restart=on-failure:2 --memory=4096m --memory-reservation=512m --memory-swap=4096m</ExtraParams>
+  <PostArgs />
+  <CPUset />
   <DateInstalled>1749587466</DateInstalled>
-  <DonateText/>
-  <DonateLink/>
-  <Requires/>
+  <DonateText />
+  <DonateLink />
+  <Requires />
   <Config Name="VNC Port" Target="5800" Default="5800" Mode="tcp" Description="VNC Web Interface port for accessing Everything Search GUI" Type="Port" Display="always" Required="true" Mask="false">5800</Config>
   <Config Name="Alternative VNC Port" Target="5900" Default="5900" Mode="tcp" Description="Alternative VNC port for direct VNC access" Type="Port" Display="always" Required="false" Mask="false">5900</Config>
   <Config Name="HTTP Server Port" Target="14680" Default="14680" Mode="tcp" Description="Everything HTTP Server port for web-based search interface" Type="Port" Display="always" Required="false" Mask="false">14680</Config>
   <Config Name="ETP Server Port" Target="14620" Default="14620" Mode="tcp" Description="Everything ETP Server port for Everything Transfer Protocol" Type="Port" Display="always" Required="false" Mask="false">14620</Config>
   <Config Name="Everything Server Port" Target="14630" Default="14630" Mode="tcp" Description="Everything Server port for network access" Type="Port" Display="always" Required="false" Mask="false">14630</Config>
-  <Config Name="Everything Data Directory" Target="/opt/everything" Default="/mnt/user/appdata/everything-search/data/" Mode="rw" Description="Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/data/</Config>
-  <Config Name="Container Config Directory" Target="/config" Default="/mnt/user/appdata/everything-search/.config/" Mode="rw" Description="Container configuration directory (VNC passwords, certificates, .wine/ subdirectory)" Type="Path" Display="advanced-hide" Required="true" Mask="false">/mnt/user/appdata/everything-search/.config/</Config>
+  <Config Name="Everything Home Directory" Target="/home/everything" Default="/mnt/user/appdata/everything-search/" Mode="rw" Description="Everything Search home directory (contains config and database files by default)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/</Config>
+  <Config Name="Everything Config Path" Target="EVERYTHING_CONFIG" Default="~/everything.ini" Mode="" Description="Everything Search config file path (e.g., ~/everything.ini, /settings/everything.ini). Defaults to ~/everything.ini" Type="Variable" Display="advanced" Required="true" Mask="false">~/everything.ini</Config>
+  <Config Name="Everything Database Path" Target="EVERYTHING_DATABASE" Default="~/everything.db" Mode="" Description="Everything Search database file path (e.g., ~/everything.db, /data/everything.db). Defaults to ~/everything.db" Type="Variable" Display="advanced" Required="true" Mask="false">~/everything.db</Config>
+  <Config Name="Wine Prefix Directory" Target="/home/everything/.wine" Default="/mnt/user/appdata/everything-search/.wine/" Mode="rw" Description="Wine prefix directory (Wine configuration and registry)" Type="Path" Display="advanced-hide" Required="true" Mask="false">/mnt/user/appdata/everything-search/.wine/</Config>
+  <Config Name="Container Config Directory" Target="/config" Default="/mnt/user/appdata/everything-search/.config/" Mode="rw" Description="Container configuration directory (VNC passwords, certificates)" Type="Path" Display="advanced-hide" Required="true" Mask="false">/mnt/user/appdata/everything-search/.config/</Config>
   <Config Name="Unraid User Shares" Target="/mnt/user" Default="/mnt/user" Mode="ro" Description="Unraid user shares mount for indexing (read-only)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user</Config>
   <Config Name="Everything Binary" Target="EVERYTHING_BINARY" Default="everything-1.5.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5.exe, everything-1.4.exe, es.exe, voidimageviewer.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5.exe</Config>
   <Config Name="Timezone" Target="TZ" Default="America/New_York" Mode="" Description="Timezone for the container (e.g., America/New_York, Europe/London)" Type="Variable" Display="always" Required="true" Mask="false">America/New_York</Config>
@@ -39,5 +42,5 @@
   <Config Name="Umask" Target="UMASK" Default="000" Mode="" Description="Umask for file permissions" Type="Variable" Display="advanced-hide" Required="true" Mask="false">000</Config>
   <Config Name="Display" Target="DISPLAY" Default=":0" Mode="" Description="X11 display for GUI" Type="Variable" Display="advanced-hide" Required="true" Mask="false">:0</Config>
   <Config Name="Wine Debug" Target="WINEDEBUG" Default="-fixme-all" Mode="" Description="Wine debug settings" Type="Variable" Display="advanced-hide" Required="true" Mask="false">-fixme-all</Config>
-  <TailscaleStateDir/>
+  <TailscaleStateDir />
 </Container>

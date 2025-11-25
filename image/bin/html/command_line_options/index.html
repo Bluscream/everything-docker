@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.voidtools.com/support/everything/command_line_options/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Apr 2020 00:37:42 GMT -->
+<head>
+<title>Command Line Options - voidtools</title>
+<link rel="shortcut icon" href="https://www.voidtools.com/favicon.ico?v=2">
+<meta name="viewport" content="width=920">
+<meta name="author" content="webhost2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>* {margin:0;padding:0;} body {min-width:720px;font-family:Arial,sans-serif;font-size:13px;color:#000;text-align:left;background-color:#F8F8F8;padding:0px;margin:0px;}.top {background-color:#000000;height:110px;border-bottom:1px solid #bbbbbb;text-align:center;}.topcenter {background-color:#000000; margin:0 auto; width:720px;text-align:left;}h1 {font-size:2em;font-weight:normal;margin-bottom:12px;}h2 { font-weight:normal;font-size:1.4em;margin-top:32px;margin-bottom:12px;} img {border:0;vertical-align:bottom;}a {text-decoration:none;}a:hover {text-decoration:underline;}p {margin-bottom:4px;}input {margin-top:4px;}textarea {margin-top:4px;}.sledit {padding:2px;}.slbutton {padding:2px;}pre {overflow:auto;margin-bottom:4px;}.menu {background-color:#F8F8F8;border-bottom:1px solid #bbbbbb;text-align:center;}.menucenter {background-color:#F8F8F8; margin:0 auto; width:720px;text-align:left;}.menuitem {float:left;border-left:1px solid #f8f8f8;border-right:1px solid #f8f8f8;}.curmenuitem {float:left;background-color:#ffffff;border-bottom:1px solid #ffffff;border-left:1px solid #bbbbbb;border-right:1px solid #bbbbbb;margin-bottom:-1px;position:relative;}.menuitem a {color:#000;display:block;padding:8px 8px;}.search {float:right;}.search form {color:#000; display:block; padding-left:8px; padding-right:8px;}.searchedit {background-color:#ffffff;color:#000; display:block; margin-top:5px; padding-top:2px; padding-bottom:2px; padding-left:4px; padding-right:16px;border:1px solid #bbbbbb;background-image:url(../../../searchicon.png);background-repeat:no-repeat;background-position:right center;}.curmenuitem a {color:#000;  display:block; padding:8px 8px}.endmenuitem {clear:both;}.content {background-color:#ffffff;text-align:center;}.contentcenter {background-color:#ffffff; margin:0 auto; width:720px;text-align:left;}.contentpadding {padding-top:32px;padding-bottom:32px;padding-left:8px;padding-right:8px;}.contentpadding ul { padding-left:16px; } .bot {background-color:#f8f8f8;border-top:1px solid #C0C0C0;text-align:center;}.botcenter {margin:0 auto; width:720px;background-color:#f8f8f8;text-align:center;height:48px;margin-top:16px;}.botcenter a {margin-left:16px;margin-right:16px;}.botpadding {padding:6px 8px;text-align:center;}.bot2 {background-color:#f8f8f8;height:64px;text-align:center;}.botcenter2 {margin:0 auto; width:720px;background-color:#f8f8f8;text-align:center;font-size:11px;}.botcenter2 a {}.button {font-size:15px;text-align:center;float:left;display:block;background-color:#f8f8f8;border:1px solid #bbbbbb;padding:12px;margin-bottom:12px;margin-right:12px;color:#000000;}.screenshot {float: left;margin-right:32px}.cli {min-height:16px;background:url(../../../cli.png) no-repeat;background-position:left center;padding-left:20px;}.de {min-height:16px;background:url(../../../e2.png) no-repeat;background-position:left center;padding-left:20px;}.de134 {min-height:16px;background:url(../../../e2-1.3.png) no-repeat;background-position:left center;padding-left:20px;}.di {min-height:16px;background:url(../../../h.png) no-repeat;background-position:left center;padding-left:20px;}.ds {min-height:16px;background:url(../../../c.png) no-repeat;background-position:left center;padding-left:20px;}.dc {min-height:16px;background:url(../../../cl.png) no-repeat;background-position:left center;padding-left:20px;}.viv {min-height:16px;background:url(../../../vivicon.png) no-repeat;background-position:left center;padding-left:20px;}.dltable {border-collapse:collapse;}.dltable p {margin:6px;}.dltable td {padding-right:24px;padding-top:4px;padding-bottom:4px;border-top:1px solid #C0C0C0;}.leftdot {min-height:16px;background:url(../../../dot.png) no-repeat;background-position:center center;width:16px;padding-left:16px;}code {white-space:nowrap;}.donatehistorytable {border-collapse: collapse;table-layout:fixed;}.donatehistorytable th {border-bottom:1px solid #bbbbbb;padding:8px;}.donatehistorytable td {border-bottom:1px solid #dddddd;padding:8px;}body {min-width:920px;}.wiki {background-color:#ffffff;text-align:center;}.wikicenter {background-color:#ffffff; margin:0 auto; width:920px;text-align:left;}.wikipadding {padding-top:32px;padding-bottom:32px;padding-left:12px;padding-right:12px;}.wikinav li {list-style-type:none;}.wikinav {float:left;min-height:50px;width:224px;overflow:auto;}.wikinavindent2 {margin-left:12px;white-space:nowrap;}.wikinavindent3 {margin-left:24px;white-space:nowrap;}.wikicontent {width:666px;float:right;min-height:50px;}.wikicontent ul { padding-left:16px; } .wikicontent table {border-collapse:collapse;margin-bottom:6px;}.wikicontent td, .wikicontent th {padding-right:24px;padding-top:8px;padding-bottom:8px;padding-left:8px;vertical-align:top;text-align:left;}.wikicontent td {border-bottom:1px solid #CCCCCC;border-top:1px solid #CCCCCC;}.wikicontent dl {padding-bottom:12px;}.wikicontent dt {maring-bottom:3px;}.wikicontent dd {margin-left:24px;padding-bottom:12px;}.wikicontent pre {border:1px solid #CCCCCC;padding:12px;}.wikinowrap {white-space:nowrap;}.toc { border:1px solid #CCCCCC;padding:6px; } .toc ul { list-style-type:none} .toclvl1 { white-space:nowrap;} .toclvl2 { margin-left:32px; white-space:nowrap;} .faqcontent ul {padding-left:16px; }</style>
+</head>
+<body>
+<div class="top">
+<div class="topcenter">
+<a href="https://www.voidtools.com/"><img alt="voidtools" src="../../../voidtools9.png" /></a>
+</div>
+</div>
+<div class="menu">
+<div class="menucenter">
+<div class="menuitem"><a href="https://www.voidtools.com/">Home</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/downloads">Downloads</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/faq">FAQ</a></div>
+<div class="curmenuitem"><a href="../index.html">Support</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/forum">Forums</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/donate">Donate</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/contact">Contact</a></div>
+<div class="search"><form method="get" action="https://www.duckduckgo.com/"><div><input class="searchedit" type="text" name="q" size="15" maxlength="255" value="" /><input type="hidden" name="sites" value="www.voidtools.com" /></div></form></div>
+<div class="endmenuitem"></div>
+</div>
+</div>
+<div class="wiki">
+<div class="wikicenter">
+<div class="wikipadding">
+<div class="wikinav">
+<ul>
+<li class="wikinavindent1"><p><a href="../index.html">Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../installing_everything/index.html">Installing Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../using_everything/index.html">Using Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../command_line_interface/index.html">Command Line Interface</a></p></li>
+<li class="wikinavindent2"><p><a href="index.html"><b>Command Line Options</b></a></p></li>
+<li class="wikinavindent2"><p><a href="../customizing/index.html">Customizing</a></p></li>
+<li class="wikinavindent2"><p><a href="../etp/index.html">ETP</a></p></li>
+<li class="wikinavindent2"><p><a href="../everything_service/index.html">Everything Service</a></p></li>
+<li class="wikinavindent2"><p><a href="../file_lists/index.html">File Lists</a></p></li>
+<li class="wikinavindent2"><p><a href="../folder_indexing/index.html">Folder Indexing</a></p></li>
+<li class="wikinavindent2"><p><a href="../http/index.html">HTTP</a></p></li>
+<li class="wikinavindent2"><p><a href="../indexes/index.html">Indexes</a></p></li>
+<li class="wikinavindent2"><p><a href="../ini/index.html">INI</a></p></li>
+<li class="wikinavindent2"><p><a href="../keyboard_shortcuts/index.html">Keyboard Shortcuts</a></p></li>
+<li class="wikinavindent2"><p><a href="../multiple_instances/index.html">Multiple Instances</a></p></li>
+<li class="wikinavindent2"><p><a href="../options/index.html">Options</a></p></li>
+<li class="wikinavindent2"><p><a href="../previous_versions/index.html">Previous Versions</a></p></li>
+<li class="wikinavindent2"><p><a href="../recent_changes/index.html">Recent Changes</a></p></li>
+<li class="wikinavindent2"><p><a href="../results/index.html">Results</a></p></li>
+<li class="wikinavindent2"><p><a href="../run_history/index.html">Run History</a></p></li>
+<li class="wikinavindent2"><p><a href="../sdk/index.html">SDK</a></p></li>
+<li class="wikinavindent2"><p><a href="../search_history/index.html">Search History</a></p></li>
+<li class="wikinavindent2"><p><a href="../searching/index.html">Searching</a></p></li>
+<li class="wikinavindent2"><p><a href="../supported_languages/index.html">Supported Languages</a></p></li>
+<li class="wikinavindent2"><p><a href="../translating/index.html">Translating</a></p></li>
+<li class="wikinavindent2"><p><a href="../troubleshooting/index.html">Troubleshooting</a></p></li>
+<li class="wikinavindent2"><p><a href="../uninstalling_everything/index.html">Uninstalling Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../whats_new/index.html">What's New</a></p></li>
+</ul>
+</div>
+<div class="wikicontent">
+<h1 id="command_line_options">Command Line Options</h1>
+<p>A list of all the command line options available in Everything.</p>
+<p>Most of these options are available within Everything, in the <a href="../options/index.html">Everything options</a>.</p>
+<br/>
+<h2 id="syntax">Syntax</h2>
+<pre>Everything.exe [file-list-filename] [options]</pre>
+<br/>
+<dl>
+<dt id="option"><p>[option]</p></dt>
+<dd><p>Optional option.</p>
+<br/>
+</dd>
+<dt id="lt_option_gt"><p>&lt;option&gt;</p></dt>
+<dd><p>Required option.</p>
+</dd>
+</dl>
+<br/>
+<br/>
+<h2 id="installation">Installation</h2>
+<p>These command line options return immediately and do not show an Everything search window.</p>
+<p>Some command line options require administrative privileges. Running Everything with a command line option that requires administrative privileges from a standard user account will automatically relaunch Everything with the specified command line option as administrator.</p>
+<br/>
+<dl>
+<dt id="-app-data"><p><i>-app-data</i></p></dt>
+<dt id="-noapp-data"><p><i>-noapp-data</i></p></dt>
+<dd><p>Store settings and data in %APPDATA%\Everything or in the same location as the executable.</p>
+<br/>
+</dd>
+<dt id="-choose-language"><p><i>-choose-language</i></p></dt>
+<dd><p>Show the language selection page.</p>
+<br/>
+</dd>
+<dt id="-choose-volumes"><p><i>-choose-volumes</i></p></dt>
+<dd><p>Do not automatically index volumes. Removes all NTFS volumes from the index.</p>
+<br/>
+</dd>
+<dt id="-enable-run-as-admin"><p><i>-enable-run-as-admin</i></p></dt>
+<dt id="-disable-run-as-admin"><p><i>-disable-run-as-admin</i></p></dt>
+<dd><p>Enable or disable run as administrator.</p>
+<br/>
+</dd>
+<dt id="-enable-update-notification"><p><i>-enable-update-notification</i></p></dt>
+<dt id="-disable-update-notification"><p><i>-disable-update-notification</i></p></dt>
+<dd><p>Enable or disable update notification on startup.</p>
+<br/>
+</dd>
+<dt id="-install"><p><i>-install</i> &lt;location&gt;</p></dt>
+<dd><p>Copies Everything.exe and uninstall.exe to the new location. Creates an uninstall entry in Programs and Features if uninstall.exe is present. Executes the copied Everything.exe with the install options specified in <a href="index.html#-install-options">-install-options</a>.</p>
+<br/>
+</dd>
+<dt id="-install-client-service"><p><i>-install-client-service</i></p></dt>
+<dt id="-uninstall-client-service"><p><i>-uninstall-client-service</i></p></dt>
+<dd><p>Install the "Everything" client as a service.</p>
+<br/>
+</dd>
+<dt id="-install-config"><p><i>-install-config</i> &lt;filename&gt;</p></dt>
+<dd><p>Install the specified configuration file. The specified ini file is merged with any existing configuration file before any other install options are applied.</p>
+<br/>
+</dd>
+<dt id="-install-desktop-shortcut"><p><i>-install-desktop-shortcut</i></p></dt>
+<dt id="-uninstall-desktop-shortcut"><p><i>-uninstall-desktop-shortcut</i></p></dt>
+<dd><p>Create or delete the desktop shortcut for the current user.</p>
+<br/>
+</dd>
+<dt id="-install-all-users-desktop-shortcut"><p><i>-install-all-users-desktop-shortcut</i></p></dt>
+<dt id="-uninstall-all-users-desktop-shortcut"><p><i>-uninstall-all-users-desktop-shortcut</i></p></dt>
+<dd><p>Create or delete the desktop shortcut for all users.</p>
+<br/>
+</dd>
+<dt id="-install-efu-association"><p><i>-install-efu-association</i></p></dt>
+<dt id="-uninstall-efu-association"><p><i>-uninstall-efu-association</i></p></dt>
+<dd><p>Create or remove the EFU file association with Everything.</p>
+<br/>
+</dd>
+<dt id="-install-folder-context-menu"><p><i>-install-folder-context-menu</i></p></dt>
+<dt id="-uninstall-folder-context-menu"><p><i>-uninstall-folder-context-menu</i></p></dt>
+<dd><p>Install or uninstall folder context menus.</p>
+<br/>
+</dd>
+<dt id="-install-options"><p><i>-install-options</i> &lt;command line options&gt;</p></dt>
+<dd><p>Command line options to pass to the newly installed Everything.exe. Combine with <a href="index.html#-install">-install</a>.</p>
+<br/>
+</dd>
+<dt id="-install-quick-launch-shortcut"><p><i>-install-quick-launch-shortcut</i></p></dt>
+<dt id="-uninstall-quick-launch-shortcut"><p><i>-uninstall-quick-launch-shortcut</i></p></dt>
+<dd><p>Create or delete the Search Everything quick launch shortcut.</p>
+<br/>
+</dd>
+<dt id="-install-run-on-system-startup"><p><i>-install-run-on-system-startup</i></p></dt>
+<dt id="-uninstall-run-on-system-startup"><p><i>-uninstall-run-on-system-startup</i></p></dt>
+<dd><p>Add or remove Everything from the system startup.</p>
+<br/>
+</dd>
+<dt id="-install-service"><p><i>-install-service</i></p></dt>
+<dt id="-uninstall-service"><p><i>-uninstall-service</i></p></dt>
+<dd><p>Install or uninstall the "Everything" service. The service is started automatically. Combine with <a href="index.html#-install-service-port">-install-service-port</a> to set the service port. Combine with <a href="index.html#-install-service-pipe-name">-install-service-pipe-name</a> to set the service pipe name. Combine with <a href="index.html#-install-service-security-descriptor">-install-service-security-descriptor</a> to set the service security descriptor.</p>
+<br/>
+</dd>
+<dt id="-install-service-port"><p><i>-install-service-port</i> &lt;port&gt;</p></dt>
+<dd><p>Install the Everything service on the specified port.</p>
+<br/>
+</dd>
+<dt id="-install-service-pipe-name"><p><i>-install-service-pipe-name</i> &lt;name&gt;</p></dt>
+<dd><p>Install the Everything service with the specified pipe name.</p>
+<br/>
+</dd>
+<dt id="-install-service-security-descriptor"><p><i>-install-service-security-descriptor</i> &lt;sd&gt;</p></dt>
+<dd><p>Install the Everything service with the specified security descriptor.</p>
+<br/>
+</dd>
+<dt id="-install-start-menu-shortcuts"><p><i>-install-start-menu-shortcuts</i></p></dt>
+<dt id="-uninstall-start-menu-shortcuts"><p><i>-uninstall-start-menu-shortcuts</i></p></dt>
+<dd><p>Create or delete the Everything shortcuts in the Start menu for the current user.</p>
+<br/>
+</dd>
+<dt id="-install-all-users-start-menu-shortcuts"><p><i>-install-all-users-start-menu-shortcuts</i></p></dt>
+<dt id="-uninstall-all-users-start-menu-shortcuts"><p><i>-uninstall-all-users-start-menu-shortcuts</i></p></dt>
+<dd><p>Create or delete the Everything shortcuts in the Start menu for all users.</p>
+<br/>
+</dd>
+<dt id="-install-url-protocol"><p><i>-install-url-protocol</i></p></dt>
+<dt id="-uninstall-url-protocol"><p><i>-uninstall-url-protocol</i></p></dt>
+<dd><p>Install or uninstall the URL Protocol.</p>
+<br/>
+</dd>
+<dt id="-language"><p><i>-language</i> &lt;langID&gt;</p></dt>
+<dd><p>Set the language to the specified language ID in decimal. 1033 = English (US). 0 = System default. See <a href="../language_ids/index.html">Language IDs</a> for a list of langIDs.</p>
+<br/>
+</dd>
+<dt id="-uninstall"><p><i>-uninstall</i> [path]</p></dt>
+<dd><p>Uninstall Everything from the specified path. If no path is specified Everything is uninstalled from the executables location. This removes Everything from system startup, removes the service, folder context menu, start menu shortcuts, desktop shortcut, quick launch shortcut, URL protocol, efu file associations and deletes any files created by Everything.</p>
+<br/>
+</dd>
+<dt id="-uninstall-user"><p><i>-uninstall-user</i></p></dt>
+<dd><p>Uninstall Everything user files.</p>
+<br/>
+</dd>
+<dt id="-create-usn-journal"><p><i>-create-usn-journal</i> &lt;volume&gt; &lt;max-size-bytes&gt; &lt;allocation-delta-bytes&gt;</p></dt>
+<dd><p>Create a USN Journal on the specifed volume with the specified maximum size and allocation delta in bytes.</p>
+<br/>
+</dd>
+<dt id="-delete-usn-journal"><p><i>-delete-usn-journal</i> &lt;volume&gt;</p></dt>
+<dd><p>Delete the USN Journal on the specifed volume.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="file_lists">File Lists</h2>
+<p>Command line options to manipulate Everything file lists EFU files.</p>
+<br/>
+<dl>
+<dt id="file-list-filename"><p>[file-list-filename]</p></dt>
+<dd><p>Open the specified file list.</p>
+<br/>
+</dd>
+<dt id="-create-file-list"><p><i>-create-file-list</i> &lt;filename&gt; &lt;path&gt;</p></dt>
+<dd><p>Create a file list of a path. When this command completes Everything.exe will exit, no search window is shown.</p>
+<br/>
+</dd>
+<dt id="-create-file-list-exclude-files"><p><i>-create-file-list-exclude-files</i> &lt;filters&gt;</p></dt>
+<dd><p>Set a semicolon delimited wildcard filter of files to exclude with -create-file-list.</p>
+<p>Prefix a filter with regex: to use Regex.</p>
+<br/>
+</dd>
+<dt id="-create-file-list-exclude-folders"><p><i>-create-file-list-exclude-folders</i> &lt;filters&gt;</p></dt>
+<dd><p>Set a semicolon delimited wildcard filter of folders to exclude with -create-file-list.</p>
+<p>Prefix a filter with regex: to use Regex.</p>
+<br/>
+</dd>
+<dt id="-create-file-list-include-only-files"><p><i>-create-file-list-include-only-files</i> &lt;filters&gt;</p></dt>
+<dd><p>Set a semicolon delimited wildcard filter of files to include only with -create-file-list.</p>
+<p>Prefix a filter with regex: to use Regex.</p>
+<br/>
+</dd>
+<dt id="-edit"><p><i>-edit</i> &lt;filename&gt;</p></dt>
+<dd><p>Open the specified file list with the file list editor.</p>
+<br/>
+</dd>
+<dt id="-f"><p><i>-f</i> &lt;filename&gt;</p></dt>
+<dt id="-filelist"><p><i>-filelist</i> &lt;filename&gt;</p></dt>
+<dd><p>Open a file list.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="etp">ETP</h2>
+<p>Command line options to connect to an ETP server.</p>
+<br/>
+<dl>
+<dt id="-admin-server-share-links"><p><i>-admin-server-share-links</i></p></dt>
+<dt id="-server-share-links"><p><i>-server-share-links</i></p></dt>
+<dt id="-ftp-links"><p><i>-ftp-links</i></p></dt>
+<dt id="-drive-links"><p><i>-drive-links</i></p></dt>
+<dd><p>Link type for ETP connections. Use with <a href="index.html#-connect">-connect</a>.</p>
+<br/>
+</dd>
+<dt id="-connect"><p><i>-connect</i> &lt;[username[:password]@]host[:port]&gt;</p></dt>
+<dd><p>Connect to an ETP server.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="searching">Searching</h2>
+<p>Command line options to manipulate the search.</p>
+<br/>
+<dl>
+<dt id="-bookmark"><p><i>-bookmark</i> &lt;name&gt;</p></dt>
+<dd><p>Open a bookmark.</p>
+<br/>
+</dd>
+<dt id="-case"><p><i>-case</i></p></dt>
+<dt id="-nocase"><p><i>-nocase</i></p></dt>
+<dd><p>Enable or disable case matching.</p>
+<br/>
+</dd>
+<dt id="-diacritics"><p><i>-diacritics</i></p></dt>
+<dt id="-nodiacritics"><p><i>-nodiacritics</i></p></dt>
+<dd><p>Enable or disable diacritics matching.</p>
+<br/>
+</dd>
+<dt id="-filename"><p><i>-filename</i> &lt;filename&gt;</p></dt>
+<dd><p>Search for a file or folder by filename.</p>
+<br/>
+</dd>
+<dt id="-filter"><p><i>-filter</i> &lt;name&gt;</p></dt>
+<dd><p>Select a search filter.</p>
+<br/>
+</dd>
+<dt id="-l"><p><i>-l</i></p></dt>
+<dt id="-local"><p><i>-local</i></p></dt>
+<dd><p>Load the local database.</p>
+<br/>
+</dd>
+<dt id="-matchpath"><p><i>-matchpath</i></p></dt>
+<dt id="-nomatchpath"><p><i>-nomatchpath</i></p></dt>
+<dd><p>Enable or disable full path matching.</p>
+<br/>
+</dd>
+<dt id="-p"><p><i>-p</i> &lt;path&gt;</p></dt>
+<dt id="-path"><p><i>-path</i> &lt;path&gt;</p></dt>
+<dd><p>Search for a path.</p>
+<br/>
+</dd>
+<dt id="-parent"><p><i>-parent</i> &lt;path&gt;</p></dt>
+<dd><p>Search for files and folders in path. Does not search subfolders.</p>
+<br/>
+</dd>
+<dt id="-parentpath"><p><i>-parentpath</i> &lt;path&gt;</p></dt>
+<dd><p>Search for the parent of a path.</p>
+<br/>
+</dd>
+<dt id="-regex"><p><i>-regex</i></p></dt>
+<dt id="-noregex"><p><i>-noregex</i></p></dt>
+<dd><p>Enable or disable Regex.</p>
+<br/>
+</dd>
+<dt id="-s"><p><i>-s</i> &lt;text&gt;</p></dt>
+<dt id="-search"><p><i>-search</i> &lt;text&gt;</p></dt>
+<dd><p>Set the search.</p>
+<br/>
+</dd>
+<dt id="-url"><p><i>-url</i> &lt;[es:]search&gt;</p></dt>
+<dd><p>Set the search from an ES: URL.</p>
+<br/>
+</dd>
+<dt id="-wholeword"><p><i>-wholeword</i></p></dt>
+<dt id="-nowholeword"><p><i>-nowholeword</i></p></dt>
+<dt id="-ww"><p><i>-ww</i></p></dt>
+<dt id="-noww"><p><i>-noww</i></p></dt>
+<dd><p>Enable or disable match whole word.</p>
+<br/>
+</dd>
+<dt id="-home"><p><i>-home</i></p></dt>
+<dd><p>Open the home search.</p>
+<br/>
+</dd>
+<dt id="-name-part"><p><i>-name-part</i> &lt;filename&gt;</p></dt>
+<dd><p>Search for the name part of a filename.</p>
+<br/>
+</dd>
+<dt id="-search-file-list"><p><i>-search-file-list</i> &lt;filename&gt;</p></dt>
+<dd><p>Search the specified text file for a list of file names.</p>
+<p>Each filename must appear on a single line.</p>
+<p>Include a backslash to match the full path and filename.</p>
+<br/>
+</dd>
+</dl>
+<br/>
+<h2 id="results">Results</h2>
+<p>Command line options to manipulate the results.</p>
+<br/>
+<dl>
+<dt id="-sort"><p><i>-sort</i> &lt;name&gt;</p></dt>
+<dd><p>Set the sort to the specified name.</p>
+<br/>
+</dd>
+<dt id="-sort-ascending"><p><i>-sort-ascending</i></p></dt>
+<dd><p>Sort ascending.</p>
+<br/>
+</dd>
+<dt id="-sort-descending"><p><i>-sort-descending</i></p></dt>
+<dd><p>Sort descending.</p>
+<br/>
+</dd>
+<dt id="-details"><p><i>-details</i></p></dt>
+<dd><p>View results in the detail view.</p>
+<br/>
+</dd>
+<dt id="-thumbnail-size"><p><i>-thumbnail-size</i> &lt;size&gt;</p></dt>
+<dd><p>Specify the size of thumbnails in pixels.</p>
+<br/>
+</dd>
+<dt id="-thumbnails"><p><i>-thumbnails</i></p></dt>
+<dd><p>Show results in thumbnail view.</p>
+<br/>
+</dd>
+<dt id="-focus-bottom-result"><p><i>-focus-bottom-result</i></p></dt>
+<dd><p>Focus the bottom result.</p>
+<br/>
+</dd>
+<dt id="-focus-last-run-result"><p><i>-focus-last-run-result</i></p></dt>
+<dd><p>Focus the last run result.</p>
+<br/>
+</dd>
+<dt id="-focus-most-run-result"><p><i>-focus-most-run-result</i></p></dt>
+<dd><p>Focus the most run result.</p>
+<br/>
+</dd>
+<dt id="-focus-results"><p><i>-focus-results</i></p></dt>
+<dd><p>Focus the result list.</p>
+<br/>
+</dd>
+<dt id="-focus-top-result"><p><i>-focus-top-result</i></p></dt>
+<dd><p>Focus the top result.</p>
+<br/>
+</dd>
+<dt id="-select"><p><i>-select</i> &lt;filename&gt;</p></dt>
+<dd><p>Focus and select the specified result.</p>
+<br/>
+</dd>
+</dl>
+<br/>
+<h2 id="general">General</h2>
+<p>General command line options.</p>
+<br/>
+<dl>
+<dt id="-"><p><i>-?</i></p></dt>
+<dt id="-h"><p><i>-h</i></p></dt>
+<dt id="-help"><p><i>-help</i></p></dt>
+<dd><p>Show this help.</p>
+<br/>
+</dd>
+<dt id="-admin"><p><i>-admin</i></p></dt>
+<dd><p>Run Everything as an administrator.</p>
+<br/>
+</dd>
+<dt id="-client-svc"><p><i>-client-svc</i></p></dt>
+<dd><p>Everything client service entry point.</p>
+<br/>
+</dd>
+<dt id="-config"><p><i>-config</i> &lt;filename&gt;</p></dt>
+<dd><p>The filename of the ini file.</p>
+<br/>
+</dd>
+<dt id="-console"><p><i>-console</i></p></dt>
+<dt id="-debug"><p><i>-debug</i></p></dt>
+<dd><p>Show the debugging console.</p>
+<br/>
+</dd>
+<dt id="-debug-log"><p><i>-debug-log</i></p></dt>
+<dd><p>Enables debug mode and <a href="https://www.voidtools.com/forum/viewtopic.php?t=5790">logs debugging information</a> to disk.</p>
+<br/>
+</dd>
+<dt id="-exit"><p><i>-exit</i></p></dt>
+<dt id="-quit"><p><i>-quit</i></p></dt>
+<dd><p>Exit an existing "Everything" instance.</p>
+<br/>
+</dd>
+<dt id="-instance"><p><i>-instance</i> &lt;name&gt;</p></dt>
+<dd><p>The name of the Everything <a href="../multiple_instances/index.html">instance</a>.</p>
+<br/>
+</dd>
+<dt id="-is-run-as"><p><i>-is-run-as</i></p></dt>
+<dd><p>Everything was executed with "runas" and should not attempt to runas again.</p>
+<br/>
+</dd>
+<dt id="-start-client-service"><p><i>-start-client-service</i></p></dt>
+<dt id="-stop-client-service"><p><i>-stop-client-service</i></p></dt>
+<dd><p>Start or stop the Everything client service.</p>
+<br/>
+</dd>
+<dt id="-start-service"><p><i>-start-service</i></p></dt>
+<dt id="-stop-service"><p><i>-stop-service</i></p></dt>
+<dd><p>Start or stop the Everything service.</p>
+<br/>
+</dd>
+<dt id="-startup"><p><i>-startup</i></p></dt>
+<dd><p>Run Everything in the background.</p>
+<br/>
+</dd>
+<dt id="-svc"><p><i>-svc</i></p></dt>
+<dd><p>Service entry point. Optionally combine with -svc-port.</p>
+<br/>
+</dd>
+<dt id="-svc-port"><p><i>-svc-port</i> &lt;port&gt;</p></dt>
+<dd><p>Run the Everything service on the specified port.</p>
+<br/>
+</dd>
+<dt id="-svc-pipe-name"><p><i>-svc-pipe-name</i> &lt;name&gt;</p></dt>
+<dd><p>Host the pipe server with the specified name.</p>
+<br/>
+</dd>
+<dt id="-svc-security-descriptor"><p><i>-svc-security-descriptor</i> &lt;sd&gt;</p></dt>
+<dd><p>Host the pipe server with the security descriptor.</p>
+<br/>
+</dd>
+<dt id="-service-port"><p><i>-service-port</i> &lt;port&gt;</p></dt>
+<dd><p>Connect to the Everything service on the specified port.</p>
+<br/>
+</dd>
+<dt id="-service-pipe-name"><p><i>-service-pipe-name</i> &lt;name&gt;</p></dt>
+<dd><p>Connect to the Everything service using the specified pipe name.</p>
+<br/>
+</dd>
+<dt id="-verbose"><p><i>-verbose</i></p></dt>
+<dt id="-noverbose"><p><i>-noverbose</i></p></dt>
+<dd><p>Display all or basic debug messages. combine with <a href="index.html#-debug">-debug</a>.</p>
+<br/>
+</dd>
+<dt id="-first-instance"><p><i>-first-instance</i></p></dt>
+<dd><p>Only run Everything if this is the first instance of Everything.</p>
+<p>If Everything is already running this call will be ignored.</p>
+<br/>
+</dd>
+<dt id="-no-first-instance"><p><i>-no-first-instance</i></p></dt>
+<dd><p>Only run Everything if Everything is already running.</p>
+<p>If Everything is not running this call will be ignored.</p>
+<br/>
+<br/>
+</dd>
+</dl>
+<br/>
+<h2 id="database">Database</h2>
+<p>Command line options to manipulate the Everything database.</p>
+<br/>
+<dl>
+<dt id="-db"><p><i>-db</i> &lt;filename&gt;</p></dt>
+<dd><p>The filename of the database. Combine with -read-only.</p>
+<br/>
+</dd>
+<dt id="-load-delay"><p><i>-load-delay</i> &lt;milliseconds&gt;</p></dt>
+<dd><p>The delay in milliseconds before loading the database.</p>
+<p>The database is loaded if required before this delay.</p>
+<br/>
+</dd>
+<dt id="-nodb"><p><i>-nodb</i></p></dt>
+<dd><p>Do not save to or load from the "Everything" database file.</p>
+<br/>
+</dd>
+<dt id="-read-only"><p><i>-read-only</i></p></dt>
+<dd><p>Loads the database in read-only mode.</p>
+<br/>
+</dd>
+<dt id="-reindex"><p><i>-reindex</i></p></dt>
+<dd><p>Force database rebuild.</p>
+<br/>
+</dd>
+<dt id="-update"><p><i>-update</i></p></dt>
+<dd><p>Save the database to disk.</p>
+<br/>
+</dd>
+<dt id="-monitor-pause"><p><i>-monitor-pause</i></p></dt>
+<dd><p>Pause NTFS, ReFS and folder index monitors.</p>
+<br/>
+</dd>
+<dt id="-monitor-resume"><p><i>-monitor-resume</i></p></dt>
+<dd><p>Resume NTFS, ReFS and folder index monitors.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="window">Window</h2>
+<p>Command line options to manipulate the search window and results.</p>
+<br/>
+<dl>
+<dt id="-fullscreen"><p><i>-fullscreen</i></p></dt>
+<dt id="-nofullscreen"><p><i>-nofullscreen</i></p></dt>
+<dd><p>Show the search window fullscreen or in a window.</p>
+<br/>
+</dd>
+<dt id="-maximized"><p><i>-maximized</i></p></dt>
+<dt id="-nomaximized"><p><i>-nomaximized</i></p></dt>
+<dd><p>Maximize or restore the search window.</p>
+<br/>
+</dd>
+<dt id="-minimized"><p><i>-minimized</i></p></dt>
+<dt id="-nominimized"><p><i>-nominimized</i></p></dt>
+<dd><p>Minimize or restore the search window.</p>
+<br/>
+</dd>
+<dt id="-newwindow"><p><i>-newwindow</i></p></dt>
+<dt id="-nonewwindow"><p><i>-nonewwindow</i></p></dt>
+<dd><p>Create a new search window or show an existing window.</p>
+<br/>
+</dd>
+<dt id="-ontop"><p><i>-ontop</i></p></dt>
+<dt id="-noontop"><p><i>-noontop</i></p></dt>
+<dd><p>Enable or disable always ontop.</p>
+<br/>
+</dd>
+<dt id="-close"><p><i>-close</i></p></dt>
+<dd><p>Close the current search window. </p>
+<br/>
+</dd>
+<dt id="-toggle-window"><p><i>-toggle-window</i></p></dt>
+<dd><p>Shows or hides the current search window.</p>
+<br/>
+<br/>
+</dd>
+</dl>
+<br/>
+<h2 id="multi_file_renaming">Multi File Renaming</h2>
+<p>Shows the multi file renamer dialog and does not start Everything.</p>
+<br/>
+<dl>
+<dt id="-copyto"><p><i>-copyto</i> [filename1] [filename2] [filename3] [...]</p></dt>
+<dd><p>Show the Everything multi file renamer for a copy to operation.</p>
+<br/>
+</dd>
+<dt id="-moveto"><p><i>-moveto</i> [filename1] [filename2] [filename3] [...]</p></dt>
+<dd><p>Show the Everything multi file renamer for a move to operation.</p>
+<br/>
+</dd>
+<dt id="-rename"><p><i>-rename</i> [filename1] [filename2] [filename3] [...]</p></dt>
+<dd><p>Show the Everything multi file renamer for a rename operation.</p>
+<br/>
+</dd>
+</dl>
+<br/>
+<h2 id="notes">Notes</h2>
+<p>Dashes (-) inside switches can be omitted, for example, instead of using -no-new-window, use: -nonewwindow</p>
+<br/>
+<p>Use double quotes to escape spaces and switches.</p>
+<br/>
+<p>Use ^ to escape \, &amp;, |, &gt;, &lt; and ^.</p>
+<br/>
+<p>Use """ to escape a literal "</p>
+<br/>
+<h2 id="examples">Examples</h2>
+<p>Search for ABC or 123:</p>
+<pre>Everything.exe -s "ABC|123"</pre>
+<br/>
+<p>Connect to an ETP server:</p>
+<pre>Everything.exe -connect "ComputerName" -drive-links</pre>
+<br/>
+<p>Create a filelist mp3 and flac files in D:\Music</p>
+<pre>Everything.exe -create-file-list "music.efu" "D:\Music" -create-file-list-include-only-files "*.mp3;*.flac"</pre>
+<br/>
+<h2 id="see_also">See also</h2>
+<ul>
+<li><p><a href="../multiple_instances/index.html">Multiple Instances</a></p></li>
+</ul>
+<br/>
+</div>
+<div style="clear:both">
+</div>
+</div>
+</div>
+</div>
+<div class="bot">
+<div class="botcenter">
+<div class="botpadding">
+<a href="https://www.voidtools.com/about">About voidtools</a>
+<a href="https://www.voidtools.com/language">Language</a>
+</div>
+</div>
+</div>
+<div class="bot2">
+<div class="botcenter2">
+&copy; 2020 - <a href="https://www.voidtools.com/privacy">Privacy</a>
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.voidtools.com/support/everything/command_line_options/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Apr 2020 00:37:42 GMT -->
+</html>

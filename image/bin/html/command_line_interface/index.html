@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.voidtools.com/support/everything/command_line_interface/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Apr 2020 00:37:41 GMT -->
+<head>
+<title>Command Line Interface - voidtools</title>
+<link rel="shortcut icon" href="https://www.voidtools.com/favicon.ico?v=2">
+<meta name="viewport" content="width=920">
+<meta name="author" content="webhost2">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>* {margin:0;padding:0;} body {min-width:720px;font-family:Arial,sans-serif;font-size:13px;color:#000;text-align:left;background-color:#F8F8F8;padding:0px;margin:0px;}.top {background-color:#000000;height:110px;border-bottom:1px solid #bbbbbb;text-align:center;}.topcenter {background-color:#000000; margin:0 auto; width:720px;text-align:left;}h1 {font-size:2em;font-weight:normal;margin-bottom:12px;}h2 { font-weight:normal;font-size:1.4em;margin-top:32px;margin-bottom:12px;} img {border:0;vertical-align:bottom;}a {text-decoration:none;}a:hover {text-decoration:underline;}p {margin-bottom:4px;}input {margin-top:4px;}textarea {margin-top:4px;}.sledit {padding:2px;}.slbutton {padding:2px;}pre {overflow:auto;margin-bottom:4px;}.menu {background-color:#F8F8F8;border-bottom:1px solid #bbbbbb;text-align:center;}.menucenter {background-color:#F8F8F8; margin:0 auto; width:720px;text-align:left;}.menuitem {float:left;border-left:1px solid #f8f8f8;border-right:1px solid #f8f8f8;}.curmenuitem {float:left;background-color:#ffffff;border-bottom:1px solid #ffffff;border-left:1px solid #bbbbbb;border-right:1px solid #bbbbbb;margin-bottom:-1px;position:relative;}.menuitem a {color:#000;display:block;padding:8px 8px;}.search {float:right;}.search form {color:#000; display:block; padding-left:8px; padding-right:8px;}.searchedit {background-color:#ffffff;color:#000; display:block; margin-top:5px; padding-top:2px; padding-bottom:2px; padding-left:4px; padding-right:16px;border:1px solid #bbbbbb;background-image:url(../../../searchicon.png);background-repeat:no-repeat;background-position:right center;}.curmenuitem a {color:#000;  display:block; padding:8px 8px}.endmenuitem {clear:both;}.content {background-color:#ffffff;text-align:center;}.contentcenter {background-color:#ffffff; margin:0 auto; width:720px;text-align:left;}.contentpadding {padding-top:32px;padding-bottom:32px;padding-left:8px;padding-right:8px;}.contentpadding ul { padding-left:16px; } .bot {background-color:#f8f8f8;border-top:1px solid #C0C0C0;text-align:center;}.botcenter {margin:0 auto; width:720px;background-color:#f8f8f8;text-align:center;height:48px;margin-top:16px;}.botcenter a {margin-left:16px;margin-right:16px;}.botpadding {padding:6px 8px;text-align:center;}.bot2 {background-color:#f8f8f8;height:64px;text-align:center;}.botcenter2 {margin:0 auto; width:720px;background-color:#f8f8f8;text-align:center;font-size:11px;}.botcenter2 a {}.button {font-size:15px;text-align:center;float:left;display:block;background-color:#f8f8f8;border:1px solid #bbbbbb;padding:12px;margin-bottom:12px;margin-right:12px;color:#000000;}.screenshot {float: left;margin-right:32px}.cli {min-height:16px;background:url(../../../cli.png) no-repeat;background-position:left center;padding-left:20px;}.de {min-height:16px;background:url(../../../e2.png) no-repeat;background-position:left center;padding-left:20px;}.de134 {min-height:16px;background:url(../../../e2-1.3.png) no-repeat;background-position:left center;padding-left:20px;}.di {min-height:16px;background:url(../../../h.png) no-repeat;background-position:left center;padding-left:20px;}.ds {min-height:16px;background:url(../../../c.png) no-repeat;background-position:left center;padding-left:20px;}.dc {min-height:16px;background:url(../../../cl.png) no-repeat;background-position:left center;padding-left:20px;}.viv {min-height:16px;background:url(../../../vivicon.png) no-repeat;background-position:left center;padding-left:20px;}.dltable {border-collapse:collapse;}.dltable p {margin:6px;}.dltable td {padding-right:24px;padding-top:4px;padding-bottom:4px;border-top:1px solid #C0C0C0;}.leftdot {min-height:16px;background:url(../../../dot.png) no-repeat;background-position:center center;width:16px;padding-left:16px;}code {white-space:nowrap;}.donatehistorytable {border-collapse: collapse;table-layout:fixed;}.donatehistorytable th {border-bottom:1px solid #bbbbbb;padding:8px;}.donatehistorytable td {border-bottom:1px solid #dddddd;padding:8px;}body {min-width:920px;}.wiki {background-color:#ffffff;text-align:center;}.wikicenter {background-color:#ffffff; margin:0 auto; width:920px;text-align:left;}.wikipadding {padding-top:32px;padding-bottom:32px;padding-left:12px;padding-right:12px;}.wikinav li {list-style-type:none;}.wikinav {float:left;min-height:50px;width:224px;overflow:auto;}.wikinavindent2 {margin-left:12px;white-space:nowrap;}.wikinavindent3 {margin-left:24px;white-space:nowrap;}.wikicontent {width:666px;float:right;min-height:50px;}.wikicontent ul { padding-left:16px; } .wikicontent table {border-collapse:collapse;margin-bottom:6px;}.wikicontent td, .wikicontent th {padding-right:24px;padding-top:8px;padding-bottom:8px;padding-left:8px;vertical-align:top;text-align:left;}.wikicontent td {border-bottom:1px solid #CCCCCC;border-top:1px solid #CCCCCC;}.wikicontent dl {padding-bottom:12px;}.wikicontent dt {maring-bottom:3px;}.wikicontent dd {margin-left:24px;padding-bottom:12px;}.wikicontent pre {border:1px solid #CCCCCC;padding:12px;}.wikinowrap {white-space:nowrap;}.toc { border:1px solid #CCCCCC;padding:6px; } .toc ul { list-style-type:none} .toclvl1 { white-space:nowrap;} .toclvl2 { margin-left:32px; white-space:nowrap;} .faqcontent ul {padding-left:16px; }</style>
+</head>
+<body>
+<div class="top">
+<div class="topcenter">
+<a href="https://www.voidtools.com/"><img alt="voidtools" src="../../../voidtools9.png" /></a>
+</div>
+</div>
+<div class="menu">
+<div class="menucenter">
+<div class="menuitem"><a href="https://www.voidtools.com/">Home</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/downloads">Downloads</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/faq">FAQ</a></div>
+<div class="curmenuitem"><a href="../index.html">Support</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/forum">Forums</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/donate">Donate</a></div>
+<div class="menuitem"><a href="https://www.voidtools.com/contact">Contact</a></div>
+<div class="search"><form method="get" action="https://www.duckduckgo.com/"><div><input class="searchedit" type="text" name="q" size="15" maxlength="255" value="" /><input type="hidden" name="sites" value="www.voidtools.com" /></div></form></div>
+<div class="endmenuitem"></div>
+</div>
+</div>
+<div class="wiki">
+<div class="wikicenter">
+<div class="wikipadding">
+<div class="wikinav">
+<ul>
+<li class="wikinavindent1"><p><a href="../index.html">Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../installing_everything/index.html">Installing Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../using_everything/index.html">Using Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="index.html"><b>Command Line Interface</b></a></p></li>
+<li class="wikinavindent2"><p><a href="../command_line_options/index.html">Command Line Options</a></p></li>
+<li class="wikinavindent2"><p><a href="../customizing/index.html">Customizing</a></p></li>
+<li class="wikinavindent2"><p><a href="../etp/index.html">ETP</a></p></li>
+<li class="wikinavindent2"><p><a href="../everything_service/index.html">Everything Service</a></p></li>
+<li class="wikinavindent2"><p><a href="../file_lists/index.html">File Lists</a></p></li>
+<li class="wikinavindent2"><p><a href="../folder_indexing/index.html">Folder Indexing</a></p></li>
+<li class="wikinavindent2"><p><a href="../http/index.html">HTTP</a></p></li>
+<li class="wikinavindent2"><p><a href="../indexes/index.html">Indexes</a></p></li>
+<li class="wikinavindent2"><p><a href="../ini/index.html">INI</a></p></li>
+<li class="wikinavindent2"><p><a href="../keyboard_shortcuts/index.html">Keyboard Shortcuts</a></p></li>
+<li class="wikinavindent2"><p><a href="../multiple_instances/index.html">Multiple Instances</a></p></li>
+<li class="wikinavindent2"><p><a href="../options/index.html">Options</a></p></li>
+<li class="wikinavindent2"><p><a href="../previous_versions/index.html">Previous Versions</a></p></li>
+<li class="wikinavindent2"><p><a href="../recent_changes/index.html">Recent Changes</a></p></li>
+<li class="wikinavindent2"><p><a href="../results/index.html">Results</a></p></li>
+<li class="wikinavindent2"><p><a href="../run_history/index.html">Run History</a></p></li>
+<li class="wikinavindent2"><p><a href="../sdk/index.html">SDK</a></p></li>
+<li class="wikinavindent2"><p><a href="../search_history/index.html">Search History</a></p></li>
+<li class="wikinavindent2"><p><a href="../searching/index.html">Searching</a></p></li>
+<li class="wikinavindent2"><p><a href="../supported_languages/index.html">Supported Languages</a></p></li>
+<li class="wikinavindent2"><p><a href="../translating/index.html">Translating</a></p></li>
+<li class="wikinavindent2"><p><a href="../troubleshooting/index.html">Troubleshooting</a></p></li>
+<li class="wikinavindent2"><p><a href="../uninstalling_everything/index.html">Uninstalling Everything</a></p></li>
+<li class="wikinavindent2"><p><a href="../whats_new/index.html">What's New</a></p></li>
+</ul>
+</div>
+<div class="wikicontent">
+<h1 id="command_line_interface">Command Line Interface</h1>
+<p>ES is a command line interface to search Everything from a command prompt.</p>
+<br/>
+<p><img src="../es-no-shadow.png" alt="Everything ES command line interface" /></p>
+<br/>
+<h2 id="download">Download</h2>
+<p>ES can be downloaded from the <a href="https://www.voidtools.com/downloads#cli">Downloads page</a>.</p>
+<br/>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><p>Everything must be installed and running.</p></li>
+</ul>
+<br/>
+<h2 id="usage">Usage</h2>
+<pre>es.exe [options] [search text]</pre>
+<br/>
+<dl>
+<dt id="option"><p>[option]</p></dt>
+<dd><p>Optional option.</p>
+<br/>
+</dd>
+<dt id="lt_option_gt"><p>&lt;option&gt;</p></dt>
+<dd><p>Required option.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="search_syntax">Search syntax</h2>
+<br/>
+<p>ES uses the <a href="../searching/index.html">Everything search syntax</a>.</p>
+<br/>
+<h2 id="general_command_line_options">General Command Line Options</h2>
+<br/>
+<p>These options will work with any version of Everything.</p>
+<br/>
+<dl>
+<dt id="-r"><p><i>-r</i> &lt;search&gt;</p></dt>
+<dt id="-regex"><p><i>-regex</i> &lt;search&gt;</p></dt>
+<dd><p>Search using regular expressions.</p>
+<p>Escape spaces with double quotes.</p>
+<br/>
+</dd>
+<dt id="-i"><p><i>-i</i></p></dt>
+<dt id="-case"><p><i>-case</i></p></dt>
+<dd><p>Match case.</p>
+<br/>
+</dd>
+<dt id="-w"><p><i>-w</i></p></dt>
+<dt id="-ww"><p><i>-ww</i></p></dt>
+<dt id="-whole-word"><p><i>-whole-word</i></p></dt>
+<dt id="-whole-words"><p><i>-whole-words</i></p></dt>
+<dd><p>Match whole words.</p>
+<br/>
+</dd>
+<dt id="-p"><p><i>-p</i></p></dt>
+<dt id="-match-path"><p><i>-match-path</i></p></dt>
+<dd><p>Match full path and file name.</p>
+<br/>
+</dd>
+<dt id="-h"><p><i>-h</i></p></dt>
+<dt id="-help"><p><i>-help</i></p></dt>
+<dd><p>Display this help.</p>
+<br/>
+</dd>
+<dt id="-o"><p><i>-o</i> &lt;offset&gt;</p></dt>
+<dt id="-offset"><p><i>-offset</i> &lt;offset&gt;</p></dt>
+<dd><p>Show results starting from the zero based offset.</p>
+<br/>
+</dd>
+<dt id="-n"><p><i>-n</i> &lt;num&gt;</p></dt>
+<dt id="-max-results"><p><i>-max-results</i> &lt;num&gt;</p></dt>
+<dd><p>Limit the number of results shown to &lt;num&gt;.</p>
+<br/>
+</dd>
+<dt id="-s"><p><i>-s</i></p></dt>
+<dd><p>Sort by full path.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="everything_1_4_command_line_options">Everything 1.4 Command Line Options</h2>
+<br/>
+<p>The following switches require Everything 1.4 or later.</p>
+<br/>
+<dl>
+<dt id="-a"><p><i>-a</i></p></dt>
+<dt id="-diacritics"><p><i>-diacritics</i></p></dt>
+<dd><p>Match diacritical marks.</p>
+<br/>
+</dd>
+<dt id="-name"><p><i>-name</i></p></dt>
+<dt id="-path-column"><p><i>-path-column</i></p></dt>
+<dt id="-full-path-and-name"><p><i>-full-path-and-name</i></p></dt>
+<dt id="-filename-column"><p><i>-filename-column</i></p></dt>
+<dt id="-extension"><p><i>-extension</i></p></dt>
+<dt id="-ext"><p><i>-ext</i></p></dt>
+<dt id="-size"><p><i>-size</i></p></dt>
+<dt id="-date-created"><p><i>-date-created</i></p></dt>
+<dt id="-dc"><p><i>-dc</i></p></dt>
+<dt id="-date-modified"><p><i>-date-modified</i></p></dt>
+<dt id="-dm"><p><i>-dm</i></p></dt>
+<dt id="-date-accessed"><p><i>-date-accessed</i></p></dt>
+<dt id="-da"><p><i>-da</i></p></dt>
+<dt id="-attributes"><p><i>-attributes</i></p></dt>
+<dt id="-attribs"><p><i>-attribs</i></p></dt>
+<dt id="-attrib"><p><i>-attrib</i></p></dt>
+<dt id="-file-list-file-name"><p><i>-file-list-file-name</i></p></dt>
+<dt id="-run-count"><p><i>-run-count</i></p></dt>
+<dt id="-date-run"><p><i>-date-run</i></p></dt>
+<dt id="-date-recently-changed"><p><i>-date-recently-changed</i></p></dt>
+<dt id="-rc"><p><i>-rc</i></p></dt>
+<dd><p>Show the specified column. The full path and name column will be used if no name, path or full path and name column is specified.</p>
+<p>Columns are displayed in the order specified.</p>
+<br/>
+</dd>
+<dt id="-sort_name"><p><i>-sort name</i></p></dt>
+<dt id="-sort_path"><p><i>-sort path</i></p></dt>
+<dt id="-sort_size"><p><i>-sort size</i></p></dt>
+<dt id="-sort_extension"><p><i>-sort extension</i></p></dt>
+<dt id="-sort_date-created"><p><i>-sort date-created</i></p></dt>
+<dt id="-sort_date-modified"><p><i>-sort date-modified</i></p></dt>
+<dt id="-sort_date-accessed"><p><i>-sort date-accessed</i></p></dt>
+<dt id="-sort_attributes"><p><i>-sort attributes</i></p></dt>
+<dt id="-sort_file-list-file-name"><p><i>-sort file-list-file-name</i></p></dt>
+<dt id="-sort_run-count"><p><i>-sort run-count</i></p></dt>
+<dt id="-sort_date-recently-changed"><p><i>-sort date-recently-changed</i></p></dt>
+<dt id="-sort_date-run"><p><i>-sort date-run</i></p></dt>
+<dt id="-sort-name"><p><i>-sort-name</i></p></dt>
+<dt id="-sort-path"><p><i>-sort-path</i></p></dt>
+<dt id="-sort-size"><p><i>-sort-size</i></p></dt>
+<dt id="-sort-extension"><p><i>-sort-extension</i></p></dt>
+<dt id="-sort-date-created"><p><i>-sort-date-created</i></p></dt>
+<dt id="-sort-date-modified"><p><i>-sort-date-modified</i></p></dt>
+<dt id="-sort-date-accessed"><p><i>-sort-date-accessed</i></p></dt>
+<dt id="-sort-attributes"><p><i>-sort-attributes</i></p></dt>
+<dt id="-sort-file-list-file-name"><p><i>-sort-file-list-file-name</i></p></dt>
+<dt id="-sort-run-count"><p><i>-sort-run-count</i></p></dt>
+<dt id="-sort-date-recently-changed"><p><i>-sort-date-recently-changed</i></p></dt>
+<dt id="-sort-date-run"><p><i>-sort-date-run</i></p></dt>
+<dt id="-sort_name-ascending"><p><i>-sort name-ascending</i></p></dt>
+<dt id="-sort_name-descending"><p><i>-sort name-descending</i></p></dt>
+<dt id="-sort_path-ascending"><p><i>-sort path-ascending</i></p></dt>
+<dt id="-sort_path-descending"><p><i>-sort path-descending</i></p></dt>
+<dt id="-sort_size-ascending"><p><i>-sort size-ascending</i></p></dt>
+<dt id="-sort_size-descending"><p><i>-sort size-descending</i></p></dt>
+<dt id="-sort_extension-ascending"><p><i>-sort extension-ascending</i></p></dt>
+<dt id="-sort_extension-descending"><p><i>-sort extension-descending</i></p></dt>
+<dt id="-sort_date-created-ascending"><p><i>-sort date-created-ascending</i></p></dt>
+<dt id="-sort_date-created-descending"><p><i>-sort date-created-descending</i></p></dt>
+<dt id="-sort_date-modified-ascending"><p><i>-sort date-modified-ascending</i></p></dt>
+<dt id="-sort_date-modified-descending"><p><i>-sort date-modified-descending</i></p></dt>
+<dt id="-sort_date-accessed-ascending"><p><i>-sort date-accessed-ascending</i></p></dt>
+<dt id="-sort_date-accessed-descending"><p><i>-sort date-accessed-descending</i></p></dt>
+<dt id="-sort_attributes-ascending"><p><i>-sort attributes-ascending</i></p></dt>
+<dt id="-sort_attributes-descending"><p><i>-sort attributes-descending</i></p></dt>
+<dt id="-sort_file-list-file-name-ascending"><p><i>-sort file-list-file-name-ascending</i></p></dt>
+<dt id="-sort_file-list-file-name-descending"><p><i>-sort file-list-file-name-descending</i></p></dt>
+<dt id="-sort_run-count-ascending"><p><i>-sort run-count-ascending</i></p></dt>
+<dt id="-sort_run-count-descending"><p><i>-sort run-count-descending</i></p></dt>
+<dt id="-sort_date-recently-changed-ascending"><p><i>-sort date-recently-changed-ascending</i></p></dt>
+<dt id="-sort_date-recently-changed-descending"><p><i>-sort date-recently-changed-descending</i></p></dt>
+<dt id="-sort_date-run-ascending"><p><i>-sort date-run-ascending</i></p></dt>
+<dt id="-sort_date-run-descending"><p><i>-sort date-run-descending</i></p></dt>
+<dt id="-sort-name-ascending"><p><i>-sort-name-ascending</i></p></dt>
+<dt id="-sort-name-descending"><p><i>-sort-name-descending</i></p></dt>
+<dt id="-sort-path-ascending"><p><i>-sort-path-ascending</i></p></dt>
+<dt id="-sort-path-descending"><p><i>-sort-path-descending</i></p></dt>
+<dt id="-sort-size-ascending"><p><i>-sort-size-ascending</i></p></dt>
+<dt id="-sort-size-descending"><p><i>-sort-size-descending</i></p></dt>
+<dt id="-sort-extension-ascending"><p><i>-sort-extension-ascending</i></p></dt>
+<dt id="-sort-extension-descending"><p><i>-sort-extension-descending</i></p></dt>
+<dt id="-sort-date-created-ascending"><p><i>-sort-date-created-ascending</i></p></dt>
+<dt id="-sort-date-created-descending"><p><i>-sort-date-created-descending</i></p></dt>
+<dt id="-sort-date-modified-ascending"><p><i>-sort-date-modified-ascending</i></p></dt>
+<dt id="-sort-date-modified-descending"><p><i>-sort-date-modified-descending</i></p></dt>
+<dt id="-sort-date-accessed-ascending"><p><i>-sort-date-accessed-ascending</i></p></dt>
+<dt id="-sort-date-accessed-descending"><p><i>-sort-date-accessed-descending</i></p></dt>
+<dt id="-sort-attributes-ascending"><p><i>-sort-attributes-ascending</i></p></dt>
+<dt id="-sort-attributes-descending"><p><i>-sort-attributes-descending</i></p></dt>
+<dt id="-sort-file-list-file-name-ascending"><p><i>-sort-file-list-file-name-ascending</i></p></dt>
+<dt id="-sort-file-list-file-name-descending"><p><i>-sort-file-list-file-name-descending</i></p></dt>
+<dt id="-sort-run-count-ascending"><p><i>-sort-run-count-ascending</i></p></dt>
+<dt id="-sort-run-count-descending"><p><i>-sort-run-count-descending</i></p></dt>
+<dt id="-sort-date-recently-changed-ascending"><p><i>-sort-date-recently-changed-ascending</i></p></dt>
+<dt id="-sort-date-recently-changed-descending"><p><i>-sort-date-recently-changed-descending</i></p></dt>
+<dt id="-sort-date-run-ascending"><p><i>-sort-date-run-ascending</i></p></dt>
+<dt id="-sort-date-run-descending"><p><i>-sort-date-run-descending</i></p></dt>
+<dd><p>Specify the sort. Results are sorted by name ascending if not specified.</p>
+<br/>
+</dd>
+<dt id="-sort-ascending"><p><i>-sort-ascending</i></p></dt>
+<dt id="-sort-descending"><p><i>-sort-descending</i></p></dt>
+<dd><p>Set sort order. For example, sort by size ascending: -sort size -sort-ascending</p>
+<p>If the sort order is not specified: size is sorted largest first, dates latest first and run count largest first, All other sorts are sorted alphabetically.</p>
+<br/>
+</dd>
+<dt id="-instance"><p><i>-instance</i> &lt;name&gt;</p></dt>
+<dd><p>Connect to the unique Everything instance name.</p>
+<p>See <a href="../multiple_instances/index.html">Multiple Instances</a> for more information.</p>
+<br/>
+</dd>
+<dt id="-highlight"><p><i>-highlight</i></p></dt>
+<dd><p>Highlight results.</p>
+<p>Highlighting many results can decrease the performance of "Everything".</p>
+<br/>
+</dd>
+<dt id="-highlight-color"><p><i>-highlight-color</i> &lt;color&gt;</p></dt>
+<dd><p>&lt;color&gt; can be one of the following color codes:</p>
+<p><img src="../es-colors.png" alt="command prompt console colors and codes" /></p>
+<p>Highlight color 0x00-0xFF.</p>
+<p>The default highlight color is 0x0a (light Green on Black).</p>
+<br/>
+</dd>
+<dt id="-csv"><p><i>-csv</i></p></dt>
+<dt id="-efu"><p><i>-efu</i></p></dt>
+<dt id="-txt"><p><i>-txt</i></p></dt>
+<dt id="-m3u"><p><i>-m3u</i></p></dt>
+<dt id="-m3u8"><p><i>-m3u8</i></p></dt>
+<dd><p>Change display format.</p>
+<p>Use &gt; to redirect to a file or | to pipe to another application.</p>
+<p>See -export options below to also write to a file.</p>
+<br/>
+</dd>
+<dt id="-export-csv"><p><i>-export-csv</i> &lt;out.csv&gt;</p></dt>
+<dt id="-export-efu"><p><i>-export-efu</i> &lt;out.efu&gt;</p></dt>
+<dt id="-export-txt"><p><i>-export-txt</i> &lt;out.txt&gt;</p></dt>
+<dt id="-export-m3u"><p><i>-export-m3u</i> &lt;out.m3u&gt;</p></dt>
+<dt id="-export-m3u8"><p><i>-export-m3u8</i> &lt;out.m3u8&gt;</p></dt>
+<dd><p>Export to a file. No output is displayed on screen.</p>
+<p>-export-efu will only export indexed information. Combine -export-efu with -size, -date-modified, -date-created and/or -attributes to gather this information.</p>
+<p>UTF-8 encoding is used for exporting as txt and csv.</p>
+<br/>
+</dd>
+<dt id="-size-format"><p><i>-size-format</i> &lt;format&gt;</p></dt>
+<dd><p>Format can be one of the following values:</p>
+<table>
+<tr><th class="wikinowrap">Value</th><th class="wikinowrap">Description</th></tr>
+<tr><td class="wikinowrap">0</td><td>Auto</td></tr>
+<tr><td class="wikinowrap">1</td><td>Bytes (default)</td></tr>
+<tr><td class="wikinowrap">2</td><td>KB</td></tr>
+<tr><td class="wikinowrap">3</td><td>MB</td></tr>
+</table>
+<br/>
+</dd>
+<dt id="-date-format"><p><i>-date-format</i> &lt;format&gt;</p></dt>
+<dd><p>Format can be one of the following values:</p>
+<table>
+<tr><th class="wikinowrap">Value</th><th class="wikinowrap">Description</th></tr>
+<tr><td class="wikinowrap">0</td><td>System format (default)</td></tr>
+<tr><td class="wikinowrap">1</td><td>ISO-8601</td></tr>
+<tr><td class="wikinowrap">2</td><td>Windows FILETIME in decimal</td></tr>
+<tr><td class="wikinowrap">3</td><td>ISO-8601 as UTC</td></tr>
+</table>
+<br/>
+</dd>
+<dt id="-pause"><p><i>-pause</i></p></dt>
+<dt id="-more"><p><i>-more</i></p></dt>
+<dd><p>Pause after each page of output.</p>
+<br/>
+</dd>
+<dt id="-hide-empty-search-results"><p><i>-hide-empty-search-results</i></p></dt>
+<dd><p>Don't show any results when the search is empty.</p>
+<br/>
+</dd>
+<dt id="-empty-search-help"><p><i>-empty-search-help</i></p></dt>
+<dd><p>Show help when no search is specified.</p>
+<br/>
+</dd>
+<dt id="-timeout"><p><i>-timeout</i> &lt;milliseconds&gt;</p></dt>
+<dd><p>Timeout after the specified number of milliseconds to wait for the Everything database to load before sending a query. The default timeout is 0 milliseconds.</p>
+<br/>
+</dd>
+<dt id="-filename-color"><p><i>-filename-color</i> &lt;color&gt;</p></dt>
+<dt id="-name-color"><p><i>-name-color</i> &lt;color&gt;</p></dt>
+<dt id="-path-color"><p><i>-path-color</i> &lt;color&gt;</p></dt>
+<dt id="-extension-color"><p><i>-extension-color</i> &lt;color&gt;</p></dt>
+<dt id="-size-color"><p><i>-size-color</i> &lt;color&gt;</p></dt>
+<dt id="-date-created-color"><p><i>-date-created-color</i> &lt;color&gt;</p></dt>
+<dt id="-dc-color"><p><i>-dc-color</i> &lt;color&gt;</p></dt>
+<dt id="-date-modified-color"><p><i>-date-modified-color</i> &lt;color&gt;</p></dt>
+<dt id="-dm-color"><p><i>-dm-color</i> &lt;color&gt;</p></dt>
+<dt id="-date-accessed-color"><p><i>-date-accessed-color</i> &lt;color&gt;</p></dt>
+<dt id="-da-color"><p><i>-da-color</i> &lt;color&gt;</p></dt>
+<dt id="-attributes-color"><p><i>-attributes-color</i> &lt;color&gt;</p></dt>
+<dt id="-file-list-filename-color"><p><i>-file-list-filename-color</i> &lt;color&gt;</p></dt>
+<dt id="-run-count-color"><p><i>-run-count-color</i> &lt;color&gt;</p></dt>
+<dt id="-date-run-color"><p><i>-date-run-color</i> &lt;color&gt;</p></dt>
+<dt id="-date-recently-changed-color"><p><i>-date-recently-changed-color</i> &lt;color&gt;</p></dt>
+<dt id="-rc-color"><p><i>-rc-color</i> &lt;color&gt;</p></dt>
+<dd><p>&lt;color&gt; can be one of the following color codes:</p>
+<p><img src="../es-colors.png" alt="command prompt console colors and codes" /></p>
+<p>Set the column color 0x00-0xFF.</p>
+<br/>
+</dd>
+<dt id="-filename-width"><p><i>-filename-width</i> &lt;width&gt;</p></dt>
+<dt id="-name-width"><p><i>-name-width</i> &lt;width&gt;</p></dt>
+<dt id="-path-width"><p><i>-path-width</i> &lt;width&gt;</p></dt>
+<dt id="-extension-width"><p><i>-extension-width</i> &lt;width&gt;</p></dt>
+<dt id="-size-width"><p><i>-size-width</i> &lt;width&gt;</p></dt>
+<dt id="-date-created-width"><p><i>-date-created-width</i> &lt;width&gt;</p></dt>
+<dt id="-dc-width"><p><i>-dc-width</i> &lt;width&gt;</p></dt>
+<dt id="-date-modified-width"><p><i>-date-modified-width</i> &lt;width&gt;</p></dt>
+<dt id="-dm-width"><p><i>-dm-width</i> &lt;width&gt;</p></dt>
+<dt id="-date-accessed-width"><p><i>-date-accessed-width</i> &lt;width&gt;</p></dt>
+<dt id="-da-width"><p><i>-da-width</i> &lt;width&gt;</p></dt>
+<dt id="-attributes-width"><p><i>-attributes-width</i> &lt;width&gt;</p></dt>
+<dt id="-file-list-filename-width"><p><i>-file-list-filename-width</i> &lt;width&gt;</p></dt>
+<dt id="-run-count-width"><p><i>-run-count-width</i> &lt;width&gt;</p></dt>
+<dt id="-date-run-width"><p><i>-date-run-width</i> &lt;width&gt;</p></dt>
+<dt id="-date-recently-changed-width"><p><i>-date-recently-changed-width</i> &lt;width&gt;</p></dt>
+<dt id="-rc-width"><p><i>-rc-width</i> &lt;width&gt;</p></dt>
+<dd><p>Set the column width 0-200.</p>
+<br/>
+</dd>
+<dt id="-size-leading-zero"><p><i>-size-leading-zero</i></p></dt>
+<dt id="-run-count-leading-zero"><p><i>-run-count-leading-zero</i></p></dt>
+<dd><p>Format the number with leading zeros, use with -no-digit-grouping.</p>
+<br/>
+</dd>
+<dt id="-no-digit-grouping"><p><i>-no-digit-grouping</i></p></dt>
+<dd><p>Don't group numbers with commas.</p>
+<br/>
+</dd>
+<dt id="-path"><p><i>-path</i> &lt;path&gt;</p></dt>
+<dd><p>Search for subfolders and files in path.</p>
+<br/>
+</dd>
+<dt id="-parent-path"><p><i>-parent-path</i> &lt;path&gt;</p></dt>
+<dd><p>Search for subfolders and files in the parent of path.</p>
+<br/>
+</dd>
+<dt id="-parent"><p><i>-parent</i> &lt;path&gt;</p></dt>
+<dd><p>Search for files with the specified parent path.</p>
+<br/>
+</dd>
+<dt id="o_sort"><p><i>/o[sort]</i></p></dt>
+<dd><p>DIR style sorts.</p>
+<p>sort must be one the following sorts:</p>
+<table>
+<tr><th class="wikinowrap">Sort</th><th class="wikinowrap">Description</th></tr>
+<tr><td class="wikinowrap">N</td><td>Name ascending.</td></tr>
+<tr><td class="wikinowrap">-N</td><td>Name descending.</td></tr>
+<tr><td class="wikinowrap">S</td><td>Size ascending.</td></tr>
+<tr><td class="wikinowrap">-S</td><td>Size descending.</td></tr>
+<tr><td class="wikinowrap">E</td><td>Extension ascending.</td></tr>
+<tr><td class="wikinowrap">-E</td><td>Extension descending.</td></tr>
+<tr><td class="wikinowrap">D</td><td>Date modified ascending.</td></tr>
+<tr><td class="wikinowrap">-D</td><td>Date modified descending.</td></tr>
+</table>
+<br/>
+</dd>
+<dt id="ad"><p><i>/ad</i></p></dt>
+<dd><p>Folders only.</p>
+<br/>
+</dd>
+<dt id="a-d"><p><i>/a-d</i></p></dt>
+<dd><p>Files only.</p>
+<br/>
+</dd>
+<dt id="a_attributes"><p><i>/a[attributes]</i></p></dt>
+<dd><p>DIR style attributes search.</p>
+<p>attributes can be any one or more of the following attributes:</p>
+<table>
+<tr><th class="wikinowrap">Attribute</th><th class="wikinowrap">Description</th></tr>
+<tr><td class="wikinowrap">R</td><td>Read only.</td></tr>
+<tr><td class="wikinowrap">H</td><td>Hidden.</td></tr>
+<tr><td class="wikinowrap">S</td><td>System.</td></tr>
+<tr><td class="wikinowrap">D</td><td>Directory.</td></tr>
+<tr><td class="wikinowrap">A</td><td>Archive.</td></tr>
+<tr><td class="wikinowrap">V</td><td>Device.</td></tr>
+<tr><td class="wikinowrap">N</td><td>Normal.</td></tr>
+<tr><td class="wikinowrap">T</td><td>Temporary.</td></tr>
+<tr><td class="wikinowrap">P</td><td>Sparse file.</td></tr>
+<tr><td class="wikinowrap">L</td><td>Reparse point.</td></tr>
+<tr><td class="wikinowrap">C</td><td>Compressed.</td></tr>
+<tr><td class="wikinowrap">O</td><td>Offline.</td></tr>
+<tr><td class="wikinowrap">I</td><td>Not content indexed.</td></tr>
+<tr><td class="wikinowrap">E</td><td>Encrypted.</td></tr>
+</table>
+<p>To exclude an attribute prefix it with a -</p>
+<p>For example, find files with no read-only attribute set: es.exe /a-r</p>
+<p>The Directory attribute is determined by the result being a file or folder in Everything, not the file attribute. Search for attributes:d for the true directory attribute.</p>
+<br/>
+</dd>
+<dt id="-set-run-count"><p><i>-set-run-count</i> &lt;filename&gt; &lt;count&gt;</p></dt>
+<dd><p>Set the run count for the specified filename. No search is performed.</p>
+<br/>
+</dd>
+<dt id="-inc-run-count"><p><i>-inc-run-count</i> &lt;filename&gt;</p></dt>
+<dd><p>Increment the run count for the specified filename by one. No search is performed.</p>
+<br/>
+</dd>
+<dt id="-get-run-count"><p><i>-get-run-count</i> &lt;filename&gt;</p></dt>
+<dd><p>Display the run count for the specified filename. No search is performed.</p>
+<br/>
+</dd>
+<dt id="-get-result-count"><p><i>-get-result-count</i></p></dt>
+<dd><p>Display the total result count for the specified search.</p>
+<p>No filenames are displayed. -n is ignored.</p>
+<br/>
+</dd>
+<dt id="-save-settings"><p><i>-save-settings</i></p></dt>
+<dt id="-clear-settings"><p><i>-clear-settings</i></p></dt>
+<dd><p>Save or clear settings. No search is performed. </p>
+<p>Settings are stored in es.ini in the same location as your es.exe.</p>
+</dd>
+</dl>
+<br/>
+<h2 id="limitations">Limitations</h2>
+<p>ES does not have access to bookmarks or filters.</p>
+<br/>
+<h2 id="examples">Examples</h2>
+<p>Export all mp3 files to an Everything file list named mp3.efu</p>
+<pre>es.exe *.mp3 -export-efu mp3.efu</pre>
+<br/>
+<p>Show the top 10 largest files:</p>
+<pre>es.exe -sort size -n 10</pre>
+<br/>
+<p>Show the last 10 modified files:</p>
+<pre>es.exe -sort dm -n 10</pre>
+<br/>
+<p>Highlight the search terms foo bar</p>
+<pre>es.exe foo bar -highlight</pre>
+<br/>
+<p>Make ES show the size column, date modified column and set some pretty colors and make them the default settings:</p>
+<pre>es.exe -size -dm -sizecolor 0x0d -dmcolor 0x0b -save-settings</pre>
+<br/>
+<h2 id="return_codes">Return Codes</h2>
+<p>ES can return one of the following errorlevel codes:</p>
+<table>
+<tr><th class="wikinowrap">Errorlevel</th><th class="wikinowrap">Description</th></tr>
+<tr><td class="wikinowrap">0</td><td>No known error, search successful.</td></tr>
+<tr><td class="wikinowrap">1</td><td>Failed to register window class.</td></tr>
+<tr><td class="wikinowrap">2</td><td>Failed to create listening window.</td></tr>
+<tr><td class="wikinowrap">3</td><td>Out of memory.</td></tr>
+<tr><td class="wikinowrap">4</td><td>Expected an additional command line option with the specified switch.</td></tr>
+<tr><td class="wikinowrap">5</td><td>Failed to create export output file.</td></tr>
+<tr><td class="wikinowrap">6</td><td>Unknown switch.</td></tr>
+<tr><td class="wikinowrap">7</td><td>Failed to send Everything IPC a query.</td></tr>
+<tr><td class="wikinowrap">8</td><td>Everything IPC window not found. Please make sure the Everything search client is running.</td></tr>
+</table>
+<br/>
+<h2 id="notes">Notes</h2>
+<p>Dashes (-) inside switches can be omitted, for example, instead of using -no-digit-grouping, use: -nodigitgrouping</p>
+<br/>
+<p>Switches can also start with a /</p>
+<br/>
+<p>Use double quotes to escape spaces and switches.</p>
+<br/>
+<p>Switches can be disabled by prefixing them with no-, eg: -no-size.</p>
+<br/>
+<p>Use ^ to escape \, &amp;, |, &gt;, &lt; and ^.</p>
+<br/>
+<p>ES source code is included with the download.</p>
+<br/>
+<h2 id="see_also">See also</h2>
+<ul>
+<li><p><a href="../sdk/ipc/index.html">IPC</a></p></li>
+<li><p><a href="../multiple_instances/index.html">Multiple Instances</a></p></li>
+<li><p><a href="https://www.voidtools.com/downloads">Downloads</a></p></li>
+</ul>
+<br/>
+</div>
+<div style="clear:both">
+</div>
+</div>
+</div>
+</div>
+<div class="bot">
+<div class="botcenter">
+<div class="botpadding">
+<a href="https://www.voidtools.com/about">About voidtools</a>
+<a href="https://www.voidtools.com/language">Language</a>
+</div>
+</div>
+</div>
+<div class="bot2">
+<div class="botcenter2">
+&copy; 2020 - <a href="https://www.voidtools.com/privacy">Privacy</a>
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.voidtools.com/support/everything/command_line_interface/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Apr 2020 00:37:42 GMT -->
+</html>
