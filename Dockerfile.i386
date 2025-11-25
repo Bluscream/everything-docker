@@ -55,10 +55,6 @@ COPY opt/everything/plugins/etp_server32.dll /opt/everything-image/plugins/etp_s
 COPY opt/everything/plugins/everything_server32.dll /opt/everything-image/plugins/everything_server.dll
 COPY opt/everything/plugins/http_server32.dll /opt/everything-image/plugins/http_server.dll
 
-# Create default Everything.exe and everything.exe (mapped from everything-1.5_x86.exe)
-RUN cp /opt/everything-image/everything-1.5.exe /opt/everything-image/Everything.exe && \
-    cp /opt/everything-image/everything-1.5.exe /opt/everything-image/everything.exe
-
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh
 
