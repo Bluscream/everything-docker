@@ -123,7 +123,18 @@ Write-Host "  ✓ docker-compose.yml updated" -ForegroundColor Green
 # Update unraid/my-everything-search.xml using XML parsing
 Write-Host "Updating unraid/my-everything-search.xml..." -ForegroundColor Green
 $XmlPath = Join-Path $ProjectRoot "unraid\my-everything-search.xml"
-[xml]$XmlDoc = Get-Content $XmlPath
+
+# Read XML file - PowerShell will auto-detect encoding
+# Use -Encoding UTF8 first, if that fails try Unicode (UTF-16)
+try {
+    $XmlContent = Get-Content $XmlPath -Raw -Encoding UTF8
+    [xml]$XmlDoc = $XmlContent
+}
+catch {
+    # If UTF-8 fails, try Unicode (UTF-16)
+    $XmlContent = Get-Content $XmlPath -Raw -Encoding Unicode
+    [xml]$XmlDoc = $XmlContent
+}
 
 # Update ExtraParams
 $ExtraParams = "--restart=$RestartPolicy --memory=$MemoryMax --memory-reservation=$MemoryReservation --memory-swap=$MemorySwap"
@@ -154,19 +165,32 @@ foreach ($Config in $XmlDoc.Container.Config) {
     }
 }
 
-# Save XML with proper formatting
+# Save XML with UTF-16 encoding (Unraid expects this)
+# Use UTF-16 encoding and ensure empty elements are written as <Tag></Tag> not <Tag />
 $XmlWriterSettings = New-Object System.Xml.XmlWriterSettings
 $XmlWriterSettings.Indent = $true
 $XmlWriterSettings.IndentChars = "  "
 $XmlWriterSettings.NewLineChars = "`n"
 $XmlWriterSettings.OmitXmlDeclaration = $false
-$XmlWriterSettings.Encoding = [System.Text.Encoding]::UTF8
+$XmlWriterSettings.Encoding = [System.Text.Encoding]::Unicode  # UTF-16
+$XmlWriterSettings.NewLineHandling = [System.Xml.NewLineHandling]::None
 
-$StringWriter = New-Object System.IO.StringWriter
-$XmlWriter = [System.Xml.XmlWriter]::Create($StringWriter, $XmlWriterSettings)
+# Use MemoryStream with UTF-16 encoding
+$MemoryStream = New-Object System.IO.MemoryStream
+$XmlWriter = [System.Xml.XmlWriter]::Create($MemoryStream, $XmlWriterSettings)
 $XmlDoc.Save($XmlWriter)
 $XmlWriter.Close()
-$StringWriter.ToString() | Set-Content -Path $XmlPath -Encoding UTF8 -NoNewline
+
+# Convert to UTF-16 string and save
+$Utf16Encoding = [System.Text.Encoding]::Unicode
+$XmlBytes = $MemoryStream.ToArray()
+$MemoryStream.Close()
+$XmlString = $Utf16Encoding.GetString($XmlBytes)
+
+# Fix empty elements to use <Tag></Tag> format instead of <Tag /> (Unraid compatibility)
+$XmlString = $XmlString -replace '<(\w+)\s*/>', '<$1></$1>'
+
+Set-Content -Path $XmlPath -Value $XmlString -Encoding Unicode -NoNewline
 Write-Host "  ✓ unraid/my-everything-search.xml updated" -ForegroundColor Green
 
 # Update unraid/everything-search.plg if it exists

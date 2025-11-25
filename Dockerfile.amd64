@@ -69,7 +69,7 @@ COPY image/bin/plugins/http_server64.dll /bin/plugins/http_server.dll
 # Store defaults in /opt/everything-defaults so we can copy them during init if volume is empty
 # Copy as everything.ini (default name, lowercase) - user can override via EVERYTHING_CONFIG env var
 RUN mkdir -p /opt/everything-defaults
-COPY image/config/Everything-1.5a.ini /opt/everything-defaults/everything.ini
+COPY image/config/everything.ini /opt/everything-defaults/everything.ini
 COPY image/config/Plugins-1.5a.ini /opt/everything-defaults/plugins.ini
 
 # Copy X app start script to correct location
