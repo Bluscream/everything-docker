@@ -100,9 +100,16 @@ timeout 10 chown -R $USER_ID:$GROUP_ID /opt/everything/html 2>/dev/null || true
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
 
+# Remove Wine config early to prevent architecture conflicts
+# This must happen before any Wine command is executed
+if [ -d "/config/.wine" ]; then
+    rm -rf /config/.wine
+fi
+
 # Configure Wine architecture based on executable (if EVERYTHING_BINARY is set)
+# This is informational only - actual WINEARCH will be set in startapp.sh
 if [ -n "${EVERYTHING_BINARY:-}" ] && [ -f "/opt/everything/${EVERYTHING_BINARY}" ]; then
-    if file "/opt/everything/${EVERYTHING_BINARY}" 2>/dev/null | grep -q "PE32+"; then
+    if command -v file >/dev/null 2>&1 && file "/opt/everything/${EVERYTHING_BINARY}" 2>/dev/null | grep -q "PE32+"; then
         export WINEARCH=win64
     else
         export WINEARCH=win32

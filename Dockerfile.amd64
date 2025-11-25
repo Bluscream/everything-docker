@@ -29,6 +29,9 @@ ENV SECURE_CONNECTION=1
 # Clean tmp on startup
 ENV CLEAN_TMP_DIR=1
 
+# Set Wine architecture for amd64 (64-bit)
+ENV WINEARCH=win64
+
 # Install packages needed for app
 # For amd64, we only need 64-bit Wine support
 RUN add-pkg wine xterm python3 python3-websockify git xvfb

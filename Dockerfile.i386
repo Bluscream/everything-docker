@@ -29,6 +29,9 @@ ENV SECURE_CONNECTION=1
 # Clean tmp on startup
 ENV CLEAN_TMP_DIR=1
 
+# Set Wine architecture for i386 (32-bit)
+ENV WINEARCH=win32
+
 # Install packages needed for app
 # For i386, we only need Wine (wine32 is not needed - it's for adding i386 support on amd64)
 RUN add-pkg wine xterm python3 python3-websockify git xvfb
