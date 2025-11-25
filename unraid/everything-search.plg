@@ -58,17 +58,17 @@
     </Variable>
     <Variable>
       <Name>TZ</Name>
-      <Value>America/New_York</Value>
+      <Value>Europe/Berlin</Value>
       <Description>Timezone for the container</Description>
     </Variable>
     <Variable>
       <Name>DISPLAY_WIDTH</Name>
-      <Value>1280</Value>
+      <Value>1920</Value>
       <Description>Display width for VNC</Description>
     </Variable>
     <Variable>
       <Name>DISPLAY_HEIGHT</Name>
-      <Value>720</Value>
+      <Value>945</Value>
       <Description>Display height for VNC</Description>
     </Variable>
     <Variable>
@@ -118,19 +118,19 @@
     <Field>
       <Name>TZ</Name>
       <Type>text</Type>
-      <Default>America/New_York</Default>
+      <Default>Europe/Berlin</Default>
       <Description>Timezone (e.g., America/New_York, Europe/London)</Description>
     </Field>
     <Field>
       <Name>DISPLAY_WIDTH</Name>
       <Type>text</Type>
-      <Default>1280</Default>
+      <Default>1920</Default>
       <Description>VNC display width</Description>
     </Field>
     <Field>
       <Name>DISPLAY_HEIGHT</Name>
       <Type>text</Type>
-      <Default>720</Default>
+      <Default>945</Default>
       <Description>VNC display height</Description>
     </Field>
     <Field>

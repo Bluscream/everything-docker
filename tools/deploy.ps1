@@ -10,9 +10,9 @@ param(
     [string]$EverythingBinary = "everything-1.5.exe",
     [string]$EverythingConfig = "~/everything.ini",
     [string]$EverythingDatabase = "~/everything.db",
-    [string]$Timezone = "America/New_York",
-    [string]$DisplayWidth = "1280",
-    [string]$DisplayHeight = "720",
+    [string]$Timezone = "Europe/Berlin",
+    [string]$DisplayWidth = "1920",
+    [string]$DisplayHeight = "945",
     [string]$SecureConnection = "1",
     [string]$UserId = "99",
     [string]$GroupId = "100",
@@ -165,32 +165,30 @@ foreach ($Config in $XmlDoc.Container.Config) {
     }
 }
 
-# Save XML with UTF-16 encoding (Unraid expects this)
-# Use UTF-16 encoding and ensure empty elements are written as <Tag></Tag> not <Tag />
+# Save XML as UTF-8 (preserve the working format - no encoding declaration or UTF-8)
+# The working file uses UTF-8 without BOM and no encoding in declaration
 $XmlWriterSettings = New-Object System.Xml.XmlWriterSettings
 $XmlWriterSettings.Indent = $true
 $XmlWriterSettings.IndentChars = "  "
 $XmlWriterSettings.NewLineChars = "`n"
 $XmlWriterSettings.OmitXmlDeclaration = $false
-$XmlWriterSettings.Encoding = [System.Text.Encoding]::Unicode  # UTF-16
-$XmlWriterSettings.NewLineHandling = [System.Xml.NewLineHandling]::None
+$XmlWriterSettings.Encoding = New-Object System.Text.UTF8Encoding $false  # UTF-8 without BOM
 
-# Use MemoryStream with UTF-16 encoding
-$MemoryStream = New-Object System.IO.MemoryStream
-$XmlWriter = [System.Xml.XmlWriter]::Create($MemoryStream, $XmlWriterSettings)
+$StringWriter = New-Object System.IO.StringWriter
+$XmlWriter = [System.Xml.XmlWriter]::Create($StringWriter, $XmlWriterSettings)
 $XmlDoc.Save($XmlWriter)
 $XmlWriter.Close()
 
-# Convert to UTF-16 string and save
-$Utf16Encoding = [System.Text.Encoding]::Unicode
-$XmlBytes = $MemoryStream.ToArray()
-$MemoryStream.Close()
-$XmlString = $Utf16Encoding.GetString($XmlBytes)
+# Get the XML string and ensure it doesn't have encoding="utf-16" in declaration
+$XmlString = $StringWriter.ToString()
+# Remove encoding declaration or ensure it's utf-8 (or no encoding - defaults to UTF-8)
+$XmlString = $XmlString -replace 'encoding="utf-16"', ''
+$XmlString = $XmlString -replace 'encoding="UTF-16"', ''
+# If no encoding is specified, that's fine (defaults to UTF-8 per XML spec)
 
-# Fix empty elements to use <Tag></Tag> format instead of <Tag /> (Unraid compatibility)
-$XmlString = $XmlString -replace '<(\w+)\s*/>', '<$1></$1>'
-
-Set-Content -Path $XmlPath -Value $XmlString -Encoding Unicode -NoNewline
+# Save as UTF-8 without BOM to match the working file format
+$Utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($XmlPath, $XmlString, $Utf8NoBom)
 Write-Host "  ✓ unraid/my-everything-search.xml updated" -ForegroundColor Green
 
 # Update unraid/everything-search.plg if it exists

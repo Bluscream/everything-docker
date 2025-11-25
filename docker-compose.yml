@@ -1,23 +1,9 @@
 services:
   everything:
-    volumes:
-    - ./.config:/config
-    - ./data:/home/everything
-    - ./.wine:/home/everything/.wine
-    - /mnt/user:/mnt/user:ro
-    environment:
-    - DISPLAY=:0
-    - TZ=America/New_York
-    - WINEDEBUG=-fixme-all
-    - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
-    - EVERYTHING_CONFIG=${EVERYTHING_CONFIG:-~/everything.ini}
-    - EVERYTHING_DATABASE=${EVERYTHING_DATABASE:-~/everything.db}
     mem_limit: 8192M
     build:
-      dockerfile: Dockerfile.amd64
       context: .
-    restart: on-failure:2
-    mem_reservation: 1024M
+      dockerfile: Dockerfile.amd64
     container_name: everything-search
     ports:
     - 5800:5800
@@ -25,3 +11,17 @@ services:
     - 14680:14680
     - 14620:14620
     - 14630:14630
+    restart: on-failure:2
+    environment:
+    - DISPLAY=:0
+    - TZ=Europe/Berlin
+    - WINEDEBUG=-fixme-all
+    - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
+    - EVERYTHING_CONFIG=${EVERYTHING_CONFIG:-~/everything.ini}
+    - EVERYTHING_DATABASE=${EVERYTHING_DATABASE:-~/everything.db}
+    mem_reservation: 1024M
+    volumes:
+    - ./.config:/config
+    - ./data:/home/everything
+    - ./.wine:/home/everything/.wine
+    - /mnt/user:/mnt/user:ro
