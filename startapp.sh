@@ -9,15 +9,28 @@ if ! command -v wine >/dev/null 2>&1; then
 fi
 
 # Set default binary if not specified
-EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5_x64.exe}"
+# Try mapped names first, then fallback to architecture-specific names
+EVERYTHING_BINARY="${EVERYTHING_BINARY:-Everything.exe}"
 EVERYTHING_PATH="/opt/everything/${EVERYTHING_BINARY}"
 
-# Check if the specified binary exists
+# Check if the specified binary exists, try fallbacks
 if [ ! -f "$EVERYTHING_PATH" ]; then
-    echo "Error: Everything binary not found at $EVERYTHING_PATH"
-    echo "Available executables:"
-    ls -1 /opt/everything/*.exe 2>/dev/null | sed 's|/opt/everything/|  - |' || echo "  (none found)"
-    exit 1
+    # Try common mapped names
+    if [ "$EVERYTHING_BINARY" = "Everything.exe" ]; then
+        if [ -f "/opt/everything/everything-1.5.exe" ]; then
+            EVERYTHING_PATH="/opt/everything/everything-1.5.exe"
+        elif [ -f "/opt/everything/es.exe" ]; then
+            EVERYTHING_PATH="/opt/everything/es.exe"
+        fi
+    fi
+    
+    # Final check
+    if [ ! -f "$EVERYTHING_PATH" ]; then
+        echo "Error: Everything binary not found at $EVERYTHING_PATH"
+        echo "Available executables:"
+        ls -1 /opt/everything/*.exe 2>/dev/null | sed 's|/opt/everything/|  - |' || echo "  (none found)"
+        exit 1
+    fi
 fi
 
 # Configure Wine architecture based on executable

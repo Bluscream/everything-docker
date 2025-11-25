@@ -50,16 +50,18 @@ If you enable or start these servers from the VNC desktop, they will be accessib
 
 ### Architecture Selection
 
-This project includes all architectures (x64 and x86) in a single image. You can select which executable to run using the `EVERYTHING_BINARY` environment variable. By default, it uses `everything-1.5_x64.exe`, but you can choose any available executable:
+This project uses Docker multi-arch builds with separate optimized images for each architecture. Docker automatically selects the correct image based on your system's architecture:
 
-- `everything-1.5_x64.exe` (default) - Everything 1.5 64-bit
-- `everything-1.5_x86.exe` - Everything 1.5 32-bit
-- `everything-1.4_x64.exe` - Everything 1.4 64-bit
-- `everything-1.4_x86.exe` - Everything 1.4 32-bit
-- `es_x64.exe` - ES 64-bit
-- `es_x86.exe` - ES 32-bit
+- **amd64 (x64)**: Optimized image containing only 64-bit executables and plugins
+- **i386 (x86)**: Optimized image containing only 32-bit executables and plugins
 
-All executables are available in the image, and you can switch between them by changing the `EVERYTHING_BINARY` environment variable.
+Each image is smaller because it only contains files for its specific architecture. The default executable is `Everything.exe` (mapped from `everything-1.5.exe`), but you can override it using the `EVERYTHING_BINARY` environment variable:
+
+- `Everything.exe` (default) - Mapped from everything-1.5.exe
+- `everything-1.5.exe` - Everything 1.5
+- `everything-1.4.exe` - Everything 1.4
+- `es.exe` - ES version
+- Or any other executable available in the image
 
 ### Other Customization
 - To change the VNC or web port, edit the `docker-compose.yml` file.
