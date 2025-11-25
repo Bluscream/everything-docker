@@ -9,7 +9,7 @@ if ! command -v wine >/dev/null 2>&1; then
 fi
 
 # Set default binary if not specified
-EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5.exe}"
+EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5_x64.exe}"
 EVERYTHING_PATH="/opt/everything/${EVERYTHING_BINARY}"
 
 # Check if the specified binary exists
