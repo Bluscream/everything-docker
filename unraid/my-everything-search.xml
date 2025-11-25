@@ -9,7 +9,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/bluscream/everything-docker/issues</Support>
   <Project>https://www.voidtools.com/</Project>
-  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable (x86/x64 variants), Everything HTTP Server, ETP Server, and Server components. All architecture variants are included in a single image.</Overview>
+  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Overview>
   <Category>Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
@@ -27,7 +27,7 @@
   <Config Name="ETP Server Port" Target="14620" Default="14620" Mode="tcp" Description="Everything ETP Server port for Everything Transfer Protocol" Type="Port" Display="always" Required="false" Mask="false">14620</Config>
   <Config Name="Everything Server Port" Target="14630" Default="14630" Mode="tcp" Description="Everything Server port for network access" Type="Port" Display="always" Required="false" Mask="false">14630</Config>
   <Config Name="Everything Data Directory" Target="/opt/everything" Default="/mnt/user/appdata/everything-search/data" Mode="rw" Description="Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/data</Config>
-  <Config Name="Everything Binary" Target="EVERYTHING_BINARY" Default="everything-1.5_x64.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5_x64.exe, everything-1.5_x86.exe, es_x64.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5_x64.exe</Config>
+  <Config Name="Everything Binary" Target="EVERYTHING_BINARY" Default="everything-1.5.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5.exe, everything-1.4.exe, es.exe, voidimageviewer.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5.exe</Config>
   <Config Name="Timezone" Target="TZ" Default="America/New_York" Mode="" Description="Timezone for the container (e.g., America/New_York, Europe/London)" Type="Variable" Display="always" Required="true" Mask="false">America/New_York</Config>
   <Config Name="Display Width" Target="DISPLAY_WIDTH" Default="1280" Mode="" Description="Display width for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">1280</Config>
   <Config Name="Display Height" Target="DISPLAY_HEIGHT" Default="720" Mode="" Description="Display height for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">720</Config>
