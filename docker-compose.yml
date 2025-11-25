@@ -16,7 +16,7 @@ services:
       - DISPLAY=:0
       - TZ=Europe/Berlin
       - WINEDEBUG=-fixme-all
-      - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
+      - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5_x64.exe}
     volumes:
       - ./.data:/opt/everything         # Everything.ini, Everything.db, Everything.exe, and plugins/
     restart: "on-failure:2"
