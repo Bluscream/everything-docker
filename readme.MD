@@ -4,7 +4,7 @@ This project runs the Everything Search software (Windows-only) inside a Docker 
 
 ## Features
 - Everything Search (Windows version) via Wine
-- Configurable architecture (x86/x64)
+- Separate images for x86 (32-bit) and amd64 (64-bit) architectures
 - Professional GUI base image with secure web access
 - TigerVNC server with noVNC web interface
 - Everything HTTP Server, ETP Server, and Server components included
@@ -34,7 +34,7 @@ You will see the Windows Everything Search UI running inside the container via a
 Open your browser and go to:
 
 ```
-http://localhost:8080
+http://localhost:14680
 ```
 
 This exposes the Everything HTTP Server web interface, which allows you to search and interact with Everything via HTTP requests.
@@ -42,7 +42,7 @@ This exposes the Everything HTTP Server web interface, which allows you to searc
 ### 4. Everything Server and ETP Server Ports
 
 - Everything Server: `14630` (default)
-- ETP Server: `21` (default)
+- ETP Server: `14620` (default)
 
 If you enable or start these servers from the VNC desktop, they will be accessible on these ports.
 
@@ -50,45 +50,23 @@ If you enable or start these servers from the VNC desktop, they will be accessib
 
 ### Architecture Selection
 
-You can choose between 32-bit (x86) and 64-bit (x64) versions of Everything:
-
-1. **Edit the `config.env` file**:
-   ```bash
-   # For 32-bit version (default)
-   EVERYTHING_ARCH=x86
-   
-   # For 64-bit version
-   EVERYTHING_ARCH=x64
-   ```
-
-2. **Or set the environment variable directly**:
-   ```bash
-   # For 32-bit version
-   docker-compose build --build-arg EVERYTHING_ARCH=x86
-   
-   # For 64-bit version
-   docker-compose build --build-arg EVERYTHING_ARCH=x64
-   ```
-
-3. **Or use the convenience scripts**:
-   ```bash
-   # Linux/Mac
-   ./switch-arch.sh x86    # or ./switch-arch.sh 32
-   ./switch-arch.sh x64    # or ./switch-arch.sh 64
-   
-   # Windows
-   switch-arch.bat x86     # or switch-arch.bat 32
-   switch-arch.bat x64     # or switch-arch.bat 64
-   ```
+This project includes all architectures (x64 and x86) in a single image. The container automatically detects and uses the appropriate executable based on the Everything.exe file. By default, it uses the x64 version, but all executables are available in the image.
 
 ### Other Customization
 - To change the VNC or web port, edit the `docker-compose.yml` file.
-- The Everything Search version can be updated by changing the `EVERYTHING_VERSION` build argument in the Dockerfile.
 
 ## Notes
 - This container uses Wine to run Everything Search, which is a Windows application.
 - The UI is accessible via any modern web browser using noVNC.
-- Data is not persisted by default. For persistent settings or databases, mount a volume to `/opt/everything`.
+- **All Everything Search data is persistent by default** and organized in the data directory:
+  - `./.data/` - Everything Search data directory (mounted to `/opt/everything` in container, gitignored)
+    - `Everything-1.5a.ini` - Settings and configuration (Everything 1.5a alpha format)
+    - `Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
+    - `Everything.db` - Index database
+    - `Everything.exe` - Executable (copied from image on first run)
+    - `plugins/` - Everything Search plugins (HTTP Server, ETP Server, etc.)
+  - Note: Wine configuration is stored inside the container and is not persisted by default
+  - Note: For production use, you may want to use `./data/` instead of `./.data/` by updating the docker-compose volume mount
 
 ## Development
 

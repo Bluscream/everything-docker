@@ -8,13 +8,18 @@ if ! command -v wine >/dev/null 2>&1; then
     exit 1
 fi
 
-# Configure Wine based on architecture
-if [ "${EVERYTHING_ARCH}" = "x64" ]; then
-    # For 64-bit, use wine with win64 architecture
+# Configure Wine architecture based on executable
+if [ -f "/opt/everything/Everything.exe" ] && file /opt/everything/Everything.exe 2>/dev/null | grep -q "PE32+"; then
     export WINEARCH=win64
-    exec env wine /opt/everything/Everything.exe
 else
-    # For 32-bit, use wine with win32 architecture
     export WINEARCH=win32
-    exec env wine /opt/everything/Everything.exe
-fi 
+fi
+
+# Remove existing Wine configuration to avoid architecture conflicts
+if [ -d "/config/.wine" ]; then
+    rm -rf /config/.wine
+fi
+
+# Run Everything from data directory
+cd /opt/everything
+exec env WINEARCH="${WINEARCH}" wine /opt/everything/Everything.exe 

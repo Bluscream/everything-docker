@@ -3,18 +3,6 @@ FROM jlesage/baseimage-gui:${DEBIAN_VERSION}
 
 ARG DEBIAN_VERSION=Debian-11
 
-ARG EVERYTHING_VERSION=1.4.1.1024
-ARG EVERYTHING_ARCH=x64
-
-ARG EVERYTHING_HTTP_USE=1
-ARG EVERYTHING_HTTP_VERSION=1.0.3.4
-
-ARG EVERYTHING_ETP_USE=1
-ARG EVERYTHING_ETP_VERSION=1.0.1.4
-
-ARG EVERYTHING_SERVER_USE=1
-ARG EVERYTHING_SERVER_VERSION=1.0.1.2
-
 MAINTAINER bluscream
 
 #########################################
@@ -29,7 +17,7 @@ ENV UMASK=000
 
 # Gui App Name default is "GUI_APPLICATION"
 RUN set-cont-env APP_NAME "Everything"
-RUN set-cont-env APP_VERSION $EVERYTHING_VERSION
+RUN set-cont-env APP_VERSION 1.4.1.1024
 
 # Default resolution, change if you like
 ENV DISPLAY_WIDTH=1280
@@ -41,61 +29,23 @@ ENV SECURE_CONNECTION=1
 # Clean tmp on startup
 ENV CLEAN_TMP_DIR=1
 
-# Enable multiarch and install packages needed for app
-RUN \
-    if [ "${EVERYTHING_ARCH}" = "x86" ]; then \
-        dpkg --add-architecture i386 && \
-        add-pkg wine wine32 wget unzip xterm python3 python3-websockify git xvfb; \
-    else \
-        add-pkg wine wget unzip xterm python3 python3-websockify git xvfb; \
-    fi
-
-RUN dpkg --add-architecture i386 && apt-get update -y && apt-get install wine32 -y
+# Install packages needed for app
+# Enable multiarch and install Wine (needed for both x64 and x86 executables)
+RUN dpkg --add-architecture i386 && \
+    add-pkg wine wine32 xterm python3 python3-websockify git xvfb
 
 #########################################
 ##    REPOSITORIES AND DEPENDENCIES    ##
 #########################################
 
-# Create Plugins directory
-RUN mkdir -p /opt/everything/Plugins
+# Copy all Everything files (all architectures included) to image source location
+COPY opt/everything/ /opt/everything-image/
 
-# Download Everything portable
-RUN \
-    add-pkg --virtual build-dependencies \
-        wget ca-certificates && \
-    wget -O /tmp/Everything.zip "https://www.voidtools.com/Everything-${EVERYTHING_VERSION}.${EVERYTHING_ARCH}.zip" && \
-    unzip /tmp/Everything.zip -d /opt/everything && \
-    rm /tmp/Everything.zip && \
-    del-pkg build-dependencies
-
-# Download Everything HTTP Server if enabled
-RUN if [ "${EVERYTHING_HTTP_USE}" = "1" ]; then \
-    add-pkg --virtual build-dependencies \
-        wget ca-certificates && \
-    wget -O /tmp/Everything-HTTP-Server.zip "https://www.voidtools.com/Everything-HTTP-Server-${EVERYTHING_HTTP_VERSION}.${EVERYTHING_ARCH}.zip" && \
-    unzip /tmp/Everything-HTTP-Server.zip -d /opt/everything/Plugins && \
-    rm /tmp/Everything-HTTP-Server.zip && \
-    del-pkg build-dependencies; \
-    fi
-
-# Download Everything ETP Server if enabled
-RUN if [ "${EVERYTHING_ETP_USE}" = "1" ]; then \
-    add-pkg --virtual build-dependencies \
-        wget ca-certificates && \
-    wget -O /tmp/Everything-ETP-Server.zip "https://www.voidtools.com/Everything-ETP-Server-${EVERYTHING_ETP_VERSION}.${EVERYTHING_ARCH}.zip" && \
-    unzip /tmp/Everything-ETP-Server.zip -d /opt/everything/Plugins && \
-    rm /tmp/Everything-ETP-Server.zip && \
-    del-pkg build-dependencies; \
-    fi
-
-# Download Everything Server if enabled
-RUN if [ "${EVERYTHING_SERVER_USE}" = "1" ]; then \
-    add-pkg --virtual build-dependencies \
-        wget ca-certificates && \
-    wget -O /tmp/Everything-Server.zip "https://www.voidtools.com/Everything-Server-${EVERYTHING_SERVER_VERSION}.${EVERYTHING_ARCH}.zip" && \
-    unzip /tmp/Everything-Server.zip -d /opt/everything/Plugins && \
-    rm /tmp/Everything-Server.zip && \
-    del-pkg build-dependencies; \
+# Set default executable to x64 (can be overridden at runtime)
+RUN if [ -f /opt/everything-image/everything-1.5_x64.exe ]; then \
+        cp /opt/everything-image/everything-1.5_x64.exe /opt/everything-image/Everything.exe; \
+    elif [ -f /opt/everything-image/es_x64.exe ]; then \
+        cp /opt/everything-image/es_x64.exe /opt/everything-image/Everything.exe; \
     fi
 
 # Copy X app start script to correct location
@@ -104,10 +54,13 @@ COPY --chmod=777 startapp.sh /startapp.sh
 # Add everything init script
 COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 
+# Copy default Everything configuration templates
+COPY opt/everything/Everything-1.5a.ini /opt/everything-defaults/Everything.ini
+COPY opt/everything/Plugins-1.5a.ini /opt/everything-defaults/plugins.ini
+
 #########################################
 ##         EXPORTS AND VOLUMES         ##
 #########################################
 
 # Place whatever volumes and ports you want exposed here:
 VOLUME ["/config"]
-VOLUME ["/cache"] 

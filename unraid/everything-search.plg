@@ -133,14 +133,9 @@
     </Variable>
   </Environment>
   <Volume>
-    <HostDir>/mnt/user/appdata/everything-search/config</HostDir>
-    <ContainerDir>/config</ContainerDir>
-    <Description>Everything Search configuration and data</Description>
-  </Volume>
-  <Volume>
-    <HostDir>/mnt/user/appdata/everything-search/cache</HostDir>
-    <ContainerDir>/cache</ContainerDir>
-    <Description>Everything Search cache directory</Description>
+    <HostDir>/mnt/user/appdata/everything-search/data</HostDir>
+    <ContainerDir>/opt/everything</ContainerDir>
+    <Description>Everything Search data directory (Everything.ini, Everything.db, Everything.exe, Plugins/)</Description>
   </Volume>
   <PostArgs>--memory=2048m</PostArgs>
   <Config>

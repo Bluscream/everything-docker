@@ -1,29 +1,23 @@
-version: '3.8'
 services:
   everything:
     build:
       context: .
-      args:
-        EVERYTHING_ARCH: ${EVERYTHING_ARCH:-x64}
+      dockerfile: Dockerfile
     container_name: everything-search
-    env_file:
-      - config.env
     ports:
       #
       # Docker ports are defined in the format "HOST:CONTAINER".
       - "5800:5800"    # VNC port (host 5800 -> container 5800)
       - "5900:5900"    # Alternative VNC port (host 5900 -> container 5900)
-      - "5000:80"      # Everything HTTP Server (host 5000 -> container 80)
-      - "14630:14630"  # Everything ETP Server (host 14630 -> container 14630)
-      - "21:21"        # Everything Server (host 21 -> container 21)
+      - "14680:14680"  # Everything HTTP Server (host 14680 -> container 14680)
+      - "14620:14620"  # Everything ETP Server (host 14620 -> container 14620)
+      - "14630:14630"  # Everything Server (host 14630 -> container 14630)
     environment:
       - DISPLAY=:0
       - TZ=Europe/Berlin
       - WINEDEBUG=-fixme-all
-      - EVERYTHING_ARCH=${EVERYTHING_ARCH:-x64}
     volumes:
-      - ./config:/config
-      - ./cache:/cache
+      - ./.data:/opt/everything         # Everything.ini, Everything.db, Everything.exe, and plugins/
     restart: "on-failure:2"
     mem_limit: 2048M
     # mem_reservation: 512M

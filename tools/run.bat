@@ -3,7 +3,6 @@ setlocal enabledelayedexpansion
 
 docker-compose down
 
-rmdir /s /q cache
 rmdir /s /q config
 
 docker-compose build --no-cache
