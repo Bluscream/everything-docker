@@ -17,19 +17,13 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build and push amd64
+      - name: Build and push multi-arch
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/386
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/everything-wine:latest
-          file: Dockerfile.amd64
-      - name: Build and push i386
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/386
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/everything-wine:latest
-          file: Dockerfile.i386
+          file: |
+            linux/amd64:Dockerfile.amd64
+            linux/386:Dockerfile.i386
