@@ -98,7 +98,7 @@
     </Variable>
   </Environment>
   <Volume>
-    <HostDir>/mnt/user/appdata/everything-search/data</HostDir>
+    <HostDir>/mnt/user/appdata/everything-search</HostDir>
     <ContainerDir>/opt/everything</ContainerDir>
     <Description>Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)</Description>
   </Volume>

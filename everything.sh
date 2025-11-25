@@ -16,8 +16,16 @@ PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini plugins-1.5a.ini 
 # Initialize Everything data directory if volume is empty (first deployment)
 if [ -z "$(ls -A /opt/everything 2>/dev/null)" ]; then
     echo "Initializing Everything data directory from image (first deployment)..."
+    echo "Copying files from image (this may take a moment)..."
     # Copy all files including all architecture variants
-    cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    # Use rsync if available for better progress, otherwise use cp
+    if command -v rsync >/dev/null 2>&1; then
+        rsync -a --info=progress2 /opt/everything-image/ /opt/everything/ 2>&1 | head -1 || \
+        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    else
+        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    fi
+    echo "Files copied successfully."
 else
     # Update binaries and static content, but preserve config/data files
     echo "Updating binaries and static content from image..."
@@ -26,6 +34,7 @@ else
     mkdir -p /tmp/everything-preserve
     
     # Backup config/data files
+    echo "Backing up configuration files..."
     for file in $PRESERVE_FILES; do
         if [ -f "/opt/everything/$file" ]; then
             cp "/opt/everything/$file" "/tmp/everything-preserve/$file" 2>/dev/null || true
@@ -33,9 +42,16 @@ else
     done
     
     # Copy all files from image (overwrites binaries/static content, keeps all arch variants)
-    cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    echo "Copying files from image (this may take a moment)..."
+    if command -v rsync >/dev/null 2>&1; then
+        rsync -a --info=progress2 /opt/everything-image/ /opt/everything/ 2>&1 | head -1 || \
+        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    else
+        cp -r /opt/everything-image/* /opt/everything/ 2>/dev/null || true
+    fi
     
     # Restore preserved config/data files
+    echo "Restoring configuration files..."
     for file in $PRESERVE_FILES; do
         if [ -f "/tmp/everything-preserve/$file" ]; then
             cp "/tmp/everything-preserve/$file" "/opt/everything/$file" 2>/dev/null || true
@@ -44,6 +60,7 @@ else
     
     # Cleanup
     rm -rf /tmp/everything-preserve
+    echo "Update completed."
 fi
 
 # Ensure config files exist (copy defaults if missing - first deployment only)
@@ -62,11 +79,22 @@ fi
       [ -f "/opt/everything-defaults/plugins.ini" ] && cp /opt/everything-defaults/plugins.ini /opt/everything/plugins-1.5a.ini || true; }
 
 # Ensure plugins directory exists and is writable
+echo "Setting up plugins directory..."
 mkdir -p /opt/everything/plugins
-chown -R $USER_ID:$GROUP_ID /opt/everything/plugins
+chown -R $USER_ID:$GROUP_ID /opt/everything/plugins 2>/dev/null || true
 
-# Adjust ownership of Everything directory
-chown -R $USER_ID:$GROUP_ID /opt/everything 2>/dev/null || true
+# Adjust ownership of Everything directory (skip if on slow network mount)
+echo "Setting file permissions..."
+# Only chown specific directories/files to avoid hanging on large network mounts
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.exe 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.dll 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.ini 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.db 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.lng 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/*.chm 2>/dev/null || true
+chown -R $USER_ID:$GROUP_ID /opt/everything/plugins 2>/dev/null || true
+# Try to chown html directory but don't fail if it's slow
+timeout 10 chown -R $USER_ID:$GROUP_ID /opt/everything/html 2>/dev/null || true
 
 # Set up Wine environment
 export WINEDEBUG=-fixme-all
