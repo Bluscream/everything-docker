@@ -47,14 +47,19 @@ else
 fi
 
 # Ensure config files exist (copy defaults if missing - first deployment only)
-[ ! -f "/opt/everything/Everything.ini" ] && [ -f "/opt/everything-defaults/Everything.ini" ] && \
-    cp /opt/everything-defaults/Everything.ini /opt/everything/Everything.ini
-[ ! -f "/opt/everything/Everything-1.5a.ini" ] && [ -f "/opt/everything-defaults/Everything.ini" ] && \
-    cp /opt/everything-defaults/Everything.ini /opt/everything/Everything-1.5a.ini
-[ ! -f "/opt/everything/plugins.ini" ] && [ -f "/opt/everything-defaults/plugins.ini" ] && \
-    cp /opt/everything-defaults/plugins.ini /opt/everything/plugins.ini
-[ ! -f "/opt/everything/plugins-1.5a.ini" ] && [ -f "/opt/everything-defaults/plugins.ini" ] && \
-    cp /opt/everything-defaults/plugins.ini /opt/everything/plugins-1.5a.ini
+# Use files from image if available, otherwise use defaults
+[ ! -f "/opt/everything/Everything.ini" ] && \
+    { [ -f "/opt/everything-image/Everything-1.5a.ini" ] && cp /opt/everything-image/Everything-1.5a.ini /opt/everything/Everything.ini || \
+      [ -f "/opt/everything-defaults/Everything.ini" ] && cp /opt/everything-defaults/Everything.ini /opt/everything/Everything.ini || true; }
+[ ! -f "/opt/everything/Everything-1.5a.ini" ] && \
+    { [ -f "/opt/everything-image/Everything-1.5a.ini" ] && cp /opt/everything-image/Everything-1.5a.ini /opt/everything/Everything-1.5a.ini || \
+      [ -f "/opt/everything-defaults/Everything.ini" ] && cp /opt/everything-defaults/Everything.ini /opt/everything/Everything-1.5a.ini || true; }
+[ ! -f "/opt/everything/plugins.ini" ] && \
+    { [ -f "/opt/everything-image/Plugins-1.5a.ini" ] && cp /opt/everything-image/Plugins-1.5a.ini /opt/everything/plugins.ini || \
+      [ -f "/opt/everything-defaults/plugins.ini" ] && cp /opt/everything-defaults/plugins.ini /opt/everything/plugins.ini || true; }
+[ ! -f "/opt/everything/plugins-1.5a.ini" ] && \
+    { [ -f "/opt/everything-image/Plugins-1.5a.ini" ] && cp /opt/everything-image/Plugins-1.5a.ini /opt/everything/plugins-1.5a.ini || \
+      [ -f "/opt/everything-defaults/plugins.ini" ] && cp /opt/everything-defaults/plugins.ini /opt/everything/plugins-1.5a.ini || true; }
 
 # Ensure plugins directory exists and is writable
 mkdir -p /opt/everything/plugins

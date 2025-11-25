@@ -7,10 +7,18 @@ set -e
 SOURCE_DIR="$1"
 TARGET_DIR="$2"
 ARCH="$3"
-MAPPINGS_FILE="${SOURCE_DIR}/mappings.json"
 
-if [ ! -f "$MAPPINGS_FILE" ]; then
-    echo "Error: mappings.json not found at $MAPPINGS_FILE"
+# Find mappings.json - try source dir first, then /tmp/everything-source (for Dockerfile builds)
+if [ -f "${SOURCE_DIR}/mappings.json" ]; then
+    MAPPINGS_FILE="${SOURCE_DIR}/mappings.json"
+elif [ -f "/tmp/everything-source/mappings.json" ]; then
+    MAPPINGS_FILE="/tmp/everything-source/mappings.json"
+    # Also update SOURCE_DIR if we're using /tmp/everything-source
+    if [ "$SOURCE_DIR" != "/tmp/everything-source" ]; then
+        SOURCE_DIR="/tmp/everything-source"
+    fi
+else
+    echo "Error: mappings.json not found"
     exit 1
 fi
 
@@ -29,7 +37,7 @@ case "$ARCH" in
         ARCH_KEY="amd64"
         ;;
     i386|i686|x86)
-        ARCH_KEY="i38"
+        ARCH_KEY="i386"
         ;;
     *)
         echo "Warning: Unknown architecture $ARCH, using amd64"
@@ -83,8 +91,8 @@ if jq -e ".${ARCH_KEY}" "$MAPPINGS_FILE" >/dev/null 2>&1; then
 fi
 
 # Set default Everything.exe based on architecture
-# For amd64 and i38, prefer everything-1.5.exe, fallback to es.exe
-if [ "$ARCH_KEY" = "amd64" ] || [ "$ARCH_KEY" = "i38" ]; then
+# For amd64 and i386, prefer everything-1.5.exe, fallback to es.exe
+if [ "$ARCH_KEY" = "amd64" ] || [ "$ARCH_KEY" = "i386" ]; then
     if [ -f "${TEMP_DIR}/everything-1.5.exe" ]; then
         cp "${TEMP_DIR}/everything-1.5.exe" "${TEMP_DIR}/Everything.exe" 2>/dev/null || true
     elif [ -f "${TEMP_DIR}/es.exe" ]; then
@@ -96,15 +104,5 @@ fi
 echo "Replacing source directory with mapped files..."
 rm -rf "${TARGET_DIR:?}"/*
 mv "${TEMP_DIR}"/* "${TARGET_DIR}"/ 2>/dev/null || true
-
-# Set default Everything.exe based on architecture
-# For amd64 and i38, prefer everything-1.5.exe, fallback to es.exe
-if [ "$ARCH_KEY" = "amd64" ] || [ "$ARCH_KEY" = "i38" ]; then
-    if [ -f "${TARGET_DIR}/everything-1.5.exe" ]; then
-        cp "${TARGET_DIR}/everything-1.5.exe" "${TARGET_DIR}/Everything.exe" 2>/dev/null || true
-    elif [ -f "${TARGET_DIR}/es.exe" ]; then
-        cp "${TARGET_DIR}/es.exe" "${TARGET_DIR}/Everything.exe" 2>/dev/null || true
-    fi
-fi
 
 echo "Mappings applied successfully"

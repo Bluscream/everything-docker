@@ -38,17 +38,20 @@ RUN dpkg --add-architecture i386 && \
 ##    REPOSITORIES AND DEPENDENCIES    ##
 #########################################
 
-# Copy all Everything files (all architectures included) to image source location
-COPY opt/everything/ /opt/everything-image/
+# Copy all Everything files to temporary location (needed for mapping script to read)
+COPY opt/everything/ /tmp/everything-source/
 
 # Copy mapping script and apply mappings based on architecture
 COPY --chmod=755 apply-mappings.sh /usr/local/bin/apply-mappings.sh
 
-# Detect build architecture and apply mappings to keep image size small
+# Apply mappings to copy only files specified in mappings.json for this architecture
+# This keeps the image smaller by excluding architecture-specific files not needed
 ARG TARGETARCH=amd64
 ARG BUILDPLATFORM=linux/amd64
-RUN /usr/local/bin/apply-mappings.sh /opt/everything-image /opt/everything-image "${TARGETARCH}" || \
-    /usr/local/bin/apply-mappings.sh /opt/everything-image /opt/everything-image "amd64"
+RUN mkdir -p /opt/everything-image && \
+    /usr/local/bin/apply-mappings.sh /tmp/everything-source /opt/everything-image "${TARGETARCH}" || \
+    /usr/local/bin/apply-mappings.sh /tmp/everything-source /opt/everything-image "amd64" && \
+    rm -rf /tmp/everything-source
 
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh
@@ -56,7 +59,7 @@ COPY --chmod=777 startapp.sh /startapp.sh
 # Add everything init script
 COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 
-# Copy default Everything configuration templates
+# Copy default Everything configuration templates directly (no need for separate defaults folder)
 COPY opt/everything/Everything-1.5a.ini /opt/everything-defaults/Everything.ini
 COPY opt/everything/Plugins-1.5a.ini /opt/everything-defaults/plugins.ini
 
