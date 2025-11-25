@@ -7,14 +7,12 @@ set -u # Treat unset variables as an error.
 mkdir -p "$XDG_CONFIG_HOME/Everything"
 mkdir -p "$XDG_DATA_HOME"
 
-# Adjust ownership of /wine (Wine prefix - separate mount, not nested)
-chown -R $USER_ID:$GROUP_ID /wine 2>/dev/null || true
-
-# Adjust ownership of /config (VNC passwords, certificates - not user data)
+# Adjust ownership of /config (VNC passwords, certificates, Wine config)
 chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
 
 # Files that should be preserved (config/data) - not overwritten on updates
-PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini plugins-1.5a.ini Everything.db Everything-1.5a.db"
+# Note: Include both case variants for plugin files (Plugins-1.5a.ini from image, plugins-1.5a.ini might be created)
+PRESERVE_FILES="Everything.ini Everything-1.5a.ini plugins.ini Plugins.ini plugins-1.5a.ini Plugins-1.5a.ini Everything.db Everything-1.5a.db"
 
 # Initialize Everything data directory if volume is empty (first deployment)
 if [ -z "$(ls -A /opt/everything 2>/dev/null)" ]; then
@@ -88,6 +86,10 @@ chown -R $USER_ID:$GROUP_ID /opt/everything/plugins 2>/dev/null || true
 
 # Adjust ownership of Everything directory (skip if on slow network mount)
 echo "Setting file permissions..."
+# Ensure the directory itself is writable
+chown $USER_ID:$GROUP_ID /opt/everything 2>/dev/null || true
+chmod 755 /opt/everything 2>/dev/null || true
+
 # Only chown specific directories/files to avoid hanging on large network mounts
 chown -R $USER_ID:$GROUP_ID /opt/everything/*.exe 2>/dev/null || true
 chown -R $USER_ID:$GROUP_ID /opt/everything/*.dll 2>/dev/null || true
@@ -102,10 +104,10 @@ timeout 10 chown -R $USER_ID:$GROUP_ID /opt/everything/html 2>/dev/null || true
 # Set up Wine environment
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
-export WINEPREFIX="/wine"
+export WINEPREFIX="/config/.wine"
 export WINE_NO_ASYNC_DIRECTORY=1
 
-# Note: Wine config is stored in /wine (separate mount, not nested)
+# Note: Wine config is stored in /config/.wine (subdirectory, not a nested mount)
 # Permissions are handled by the chown above
 
 # Note: WINEARCH is set in the Dockerfile at build time and doesn't need

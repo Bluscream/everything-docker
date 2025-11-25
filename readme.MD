@@ -3,6 +3,7 @@
 This project runs the Everything Search software (Windows-only) inside a Docker container using Wine, and exposes the UI via a web-accessible VNC server (noVNC), similar to Unraid containers.
 
 ## Features
+
 - Everything Search (Windows version) via Wine
 - Multi-arch support (amd64 and i386) with optimized architecture-specific images
 - Professional GUI base image with secure web access
@@ -65,10 +66,12 @@ Each image is smaller because it only contains files for its specific architectu
 - Or any other executable available in the image
 
 ### Other Customization
+
 - To change the VNC or web port, edit the `docker-compose.yml` file.
 - To use a different Everything executable, set the `EVERYTHING_BINARY` environment variable (e.g., `EVERYTHING_BINARY=everything-1.5_x86.exe`).
 
 ## Notes
+
 - This container uses Wine to run Everything Search, which is a Windows application.
 - The UI is accessible via any modern web browser using noVNC.
 - **All data is persistent by default** and organized in the following structure:
@@ -88,16 +91,17 @@ Each image is smaller because it only contains files for its specific architectu
 
 ## Development
 
-| Step  | Docker Hub | GHCR |
-|-------|--------------------|--------------|
-| Build | `docker build -t everything-wine:latest .` | `docker build -t everything-wine:latest .` |
-| Repo | https://hub.docker.com/repository/create | `gh repo create mygithubuser/everything-wine` |
+| Step  | Docker Hub                                                              | GHCR                                                                            |
+| ----- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Build | `docker build -t everything-wine:latest .`                              | `docker build -t everything-wine:latest .`                                      |
+| Repo  | https://hub.docker.com/repository/create                                | `gh repo create mygithubuser/everything-wine`                                   |
 | Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest` |
-| Login | `docker login` | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin` |
-| Push  | `docker push mydockeruser/everything-wine:latest` | `docker push ghcr.io/mygithubuser/everything-wine:latest` |
+| Login | `docker login`                                                          | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin`         |
+| Push  | `docker push mydockeruser/everything-wine:latest`                       | `docker push ghcr.io/mygithubuser/everything-wine:latest`                       |
 
 ## Credits
+
 - [Everything Search](https://www.voidtools.com/)
 - [Wine](https://www.winehq.org/)
 - [noVNC](https://github.com/novnc/noVNC)
-- [TigerVNC](https://tigervnc.org/) 
+- [TigerVNC](https://tigervnc.org/)

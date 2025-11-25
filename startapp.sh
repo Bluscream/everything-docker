@@ -2,8 +2,8 @@
 export HOME=/config
 export WINEDEBUG=-fixme-all
 
-# Set Wine prefix explicitly (mounted directly to /wine, not nested)
-export WINEPREFIX="/wine"
+# Set Wine prefix to /config/.wine (subdirectory of /config mount, not a nested mount)
+export WINEPREFIX="/config/.wine"
 
 # Additional Wine environment variables to prevent deadlocks
 export WINEDLLOVERRIDES="mscoree,mshtml="
@@ -35,8 +35,8 @@ fi
 # Ensure WINEARCH is set (fallback for safety, though it should always be set)
 export WINEARCH="${WINEARCH:-win64}"
 
-# Initialize Wine prefix if it doesn't exist
-if [ ! -d "/wine" ]; then
+# Initialize Wine prefix if it doesn't exist (only on first run)
+if [ ! -d "/config/.wine" ]; then
     echo "Initializing Wine prefix..."
     wineboot --init 2>/dev/null || true
     
@@ -47,7 +47,7 @@ fi
 # Apply registry tweaks to prevent deadlocks and COM marshalling issues
 # Apply these on every startup to ensure they're always set
 # Only apply if Wine prefix exists and is accessible
-if [ -d "/wine" ] && [ -f "/wine/system.reg" ]; then
+if [ -d "/config/.wine" ] && [ -f "/config/.wine/system.reg" ]; then
     echo "Applying Wine registry tweaks to prevent deadlocks..."
     
     # Ensure registry keys exist
@@ -61,11 +61,11 @@ if [ -d "/wine" ] && [ -f "/wine/system.reg" ]; then
     wine reg add "HKCU\\Software\\Wine\\DllOverrides" /v "oleaut32" /t REG_SZ /d "builtin" /f >/dev/null 2>&1 || true
     
     # Set file system options to prevent directory access deadlocks
-    wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "ReadOnly" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
-    wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "UseDType" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
+    # wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "ReadOnly" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
+    # wine reg add "HKCU\\Software\\Wine\\FileSystem" /v "UseDType" /t REG_SZ /d "N" /f >/dev/null 2>&1 || true
     
     # Set Wine version to Windows 10 for better compatibility
-    wine reg add "HKCU\\Software\\Wine" /v "Version" /t REG_SZ /d "win10" /f >/dev/null 2>&1 || true
+    # wine reg add "HKCU\\Software\\Wine" /v "Version" /t REG_SZ /d "win10" /f >/dev/null 2>&1 || true
     
     # Increase timeout for critical sections (helps with directory.c deadlocks)
     # This is a workaround for the RtlpWaitForCriticalSection timeout issue
@@ -73,6 +73,11 @@ if [ -d "/wine" ] && [ -f "/wine/system.reg" ]; then
     
     echo "Registry tweaks applied."
 fi
+
+# Ensure /opt/everything is writable before starting Everything
+# This is critical for database writes
+chmod 755 /opt/everything 2>/dev/null || true
+chown $USER_ID:$GROUP_ID /opt/everything 2>/dev/null || true
 
 # Run Everything from data directory
 cd /opt/everything
