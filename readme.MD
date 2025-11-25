@@ -76,7 +76,7 @@ Each image is smaller because it only contains files for its specific architectu
     - `Everything-1.5a.ini` - Settings and configuration (Everything 1.5a alpha format)
     - `Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
     - `Everything.db` - Index database
-    - `Everything.exe` - Executable (copied from image on first run)
+    - `everything-1.5.exe` - Executable (copied from image on first run, default)
     - `plugins/` - Everything Search plugins (HTTP Server, ETP Server, etc.)
   - Note: Wine configuration is stored inside the container and is not persisted by default
   - Note: For production use, you may want to use `./data/` instead of `./.data/` by updating the docker-compose volume mount
