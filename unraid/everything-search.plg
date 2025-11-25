@@ -107,7 +107,7 @@
     <ContainerDir>/opt/everything</ContainerDir>
     <Description>Everything Search data directory (Everything.ini, Everything.db, executables, plugins/)</Description>
   </Volume>
-  <PostArgs>--memory=4096m --memory-reservation=512m --memory-swap=4096m</PostArgs>
+  <PostArgs>--memory=8192m --memory-reservation=1024m --memory-swap=8192m</PostArgs>
   <Config>
     <Field>
       <Name>EVERYTHING_BINARY</Name>

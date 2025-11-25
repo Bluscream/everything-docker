@@ -4,9 +4,9 @@
 
 param(
     [string]$RestartPolicy = "on-failure:2",
-    [string]$MemoryMax = "4096m",
-    [string]$MemoryReservation = "512m",
-    [string]$MemorySwap = "4096m",
+    [string]$MemoryMax = "8192m",
+    [string]$MemoryReservation = "1024m",
+    [string]$MemorySwap = "8192m",
     [string]$EverythingBinary = "everything-1.5.exe",
     [string]$EverythingConfig = "~/everything.ini",
     [string]$EverythingDatabase = "~/everything.db",

@@ -1,12 +1,5 @@
 services:
   everything:
-    environment:
-    - DISPLAY=:0
-    - TZ=America/New_York
-    - WINEDEBUG=-fixme-all
-    - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
-    - EVERYTHING_CONFIG=${EVERYTHING_CONFIG:-~/everything.ini}
-    - EVERYTHING_DATABASE=${EVERYTHING_DATABASE:-~/everything.db}
     build:
       context: .
       dockerfile: Dockerfile.amd64
@@ -18,8 +11,15 @@ services:
     - 14630:14630
     restart: on-failure:2
     container_name: everything-search
-    mem_limit: 4096M
-    mem_reservation: 512M
+    mem_limit: 8192M
+    mem_reservation: 1024M
+    environment:
+    - DISPLAY=:0
+    - TZ=America/New_York
+    - WINEDEBUG=-fixme-all
+    - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
+    - EVERYTHING_CONFIG=${EVERYTHING_CONFIG:-~/everything.ini}
+    - EVERYTHING_DATABASE=${EVERYTHING_DATABASE:-~/everything.db}
     volumes:
     - ./.config:/config
     - ./data:/home/everything
