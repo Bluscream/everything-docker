@@ -1,4 +1,4 @@
-# Everything Search Docker Container
+# [![Icon](https://www.voidtools.com/e2.png)](https://www.voidtools.com/) Everything Search Docker Container
 
 This project runs the Everything Search software (Windows-only) inside a Docker container using Wine, and exposes the UI via a web-accessible VNC server (noVNC), similar to Unraid containers.
 
@@ -75,11 +75,13 @@ Docker automatically selects the correct image variant based on your system's ar
 This container includes a custom context menu item that converts Windows paths (as seen by Wine) to Linux paths and copies them to the clipboard. This is useful when working with mounted volumes (e.g., Unraid shares) where you need the actual Linux path.
 
 **How it works:**
+
 - The "Copy Linux Path" custom verb is registered in Wine's registry and appears in the context menu for all files and folders
 - The `copy_unix_path.cmd` script converts paths like `Z:\mnt\user\appdata` to `/mnt/user/appdata` and copies it to the clipboard
 - The script uses Windows' built-in `clip.exe` utility (available in Wine)
 
 **Configuration:**
+
 - The custom verb is automatically registered in Wine's registry on container startup via `startapp.sh`
 - Registry entries are added for both all file types (`HKCR\*\shell\CopyLinuxPath`) and directories (`HKCR\Directory\shell\CopyLinuxPath`)
 - The script `copy_unix_path.cmd` is included in the container at `/home/everything/copy_unix_path.cmd` (accessible as `Z:\home\everything\copy_unix_path.cmd` in Wine)
@@ -93,6 +95,7 @@ Right-click on any file or folder → Select "Copy Linux Path" from the context 
 ### Base Image
 
 This container uses **Debian Bullseye Slim** as the base image with:
+
 - Wine (with multiarch support for amd64)
 - Xvfb (virtual framebuffer X server)
 - x11vnc (VNC server)
@@ -103,6 +106,7 @@ This container uses **Debian Bullseye Slim** as the base image with:
 ### Process Management
 
 The container uses **supervisor** to manage multiple processes:
+
 - `xvfb`: Virtual X server
 - `fluxbox`: Window manager
 - `x11vnc`: VNC server on port 5900
@@ -136,13 +140,13 @@ All processes are automatically restarted if they exit unexpectedly.
 
 ## Development
 
-| Step  | Docker Hub                                                              | GHCR                                                                            |
-| ----- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Build | `docker build -t everything-wine:latest -f Dockerfile .`         | `docker buildx build --platform linux/amd64,linux/386 -t everything-wine:latest .`                 |
-| Repo  | https://hub.docker.com/repository/create                                | `gh repo create mygithubuser/everything-wine`                                   |
-| Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest` |
-| Login | `docker login`                                                          | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin`         |
-| Push  | `docker push mydockeruser/everything-wine:latest`                       | `docker push ghcr.io/mygithubuser/everything-wine:latest`                       |
+| Step  | Docker Hub                                                              | GHCR                                                                               |
+| ----- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Build | `docker build -t everything-wine:latest -f Dockerfile .`                | `docker buildx build --platform linux/amd64,linux/386 -t everything-wine:latest .` |
+| Repo  | https://hub.docker.com/repository/create                                | `gh repo create mygithubuser/everything-wine`                                      |
+| Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest`    |
+| Login | `docker login`                                                          | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin`            |
+| Push  | `docker push mydockeruser/everything-wine:latest`                       | `docker push ghcr.io/mygithubuser/everything-wine:latest`                          |
 
 ## Credits
 

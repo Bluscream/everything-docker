@@ -27,7 +27,8 @@ ENV DISPLAY_HEIGHT=720
 # Use a secure connection to the GUI
 ENV SECURE_CONNECTION=1
 
-# Clean tmp on startup
+# Clean tmp on startup (can be overridden via environment variable)
+# Default to 1, but allow users to disable for debugging
 ENV CLEAN_TMP_DIR=1
 
 # Set Wine architecture based on target architecture
@@ -141,6 +142,12 @@ COPY --chmod=777 startapp.sh /startapp.sh
 
 # Add everything init script
 COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
+
+# Generate and install favicons from Everything Search logo
+# The install_app_icon.sh script generates all necessary icon sizes and favicons
+RUN \
+    APP_ICON_URL=https://www.voidtools.com/e2.png && \
+    install_app_icon.sh "$APP_ICON_URL"
 
 #########################################
 ##         EXPORTS AND VOLUMES         ##

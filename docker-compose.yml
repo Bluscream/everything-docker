@@ -19,9 +19,21 @@ services:
     - WINEDEBUG=-fixme-all
     - WINEARCH=${WINEARCH:-win64}
     - WINE_NO_ASYNC_DIRECTORY=${WINE_NO_ASYNC_DIRECTORY:-1}
+    - DARK_MODE=${DARK_MODE:-1}
+    - CLEAN_TMP_DIR=${CLEAN_TMP_DIR:-1}
+    - KEEP_APP_RUNNING=${KEEP_APP_RUNNING:-0}
+    - VNC_PASSWORD=${VNC_PASSWORD:-}
+    - VNC_LOCALHOST_ONLY=${VNC_LOCALHOST_ONLY:-0}
+    - WEB_LOCALHOST_ONLY=${WEB_LOCALHOST_ONLY:-0}
+    - WEB_AUTHENTICATION=${WEB_AUTHENTICATION:-0}
+    - WEB_AUTHENTICATION_USERNAME=${WEB_AUTHENTICATION_USERNAME:-}
+    - WEB_AUTHENTICATION_PASSWORD=${WEB_AUTHENTICATION_PASSWORD:-}
     - EVERYTHING_BIN=${EVERYTHING_BIN:-everything-1.5.exe}
     - EVERYTHING_CFG=${EVERYTHING_CFG:-cfg/everything.ini}
     - EVERYTHING_DB=${EVERYTHING_DB:-db/everything.db}
+    # Uncomment to enable GPU acceleration (requires compatible GPU with open-source drivers)
+    # devices:
+    #   - /dev/dri:/dev/dri
     build:
       context: .
       dockerfile: Dockerfile
