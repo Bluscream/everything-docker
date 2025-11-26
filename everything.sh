@@ -12,8 +12,8 @@ if ! id -u everything >/dev/null 2>&1; then
 fi
 
 # Set up home directory and Wine prefix
-export HOME=/home/everything
-export WINEPREFIX=/home/everything/.wine
+export HOME="${HOME:-/home/everything}"
+export WINEPREFIX="${WINEPREFIX:-${HOME}/.wine}"
 
 # Create symlink from /config to /home/everything/.config for base image compatibility
 # The base image (jlesage/baseimage-gui) expects /config for VNC passwords, certificates, etc.
@@ -76,8 +76,7 @@ mkdir -p /home/everything/plugins
 chown -R $USER_ID:$GROUP_ID /home/everything/plugins 2>/dev/null || true
 
 # Set up Wine environment
-export WINEDEBUG=-fixme-all
-export DISPLAY=:0
+export DISPLAY="${DISPLAY:-:0}"
 # WINE_NO_ASYNC_DIRECTORY is configurable via environment variable (defaults to 1 if not set)
 export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 

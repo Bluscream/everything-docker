@@ -16,7 +16,10 @@ services:
     environment:
     - DISPLAY=:0
     - TZ=Europe/Berlin
-    - WINEDEBUG=-fixme-all
+    - HOME=${HOME:-/home/everything}
+    - WINEPREFIX=${WINEPREFIX:-/home/everything/.wine}
+    - WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-mscoree,mshtml=}
+    - WINEDEBUG=-all,+err,+warn,-fixme-shell
     - WINEARCH=${WINEARCH:-win64}
     - WINE_NO_ASYNC_DIRECTORY=${WINE_NO_ASYNC_DIRECTORY:-1}
     - DARK_MODE=${DARK_MODE:-1}

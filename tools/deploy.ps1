@@ -18,7 +18,10 @@ param(
     [string]$GroupId = "100",
     [string]$Umask = "000",
     [string]$Display = ":0",
-    [string]$WineDebug = "-fixme-all",
+    [string]$EverythingHome = "/home/everything",
+    [string]$WinePrefix = "/home/everything/.wine",
+    [string]$WineDllOverrides = "mscoree,mshtml=",
+    [string]$WineDebug = "-all,+err,+warn,-fixme-shell",
     [string]$WineArch = "win64",
     [string]$WineNoAsyncDirectory = "1"
 )
@@ -49,6 +52,9 @@ Write-Host "  USER_ID: $UserId"
 Write-Host "  GROUP_ID: $GroupId"
 Write-Host "  UMASK: $Umask"
 Write-Host "  DISPLAY: $Display"
+Write-Host "  HOME: $EverythingHome"
+Write-Host "  WINEPREFIX: $WinePrefix"
+Write-Host "  WINEDLLOVERRIDES: $WineDllOverrides"
 Write-Host "  WINEDEBUG: $WineDebug"
 Write-Host "  WINEARCH: $WineArch"
 Write-Host "  WINE_NO_ASYNC_DIRECTORY: $WineNoAsyncDirectory"
@@ -101,6 +107,15 @@ if ($UseYamlModule) {
         elseif ($envVars[$i] -match '^WINEARCH=') {
             $envVars[$i] = "WINEARCH=`${WINEARCH:-$WineArch}"
         }
+        elseif ($envVars[$i] -match '^HOME=') {
+            $envVars[$i] = "HOME=`${HOME:-$EverythingHome}"
+        }
+        elseif ($envVars[$i] -match '^WINEPREFIX=') {
+            $envVars[$i] = "WINEPREFIX=`${WINEPREFIX:-$WinePrefix}"
+        }
+        elseif ($envVars[$i] -match '^WINEDLLOVERRIDES=') {
+            $envVars[$i] = "WINEDLLOVERRIDES=`${WINEDLLOVERRIDES:-$WineDllOverrides}"
+        }
         elseif ($envVars[$i] -match '^WINE_NO_ASYNC_DIRECTORY=') {
             $envVars[$i] = "WINE_NO_ASYNC_DIRECTORY=`${WINE_NO_ASYNC_DIRECTORY:-$WineNoAsyncDirectory}"
         }
@@ -125,6 +140,9 @@ else {
     $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_CFG=\$\{EVERYTHING_CFG:-[^}]+\}', "EVERYTHING_CFG=`${EVERYTHING_CFG:-$EverythingConfig}"
     $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_DB=\$\{EVERYTHING_DB:-[^}]+\}', "EVERYTHING_DB=`${EVERYTHING_DB:-$EverythingDatabase}"
     $DockerComposeContent = $DockerComposeContent -replace 'TZ=[^\r\n]+', "TZ=$Timezone"
+    $DockerComposeContent = $DockerComposeContent -replace 'HOME=\$\{HOME:-[^}]+\}', "HOME=`${HOME:-$EverythingHome}"
+    $DockerComposeContent = $DockerComposeContent -replace 'WINEPREFIX=\$\{WINEPREFIX:-[^}]+\}', "WINEPREFIX=`${WINEPREFIX:-$WinePrefix}"
+    $DockerComposeContent = $DockerComposeContent -replace 'WINEDLLOVERRIDES=\$\{WINEDLLOVERRIDES:-[^}]+\}', "WINEDLLOVERRIDES=`${WINEDLLOVERRIDES:-$WineDllOverrides}"
     $DockerComposeContent = $DockerComposeContent -replace 'WINEARCH=\$\{WINEARCH:-[^}]+\}', "WINEARCH=`${WINEARCH:-$WineArch}"
     $DockerComposeContent = $DockerComposeContent -replace 'WINE_NO_ASYNC_DIRECTORY=\$\{WINE_NO_ASYNC_DIRECTORY:-[^}]+\}', "WINE_NO_ASYNC_DIRECTORY=`${WINE_NO_ASYNC_DIRECTORY:-$WineNoAsyncDirectory}"
     
@@ -165,6 +183,9 @@ $ConfigMap = @{
     "GROUP_ID"                = $GroupId
     "UMASK"                   = $Umask
     "DISPLAY"                 = $Display
+    "HOME"                    = $EverythingHome
+    "WINEPREFIX"              = $WinePrefix
+    "WINEDLLOVERRIDES"        = $WineDllOverrides
     "WINEDEBUG"               = $WineDebug
     "WINEARCH"                = $WineArch
     "WINE_NO_ASYNC_DIRECTORY" = $WineNoAsyncDirectory

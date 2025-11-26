@@ -1,12 +1,11 @@
 #!/bin/sh
 
 # Set home directory and Wine prefix
-export HOME=/home/everything
-export WINEPREFIX=/home/everything/.wine
-export WINEDEBUG=-fixme-all
+export HOME="${HOME:-/home/everything}"
+export WINEPREFIX="${WINEPREFIX:-${HOME}/.wine}"
 
 # Additional Wine environment variables to prevent deadlocks
-export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree,mshtml=}"
 # WINE_NO_ASYNC_DIRECTORY is now configurable via environment variable (defaults to 1 if not set)
 export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 
@@ -41,42 +40,42 @@ export WINEARCH="${WINEARCH:-win64}"
 
 # Check if Wine prefix exists and has the correct architecture
 # If we need win64 but prefix is 32-bit, we need to remove it (but it might be a mounted volume)
-if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]; then
+if [ -d "$WINEPREFIX" ] && [ -f "$WINEPREFIX/system.reg" ]; then
     if [ "$WINEARCH" = "win64" ]; then
         # Check if prefix is 32-bit by examining the registry or trying wine64
         ARCH_MISMATCH=false
         
         # Method 1: Check registry for wine vs wine64 references
-        if grep -q '"wine"' "/home/everything/.wine/system.reg" 2>/dev/null && ! grep -q '"wine64"' "/home/everything/.wine/system.reg" 2>/dev/null; then
+        if grep -q '"wine"' "$WINEPREFIX/system.reg" 2>/dev/null && ! grep -q '"wine64"' "$WINEPREFIX/system.reg" 2>/dev/null; then
             # Registry mentions wine but not wine64 - likely 32-bit
             ARCH_MISMATCH=true
         fi
         
         # Method 2: Try to run wine64 - if it fails with architecture error, prefix is wrong
         if [ "$ARCH_MISMATCH" = "false" ] && command -v wine64 >/dev/null 2>&1; then
-            WINE_TEST=$(env WINEARCH=win64 WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine64 --version 2>&1)
+            WINE_TEST=$(env WINEARCH=win64 WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine64 --version 2>&1)
             if echo "$WINE_TEST" | grep -qi "32-bit installation\|cannot support 64-bit"; then
                 ARCH_MISMATCH=true
             fi
         fi
         
         if [ "$ARCH_MISMATCH" = "true" ]; then
-            echo "ERROR: Wine prefix at /home/everything/.wine is 32-bit but we need 64-bit."
-            echo "Please remove the .wine directory from the host and restart the container."
-            echo "On the host, run: rm -rf ./.wine (or the equivalent path in your docker-compose.yml)"
+            echo "ERROR: Wine prefix at $WINEPREFIX is 32-bit but we need 64-bit."
+            echo "Please remove the Wine prefix directory from the host and restart the container."
+            echo "On the host, run: rm -rf $WINEPREFIX (or the equivalent path in your docker-compose.yml)"
             exit 1
         fi
     fi
 fi
 
 # Initialize Wine prefix if it doesn't exist
-if [ ! -d "/home/everything/.wine" ] || [ ! -f "/home/everything/.wine/system.reg" ]; then
-    echo "Initializing Wine prefix at /home/everything/.wine with architecture $WINEARCH..."
-    env WINEARCH="$WINEARCH" WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wineboot --init 2>&1 || {
+if [ ! -d "$WINEPREFIX" ] || [ ! -f "$WINEPREFIX/system.reg" ]; then
+    echo "Initializing Wine prefix at $WINEPREFIX with architecture $WINEARCH..."
+    env WINEARCH="$WINEARCH" WINEPREFIX="$WINEPREFIX" HOME="$HOME" wineboot --init 2>&1 || {
         echo "ERROR: Failed to initialize Wine prefix. This may indicate:"
         echo "  1. Missing Wine installation (wine32 required for win64)"
         echo "  2. Existing 32-bit prefix that needs to be removed"
-        echo "  3. Permission issues with /home/everything/.wine"
+        echo "  3. Permission issues with $WINEPREFIX"
         exit 1
     }
     
@@ -87,28 +86,31 @@ fi
 # Apply registry tweaks to prevent deadlocks and COM marshalling issues
 # Apply these on every startup to ensure they're always set
 # Only apply if Wine prefix exists and is accessible
-if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]; then
+if [ -d "$WINEPREFIX" ] && [ -f "$WINEPREFIX/system.reg" ]; then
     echo "Applying Wine registry tweaks to prevent deadlocks..."
     
+    # Convert HOME to Wine Z: drive path format (e.g., /home/everything -> Z:\home\everything)
+    HOME_WINE=$(echo "$HOME" | sed 's/\//\\/g' | sed 's/^\\/Z:/')
+    
     # Ensure registry keys exist
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine\\DllOverrides" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine\\Debug" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine\\FileSystem" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCU\\Software\\Wine" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCU\\Software\\Wine\\DllOverrides" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCU\\Software\\Wine\\Debug" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCU\\Software\\Wine\\FileSystem" /f >/dev/null 2>&1 || true
     
     # Increase timeout for critical sections (helps with directory.c deadlocks)
     # This is a workaround for the RtlpWaitForCriticalSection timeout issue
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine\\Debug" /v "RelayExclude" /t REG_SZ /d "ntdll.RtlEnterCriticalSection;ntdll.RtlLeaveCriticalSection" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCU\\Software\\Wine\\Debug" /v "RelayExclude" /t REG_SZ /d "ntdll.RtlEnterCriticalSection;ntdll.RtlLeaveCriticalSection" /f >/dev/null 2>&1 || true
     
     # Register custom verb "Copy Linux Path" in Windows context menu
     # This makes the custom verb available system-wide in Wine, not just in Everything
     # For all file types (*)
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\home\\everything\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCR\\*\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCR\\*\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"$HOME_WINE\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
     
     # For directories
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\home\\everything\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="$WINEPREFIX" HOME="$HOME" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"$HOME_WINE\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
     
     echo "Registry tweaks applied."
 fi
