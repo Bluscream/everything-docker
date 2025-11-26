@@ -64,8 +64,8 @@ if [ ! -f "$EVERYTHING_CFG" ]; then
     chown $USER_ID:$GROUP_ID "$EVERYTHING_CFG" 2>/dev/null || true
 fi
 
-# Ensure plugins config file exists
-PLUGINS_CFG="${HOME}/cfg/Plugins-1.5a.ini"
+# Ensure plugins config file exists (must be next to everything.exe, not in cfg/)
+PLUGINS_CFG="${HOME}/Plugins-1.5a.ini"
 if [ ! -f "$PLUGINS_CFG" ]; then
     cp /opt/everything-defaults/Plugins-1.5a.ini "$PLUGINS_CFG" 2>/dev/null || true
     chown $USER_ID:$GROUP_ID "$PLUGINS_CFG" 2>/dev/null || true

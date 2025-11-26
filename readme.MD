@@ -127,11 +127,13 @@ All processes are automatically restarted if they exit unexpectedly.
 - This container uses Wine to run Everything Search, which is a Windows application.
 - The UI is accessible via any modern web browser using noVNC.
 - **All data is persistent by default** and organized in the following structure:
-  - `./data/` - Everything Search data directory (mounted to `/home/everything` in container)
-    - `cfg/everything.ini` - Settings and configuration
-    - `cfg/Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
-    - `db/everything.db` - Index database
+  - `./cfg/` - Everything Search config directory (mounted to `/home/everything/cfg` in container)
+    - `everything.ini` - Settings and configuration
+  - `./db/` - Everything Search database directory (mounted to `/home/everything/db` in container)
+    - `everything.db` - Index database
+  - `/home/everything/` - Everything Search home directory (contains executables and plugin config)
     - `everything-1.5.exe` - Executable (copied from image on first run, default)
+    - `Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server) - must be next to executable
     - `plugins/` - Everything Search plugins (HTTP Server, ETP Server, etc.)
     - `.wine/` - Wine prefix (persistent Wine configuration)
   - Note: In Unraid, the structure is:

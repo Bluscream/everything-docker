@@ -110,6 +110,7 @@ RUN mkdir -p /opt/everything-files
 COPY image/bin/html/ /opt/everything-files/html/
 COPY image/bin/everything.chm /opt/everything-files/everything.chm
 COPY image/bin/everything.lng /opt/everything-files/everything.lng
+COPY image/config/Plugins-1.5a.ini /opt/everything-files/Plugins-1.5a.ini
 
 # Copy architecture-specific files to /opt/everything-files
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
