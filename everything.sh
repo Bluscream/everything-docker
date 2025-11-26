@@ -81,5 +81,9 @@ export DISPLAY=:0
 # WINE_NO_ASYNC_DIRECTORY is configurable via environment variable (defaults to 1 if not set)
 export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 
+# Print all environment variables
+echo "Container initialization environment variables:"
+env | sort
+
 # Note: WINEARCH is set in the Dockerfile at build time and doesn't need
 # to be detected at runtime. The architecture is fixed per container image.

@@ -37,7 +37,7 @@ Write-Host "  Memory Reservation: $MemoryReservation"
 Write-Host "  Memory Swap: $MemorySwap"
 Write-Host "  Restart Policy: $RestartPolicy"
 Write-Host ""
-Write-Host "Environment Variables:" -ForegroundColor Yellow
+Write-Host "Deployment Configuration Variables:" -ForegroundColor Yellow
 Write-Host "  EVERYTHING_BIN: $EverythingBinary"
 Write-Host "  EVERYTHING_CFG: $EverythingConfig"
 Write-Host "  EVERYTHING_DB: $EverythingDatabase"

@@ -14,7 +14,7 @@ export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 # will always match the container's architecture. No need to check/remove it.
 
 echo "Container environment variables:"
-env | grep -E '^(DISPLAY|TZ|WINEPREFIX|WINEDEBUG|WINEARCH|WINE_NO_ASYNC_DIRECTORY|EVERYTHING_BIN|EVERYTHING_CFG|EVERYTHING_DB)=' | sort
+env | sort
 
 # Check if wine is available
 if ! command -v wine >/dev/null 2>&1; then
@@ -123,23 +123,34 @@ chown $USER_ID:$GROUP_ID "${HOME}/data" 2>/dev/null || true
 EVERYTHING_CFG="${EVERYTHING_CFG:-cfg/everything.ini}"
 EVERYTHING_DB="${EVERYTHING_DB:-data/everything.db}"
 
-# If path is relative (doesn't start with /), assume it's relative to home directory
-if [ "${EVERYTHING_CFG#/}" = "${EVERYTHING_CFG}" ]; then
-    EVERYTHING_CFG="${HOME}/${EVERYTHING_CFG}"
+# Store original values for display
+EVERYTHING_CFG_ORIG="$EVERYTHING_CFG"
+EVERYTHING_DB_ORIG="$EVERYTHING_DB"
+
+# If path is absolute, convert to relative path from HOME for Wine
+# If path is relative, use it as-is
+if [ "${EVERYTHING_CFG#/}" != "${EVERYTHING_CFG}" ]; then
+    # Absolute path - convert to relative from HOME
+    EVERYTHING_CFG="${EVERYTHING_CFG#${HOME}/}"
 fi
-if [ "${EVERYTHING_DB#/}" = "${EVERYTHING_DB}" ]; then
-    EVERYTHING_DB="${HOME}/${EVERYTHING_DB}"
+if [ "${EVERYTHING_DB#/}" != "${EVERYTHING_DB}" ]; then
+    # Absolute path - convert to relative from HOME
+    EVERYTHING_DB="${EVERYTHING_DB#${HOME}/}"
 fi
 
-# Run Everything from home directory with relative paths for config and database
+# Convert forward slashes to backslashes for Wine (Windows paths)
+EVERYTHING_CFG_WINE=$(echo "$EVERYTHING_CFG" | sed 's/\//\\/g')
+EVERYTHING_DB_WINE=$(echo "$EVERYTHING_DB" | sed 's/\//\\/g')
+
+# Run Everything from home directory with paths from environment variables
 # NOTE: -noapp-data is NOT used as it forces Everything to run as admin
 # -config: Specify the config file location (relative path from home directory)
 # -db: Specify the database file location (relative path from home directory)
 cd "${HOME}"
 echo "Starting Everything Search..."
 echo "  Binary: $EVERYTHING_PATH"
-echo "  Config: cfg/everything.ini (relative to home)"
-echo "  Database: data/everything.db (relative to home)"
+echo "  Config: $EVERYTHING_CFG_ORIG (from EVERYTHING_CFG)"
+echo "  Database: $EVERYTHING_DB_ORIG (from EVERYTHING_DB)"
 echo "  Working directory: $(pwd)"
 echo "  Wine prefix: $WINEPREFIX"
 echo "  Home: $HOME"
@@ -150,11 +161,11 @@ echo "Custom context menu available: right-click any file/folder, choose 'Explor
 # Run Everything in foreground (without -startup flag)
 # Everything will run in the foreground and keep the container alive
 # NOTE: Do NOT use -noapp-data as it forces Everything to run as admin
-# Use relative paths: cfg/everything.ini and data/everything.db (relative to current directory /home/everything)
+# Use paths from environment variables (converted to Windows format for Wine)
 echo "Everything Search is running in the foreground. Container will stay alive while Everything is running."
 env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}" wine "$EVERYTHING_PATH" \
-    -config "cfg/everything.ini" \
-    -db "data/everything.db" 2>&1
+    -config "$EVERYTHING_CFG_WINE" \
+    -db "$EVERYTHING_DB_WINE" 2>&1
 
 # If Everything exits, the container will exit (Docker restart policy will handle restarts)
 EXIT_CODE=$?

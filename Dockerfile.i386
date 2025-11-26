@@ -97,5 +97,8 @@ COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 ##         EXPORTS AND VOLUMES         ##
 #########################################
 
+# Print all environment variables during build
+RUN echo "Build-time environment variables:" && env | sort
+
 # Place whatever volumes and ports you want exposed here:
 VOLUME ["/home/everything"]
