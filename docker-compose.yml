@@ -23,4 +23,4 @@ services:
     mem_reservation: 1024M
     volumes:
     - ./data:/home/everything
-    - /mnt/user:/mnt/user:ro
+    - /mnt/user:/mnt/user:ro # Unraid shares
