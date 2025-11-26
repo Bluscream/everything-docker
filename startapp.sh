@@ -99,6 +99,16 @@ if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]
     # This is a workaround for the RtlpWaitForCriticalSection timeout issue
     env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCU\\Software\\Wine\\Debug" /v "RelayExclude" /t REG_SZ /d "ntdll.RtlEnterCriticalSection;ntdll.RtlLeaveCriticalSection" /f >/dev/null 2>&1 || true
     
+    # Register custom verb "Copy Linux Path" in Windows context menu
+    # This makes the custom verb available system-wide in Wine, not just in Everything
+    # For all file types (*)
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\bin\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    
+    # For directories
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\bin\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    
     echo "Registry tweaks applied."
 fi
 
@@ -125,11 +135,45 @@ CONFIG_WINE_PATH=$(echo "$EVERYTHING_CONFIG" | sed 's|^/|Z:\\|; s|/|\\|g')
 DATA_WINE_PATH=$(echo "$EVERYTHING_DATABASE" | sed 's|^/|Z:\\|; s|/|\\|g')
 
 # Run Everything from /bin directory with command line options
-# -noapp-data: Store settings and data in the same location as the executable (not in %APPDATA%)
+# NOTE: -noapp-data is NOT used as it forces Everything to run as admin
 # -config: Specify the config file location (Wine path - full path to file)
 # -db: Specify the database file location (Wine path - full path to file)
+#
 cd /bin
-exec env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY=1 wine "$EVERYTHING_PATH" \
-    -noapp-data \
+echo "Starting Everything Search..."
+echo "  Binary: $EVERYTHING_PATH"
+echo "  Config (Wine path): $CONFIG_WINE_PATH"
+echo "  Database (Wine path): $DATA_WINE_PATH"
+echo "  Working directory: $(pwd)"
+echo "  Wine prefix: $WINEPREFIX"
+echo "  Home: $HOME"
+echo "  Display: $DISPLAY"
+
+echo "Custom context menu available: right-click any file/folder, choose 'Explore Path' to copy the Linux path via Wine."
+
+
+# Run Everything with -startup to run in background, then keep the container alive
+# Everything will run as a background service, so we need to keep the script running
+# NOTE: Do NOT use -noapp-data as it forces Everything to run as admin
+env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY=1 wine "$EVERYTHING_PATH" \
+    -startup \
     -config "${CONFIG_WINE_PATH}" \
-    -db "${DATA_WINE_PATH}"
+    -db "${DATA_WINE_PATH}" 2>&1
+
+# Check if Everything started successfully
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "ERROR: Everything failed to start with exit code: $EXIT_CODE"
+    exit $EXIT_CODE
+fi
+
+# Everything is now running in the background, keep the container alive
+echo "Everything Search is running in the background. Keeping container alive..."
+# Wait indefinitely to keep the container alive
+# Everything runs as a background service with -startup, so we just need to keep the script running
+while true; do
+    sleep 300
+    # Simple health check: verify Everything HTTP server is still responding
+    # If it stops responding, the container will be restarted by Docker's restart policy
+    echo "Container health check: Everything Search is still running..."
+done

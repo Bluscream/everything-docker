@@ -67,6 +67,9 @@ COPY image/bin/plugins/etp_server64.dll /bin/plugins/etp_server.dll
 COPY image/bin/plugins/everything_server64.dll /bin/plugins/everything_server.dll
 COPY image/bin/plugins/http_server64.dll /bin/plugins/http_server.dll
 
+# Copy helper scripts
+COPY image/bin/copy_unix_path.cmd /bin/copy_unix_path.cmd
+
 # Copy default config files to image location (for first-time initialization)
 # Note: /config is used by base image for VNC config, so we use /settings for Everything config
 # Store defaults in /opt/everything-defaults so we can copy them during init if volume is empty

@@ -70,6 +70,30 @@ Each image is smaller because it only contains files for its specific architectu
 - To change the VNC or web port, edit the `docker-compose.yml` file.
 - To use a different Everything executable, set the `EVERYTHING_BINARY` environment variable (e.g., `EVERYTHING_BINARY=everything-1.5_x86.exe`).
 
+### Custom Context Menu: "Copy Linux Path"
+
+This container includes a custom context menu item that converts Windows paths (as seen by Wine) to Linux paths and copies them to the clipboard. This is useful when working with mounted volumes (e.g., Unraid shares) where you need the actual Linux path.
+
+**How it works:**
+- The "Copy Linux Path" custom verb is registered in Wine's registry and appears in the context menu for all files and folders
+- Additionally, the "Explore Path" context menu item is configured to run the same script
+- The `copy_unix_path.cmd` script converts paths like `Z:\mnt\user\appdata` to `/mnt/user/appdata` and copies it to the clipboard
+- The script uses Windows' built-in `clip.exe` utility (available in Wine)
+
+**Configuration:**
+- The custom verb is automatically registered in Wine's registry on container startup via `startapp.sh`
+- Registry entries are added for both all file types (`HKCR\*\shell\CopyLinuxPath`) and directories (`HKCR\Directory\shell\CopyLinuxPath`)
+- The "Explore Path" command is also pre-configured in `image/config/everything.ini` via `explore_path_command2`
+- The script `copy_unix_path.cmd` is included in the container at `/bin/copy_unix_path.cmd` (accessible as `Z:\bin\copy_unix_path.cmd` in Wine)
+- No additional setup is required - it works out of the box
+
+**Usage:**
+You have two options to copy Linux paths:
+1. **Custom Verb (Recommended):** Right-click on any file or folder → Select "Copy Linux Path" from the context menu
+2. **Modified Explore Path:** Right-click on any file or folder → Select "Explore Path" from the context menu
+
+Both methods will copy the Linux path (e.g., `/mnt/user/appdata/...`) to your clipboard.
+
 ## Notes
 
 - This container uses Wine to run Everything Search, which is a Windows application.
