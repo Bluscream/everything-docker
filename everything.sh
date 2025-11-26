@@ -15,9 +15,18 @@ fi
 export HOME=/home/everything
 export WINEPREFIX=/home/everything/.wine
 
+# Create symlink from /config to /home/everything/.config for base image compatibility
+# The base image (jlesage/baseimage-gui) expects /config for VNC passwords, certificates, etc.
+# We store it in /home/everything/.config/ and symlink it
+if [ ! -L /config ] && [ ! -d /config ]; then
+    # Remove /config if it exists as a directory (from image build)
+    rm -rf /config 2>/dev/null || true
+    # Create symlink
+    ln -s /home/everything/.config /config
+fi
+
 # Adjust ownership of directories
 chown -R $USER_ID:$GROUP_ID /home/everything 2>/dev/null || true
-chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
 
 # Get config path from environment variable (default to cfg/everything.ini relative to home)
 # Support full paths or relative paths (relative to home directory)

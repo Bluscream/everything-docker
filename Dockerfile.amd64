@@ -86,4 +86,4 @@ COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 #########################################
 
 # Place whatever volumes and ports you want exposed here:
-VOLUME ["/config", "/home/everything"]
+VOLUME ["/home/everything"]

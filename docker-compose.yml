@@ -22,6 +22,5 @@ services:
     container_name: everything-search
     mem_reservation: 1024M
     volumes:
-    - ./.config:/config
     - ./data:/home/everything
     - /mnt/user:/mnt/user:ro
