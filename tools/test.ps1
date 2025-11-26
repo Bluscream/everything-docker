@@ -7,7 +7,9 @@ param(
     [int]$VNCDirectPort = 5900,
     [int]$HttpServerPort = 14680,
     [int]$FtpServerPort = 14621,
-    [int]$EverythingServerPort = 14630
+    [int]$EverythingServerPort = 14630,
+    [switch]$Clean,
+    [switch]$NoClean
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,6 +44,23 @@ function Add-TestResult {
         Status = $status
     }
     $script:TestResults += $result
+}
+
+function Invoke-Cleanup {
+    param(
+        [string]$Message = "Cleaning up..."
+    )
+    
+    Write-Host ""
+    Write-Host $Message -ForegroundColor Yellow
+    try {
+        docker-compose -f "$ProjectRoot\docker-compose.yml" down -v 2>&1 | Out-Null
+        docker rmi everything-docker-everything:latest 2>&1 | Out-Null
+        Add-TestResult -TestName "Cleanup After Test" -Success $true
+    }
+    catch {
+        Add-TestResult -TestName "Cleanup After Test" -Success $false -ErrorCode "CLEANUP_ERROR" -ErrorDescription $_.Exception.Message
+    }
 }
 
 function Test-Port {
@@ -409,18 +428,6 @@ catch {
     Add-TestResult -TestName "Container Logs" -Success $false -ErrorCode "LOG_CHECK_ERROR" -ErrorDescription $_.Exception.Message
 }
 
-# Cleanup
-Write-Host ""
-Write-Host "Cleaning up..." -ForegroundColor Yellow
-try {
-    docker-compose -f "$ProjectRoot\docker-compose.yml" down -v 2>&1 | Out-Null
-    docker rmi everything-docker-everything:latest 2>&1 | Out-Null
-    Add-TestResult -TestName "Cleanup After Test" -Success $true
-}
-catch {
-    Add-TestResult -TestName "Cleanup After Test" -Success $false -ErrorCode "CLEANUP_ERROR" -ErrorDescription $_.Exception.Message
-}
-
 # Display results table
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
@@ -437,6 +444,59 @@ $failedTests = $totalTests - $passedTests
 
 Write-Host ""
 Write-Host "Summary: $passedTests/$totalTests tests passed" -ForegroundColor $(if ($failedTests -eq 0) { "Green" } else { "Red" })
+
+# Cleanup logic based on flags
+if ($NoClean) {
+    # NoClean: Print cleanup commands and exit
+    Write-Host ""
+    Write-Host "Cleanup skipped. To manually clean up, run:" -ForegroundColor Yellow
+    Write-Host "  docker-compose -f `"$ProjectRoot\docker-compose.yml`" down -v" -ForegroundColor Cyan
+    Write-Host "  docker rmi everything-docker-everything:latest" -ForegroundColor Cyan
+    Write-Host ""
+}
+elseif ($Clean) {
+    # Clean: Skip prompt and cleanup immediately
+    Invoke-Cleanup -Message "Cleaning up (Clean flag set)..."
+}
+else {
+    # Interactive: Show prompt
+    Write-Host ""
+    Write-Host "Press any key to keep container running (will wait for another key press to cleanup), or wait 5 seconds to cleanup automatically..." -ForegroundColor Yellow
+
+    $keyPressed = $false
+    $timeoutSeconds = 5
+    $startTime = Get-Date
+
+    # Check for key press with timeout using .NET Console
+    try {
+        while (((Get-Date) - $startTime).TotalSeconds -lt $timeoutSeconds) {
+            if ([System.Console]::KeyAvailable) {
+                [System.Console]::ReadKey($true) | Out-Null
+                $keyPressed = $true
+                break
+            }
+            Start-Sleep -Milliseconds 100
+        }
+    }
+    catch {
+        # If console doesn't support KeyAvailable, just wait the timeout
+        Start-Sleep -Seconds $timeoutSeconds
+    }
+
+    if ($keyPressed) {
+        Write-Host ""
+        Write-Host "Container will remain running. Press any key to cleanup and exit..." -ForegroundColor Cyan
+        try {
+            [System.Console]::ReadKey($true) | Out-Null
+        }
+        catch {
+            Read-Host "Press Enter to cleanup and exit"
+        }
+    }
+
+    # Cleanup
+    Invoke-Cleanup
+}
 
 # Exit with appropriate code
 if ($failedTests -gt 0) {
