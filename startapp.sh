@@ -7,13 +7,14 @@ export WINEDEBUG=-fixme-all
 
 # Additional Wine environment variables to prevent deadlocks
 export WINEDLLOVERRIDES="mscoree,mshtml="
-export WINE_NO_ASYNC_DIRECTORY=1
+# WINE_NO_ASYNC_DIRECTORY is now configurable via environment variable (defaults to 1 if not set)
+export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 
 # Note: Architecture is fixed at build time (via Dockerfile), so Wine config
 # will always match the container's architecture. No need to check/remove it.
 
 echo "Container environment variables:"
-env | grep -E '^(DISPLAY|TZ|WINEPREFIX|WINEDEBUG|WINEARCH|EVERYTHING_BINARY|EVERYTHING_CONFIG|EVERYTHING_DATABASE)=' | sort
+env | grep -E '^(DISPLAY|TZ|WINEPREFIX|WINEDEBUG|WINEARCH|WINE_NO_ASYNC_DIRECTORY|EVERYTHING_BIN|EVERYTHING_CFG|EVERYTHING_DB)=' | sort
 
 # Check if wine is available
 if ! command -v wine >/dev/null 2>&1; then
@@ -22,8 +23,8 @@ if ! command -v wine >/dev/null 2>&1; then
 fi
 
 # Set default binary if not specified
-EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5.exe}"
-EVERYTHING_PATH="${HOME}/${EVERYTHING_BINARY}"
+EVERYTHING_BIN="${EVERYTHING_BIN:-everything-1.5.exe}"
+EVERYTHING_PATH="${HOME}/${EVERYTHING_BIN}"
 
 # Check if the specified binary exists
 if [ ! -f "$EVERYTHING_PATH" ]; then
@@ -150,7 +151,7 @@ echo "Custom context menu available: right-click any file/folder, choose 'Explor
 # Everything will run as a background service, so we need to keep the script running
 # NOTE: Do NOT use -noapp-data as it forces Everything to run as admin
 # Use relative paths: cfg/everything.ini and data/everything.db (relative to current directory /home/everything)
-env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY=1 wine "$EVERYTHING_PATH" \
+env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}" wine "$EVERYTHING_PATH" \
     -startup \
     -config "cfg/everything.ini" \
     -db "data/everything.db" 2>&1

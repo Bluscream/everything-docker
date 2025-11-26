@@ -15,7 +15,8 @@ services:
     - TZ=Europe/Berlin
     - WINEDEBUG=-fixme-all
     - WINEARCH=${WINEARCH:-win64}
-    - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
+    - WINE_NO_ASYNC_DIRECTORY=${WINE_NO_ASYNC_DIRECTORY:-1}
+    - EVERYTHING_BIN=${EVERYTHING_BIN:-everything-1.5.exe}
     - EVERYTHING_CFG=${EVERYTHING_CFG:-cfg/everything.ini}
     - EVERYTHING_DB=${EVERYTHING_DB:-data/everything.db}
     restart: on-failure:2

@@ -25,6 +25,21 @@ if [ ! -L /config ] && [ ! -d /config ]; then
     ln -s /home/everything/.config /config
 fi
 
+# Copy files from image to volume on first run (if volume is empty)
+# The volume mount overwrites /home/everything, so we need to copy files from /opt/everything-files
+# Check if executables exist - if not, this is first run and we need to copy from image
+if [ ! -f "/home/everything/everything-1.5.exe" ]; then
+    echo "First run detected - copying files from image to volume..."
+    
+    # Copy all files from /opt/everything-files to /home/everything
+    if [ -d "/opt/everything-files" ]; then
+        cp -r /opt/everything-files/* /home/everything/ 2>/dev/null || true
+        echo "Files copied from image to volume"
+    else
+        echo "Warning: /opt/everything-files not found - files may not be available"
+    fi
+fi
+
 # Adjust ownership of directories
 chown -R $USER_ID:$GROUP_ID /home/everything 2>/dev/null || true
 
@@ -63,7 +78,8 @@ chown -R $USER_ID:$GROUP_ID /home/everything/plugins 2>/dev/null || true
 # Set up Wine environment
 export WINEDEBUG=-fixme-all
 export DISPLAY=:0
-export WINE_NO_ASYNC_DIRECTORY=1
+# WINE_NO_ASYNC_DIRECTORY is configurable via environment variable (defaults to 1 if not set)
+export WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}"
 
 # Note: WINEARCH is set in the Dockerfile at build time and doesn't need
 # to be detected at runtime. The architecture is fixed per container image.

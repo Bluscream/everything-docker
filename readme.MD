@@ -57,7 +57,7 @@ This project uses Docker multi-arch builds with separate optimized images for ea
 - **amd64 (x64)**: Optimized image containing only 64-bit executables and plugins
 - **i386 (x86)**: Optimized image containing only 32-bit executables and plugins
 
-Each image is smaller because it only contains files for its specific architecture. The default executable is `everything-1.5.exe`, but you can override it using the `EVERYTHING_BINARY` environment variable:
+Each image is smaller because it only contains files for its specific architecture. The default executable is `everything-1.5.exe`, but you can override it using the `EVERYTHING_BIN` environment variable:
 
 - `everything-1.5.exe` (default) - Everything 1.5
 - `everything-1.4.exe` - Everything 1.4
@@ -68,7 +68,7 @@ Each image is smaller because it only contains files for its specific architectu
 ### Other Customization
 
 - To change the VNC or web port, edit the `docker-compose.yml` file.
-- To use a different Everything executable, set the `EVERYTHING_BINARY` environment variable (e.g., `EVERYTHING_BINARY=everything-1.5_x86.exe`).
+- To use a different Everything executable, set the `EVERYTHING_BIN` environment variable (e.g., `EVERYTHING_BIN=everything-1.5_x86.exe`).
 
 ### Custom Context Menu: "Copy Linux Path"
 

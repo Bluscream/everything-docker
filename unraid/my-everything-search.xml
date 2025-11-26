@@ -9,7 +9,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/bluscream/everything-docker/issues</Support>
   <Project>https://www.voidtools.com/</Project>
-  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BINARY environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Overview>
+  <Overview>Everything Search is a fast file search utility for Windows, now running in Docker with Wine and accessible via web interface. This container runs the Windows version using Wine and provides access via a secure web interface (noVNC). Features include selectable executable via EVERYTHING_BIN environment variable, Everything HTTP Server, ETP Server, and Server components. Multi-arch support (amd64 and i386) with optimized architecture-specific images.</Overview>
   <Category>Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
@@ -31,7 +31,7 @@
   <Config Name="Everything Config Path" Target="EVERYTHING_CFG" Default="cfg/everything.ini" Mode="" Description="Everything Search config file path (relative to /home/everything, e.g., cfg/everything.ini). Defaults to cfg/everything.ini" Type="Variable" Display="advanced" Required="true" Mask="false">cfg/everything.ini</Config>
   <Config Name="Everything Database Path" Target="EVERYTHING_DB" Default="data/everything.db" Mode="" Description="Everything Search database file path (relative to /home/everything, e.g., data/everything.db). Defaults to data/everything.db" Type="Variable" Display="advanced" Required="true" Mask="false">data/everything.db</Config>
   <Config Name="Unraid User Shares" Target="/mnt/user" Default="/mnt/user" Mode="ro" Description="Unraid user shares mount for indexing (read-only)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user</Config>
-  <Config Name="Everything Binary" Target="EVERYTHING_BINARY" Default="everything-1.5.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5.exe, everything-1.4.exe, es.exe, voidimageviewer.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5.exe</Config>
+  <Config Name="Everything Binary" Target="EVERYTHING_BIN" Default="everything-1.5.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5.exe, everything-1.4.exe, es.exe, voidimageviewer.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5.exe</Config>
   <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone for the container (e.g., America/New_York, Europe/London)" Type="Variable" Display="always" Required="true" Mask="false">Europe/Berlin</Config>
   <Config Name="Display Width" Target="DISPLAY_WIDTH" Default="1920" Mode="" Description="Display width for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">1920</Config>
   <Config Name="Display Height" Target="DISPLAY_HEIGHT" Default="945" Mode="" Description="Display height for VNC interface" Type="Variable" Display="advanced" Required="true" Mask="false">945</Config>
@@ -42,5 +42,6 @@
   <Config Name="Display" Target="DISPLAY" Default=":0" Mode="" Description="X11 display for GUI" Type="Variable" Display="advanced-hide" Required="true" Mask="false">:0</Config>
   <Config Name="Wine Debug" Target="WINEDEBUG" Default="-fixme-all" Mode="" Description="Wine debug settings" Type="Variable" Display="advanced-hide" Required="true" Mask="false">-fixme-all</Config>
   <Config Name="Wine Architecture" Target="WINEARCH" Default="win64" Mode="" Description="Wine architecture (win64 for 64-bit, win32 for 32-bit)" Type="Variable" Display="advanced-hide" Required="true" Mask="false">win64</Config>
+  <Config Name="Wine No Async Directory" Target="WINE_NO_ASYNC_DIRECTORY" Default="1" Mode="" Description="Disable async directory operations in Wine (0=disabled, 1=enabled). Can help prevent deadlocks. Default: 1" Type="Variable" Display="advanced" Required="true" Mask="false">1</Config>
   <TailscaleStateDir />
 </Container>

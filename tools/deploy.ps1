@@ -19,7 +19,8 @@ param(
     [string]$Umask = "000",
     [string]$Display = ":0",
     [string]$WineDebug = "-fixme-all",
-    [string]$WineArch = "win64"
+    [string]$WineArch = "win64",
+    [string]$WineNoAsyncDirectory = "1"
 )
 
 $ErrorActionPreference = "Stop"
@@ -37,9 +38,9 @@ Write-Host "  Memory Swap: $MemorySwap"
 Write-Host "  Restart Policy: $RestartPolicy"
 Write-Host ""
 Write-Host "Environment Variables:" -ForegroundColor Yellow
-Write-Host "  EVERYTHING_BINARY: $EverythingBinary"
-Write-Host "  EVERYTHING_CONFIG: $EverythingConfig"
-Write-Host "  EVERYTHING_DATABASE: $EverythingDatabase"
+Write-Host "  EVERYTHING_BIN: $EverythingBinary"
+Write-Host "  EVERYTHING_CFG: $EverythingConfig"
+Write-Host "  EVERYTHING_DB: $EverythingDatabase"
 Write-Host "  TZ: $Timezone"
 Write-Host "  DISPLAY_WIDTH: $DisplayWidth"
 Write-Host "  DISPLAY_HEIGHT: $DisplayHeight"
@@ -50,6 +51,7 @@ Write-Host "  UMASK: $Umask"
 Write-Host "  DISPLAY: $Display"
 Write-Host "  WINEDEBUG: $WineDebug"
 Write-Host "  WINEARCH: $WineArch"
+Write-Host "  WINE_NO_ASYNC_DIRECTORY: $WineNoAsyncDirectory"
 Write-Host ""
 
 # Convert memory values for docker-compose (uppercase M)
@@ -84,17 +86,23 @@ if ($UseYamlModule) {
     # Update environment variables
     $envVars = $YamlContent.services.everything.environment
     for ($i = 0; $i -lt $envVars.Count; $i++) {
-        if ($envVars[$i] -match '^EVERYTHING_BINARY=') {
-            $envVars[$i] = "EVERYTHING_BINARY=`${EVERYTHING_BINARY:-$EverythingBinary}"
+        if ($envVars[$i] -match '^EVERYTHING_BIN=') {
+            $envVars[$i] = "EVERYTHING_BIN=`${EVERYTHING_BIN:-$EverythingBinary}"
         }
-        elseif ($envVars[$i] -match '^EVERYTHING_CONFIG=') {
-            $envVars[$i] = "EVERYTHING_CONFIG=`${EVERYTHING_CONFIG:-$EverythingConfig}"
+        elseif ($envVars[$i] -match '^EVERYTHING_CFG=') {
+            $envVars[$i] = "EVERYTHING_CFG=`${EVERYTHING_CFG:-$EverythingConfig}"
         }
-        elseif ($envVars[$i] -match '^EVERYTHING_DATABASE=') {
-            $envVars[$i] = "EVERYTHING_DATABASE=`${EVERYTHING_DATABASE:-$EverythingDatabase}"
+        elseif ($envVars[$i] -match '^EVERYTHING_DB=') {
+            $envVars[$i] = "EVERYTHING_DB=`${EVERYTHING_DB:-$EverythingDatabase}"
         }
         elseif ($envVars[$i] -match '^TZ=') {
             $envVars[$i] = "TZ=$Timezone"
+        }
+        elseif ($envVars[$i] -match '^WINEARCH=') {
+            $envVars[$i] = "WINEARCH=`${WINEARCH:-$WineArch}"
+        }
+        elseif ($envVars[$i] -match '^WINE_NO_ASYNC_DIRECTORY=') {
+            $envVars[$i] = "WINE_NO_ASYNC_DIRECTORY=`${WINE_NO_ASYNC_DIRECTORY:-$WineNoAsyncDirectory}"
         }
     }
     
@@ -113,11 +121,12 @@ else {
     $DockerComposeContent = $DockerComposeContent -replace 'mem_reservation:\s*\d+[Mm]', "mem_reservation: $MemoryReservationDocker"
     
     # Update environment variables
-    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_BINARY=\$\{EVERYTHING_BINARY:-[^}]+\}', "EVERYTHING_BINARY=`${EVERYTHING_BINARY:-$EverythingBinary}"
-    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_CONFIG=\$\{EVERYTHING_CONFIG:-[^}]+\}', "EVERYTHING_CONFIG=`${EVERYTHING_CONFIG:-$EverythingConfig}"
-    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_DATABASE=\$\{EVERYTHING_DATABASE:-[^}]+\}', "EVERYTHING_DATABASE=`${EVERYTHING_DATABASE:-$EverythingDatabase}"
+    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_BIN=\$\{EVERYTHING_BIN:-[^}]+\}', "EVERYTHING_BIN=`${EVERYTHING_BIN:-$EverythingBinary}"
+    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_CFG=\$\{EVERYTHING_CFG:-[^}]+\}', "EVERYTHING_CFG=`${EVERYTHING_CFG:-$EverythingConfig}"
+    $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_DB=\$\{EVERYTHING_DB:-[^}]+\}', "EVERYTHING_DB=`${EVERYTHING_DB:-$EverythingDatabase}"
     $DockerComposeContent = $DockerComposeContent -replace 'TZ=[^\r\n]+', "TZ=$Timezone"
     $DockerComposeContent = $DockerComposeContent -replace 'WINEARCH=\$\{WINEARCH:-[^}]+\}', "WINEARCH=`${WINEARCH:-$WineArch}"
+    $DockerComposeContent = $DockerComposeContent -replace 'WINE_NO_ASYNC_DIRECTORY=\$\{WINE_NO_ASYNC_DIRECTORY:-[^}]+\}', "WINE_NO_ASYNC_DIRECTORY=`${WINE_NO_ASYNC_DIRECTORY:-$WineNoAsyncDirectory}"
     
     Set-Content -Path $DockerComposePath -Value $DockerComposeContent -NoNewline
 }
@@ -145,19 +154,20 @@ $XmlDoc.Container.ExtraParams = $ExtraParams
 
 # Update Config elements
 $ConfigMap = @{
-    "EVERYTHING_BINARY"   = $EverythingBinary
-    "EVERYTHING_CONFIG"   = $EverythingConfig
-    "EVERYTHING_DATABASE" = $EverythingDatabase
-    "TZ"                  = $Timezone
-    "DISPLAY_WIDTH"       = $DisplayWidth
-    "DISPLAY_HEIGHT"      = $DisplayHeight
-    "SECURE_CONNECTION"   = $SecureConnection
-    "USER_ID"             = $UserId
-    "GROUP_ID"            = $GroupId
-    "UMASK"               = $Umask
-    "DISPLAY"             = $Display
-    "WINEDEBUG"           = $WineDebug
-    "WINEARCH"            = $WineArch
+    "EVERYTHING_BIN"          = $EverythingBinary
+    "EVERYTHING_CFG"          = $EverythingConfig
+    "EVERYTHING_DB"           = $EverythingDatabase
+    "TZ"                      = $Timezone
+    "DISPLAY_WIDTH"           = $DisplayWidth
+    "DISPLAY_HEIGHT"          = $DisplayHeight
+    "SECURE_CONNECTION"       = $SecureConnection
+    "USER_ID"                 = $UserId
+    "GROUP_ID"                = $GroupId
+    "UMASK"                   = $Umask
+    "DISPLAY"                 = $Display
+    "WINEDEBUG"               = $WineDebug
+    "WINEARCH"                = $WineArch
+    "WINE_NO_ASYNC_DIRECTORY" = $WineNoAsyncDirectory
 }
 
 foreach ($Config in $XmlDoc.Container.Config) {
@@ -210,7 +220,7 @@ if (Test-Path $PlgPath) {
     
     # Update Variable elements
     $VariableMap = @{
-        "EVERYTHING_BINARY" = $EverythingBinary
+        "EVERYTHING_BIN"    = $EverythingBinary
         "TZ"                = $Timezone
         "DISPLAY_WIDTH"     = $DisplayWidth
         "DISPLAY_HEIGHT"    = $DisplayHeight

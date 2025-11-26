@@ -72,6 +72,21 @@ RUN mkdir -p /opt/everything-defaults
 COPY image/config/everything.ini /opt/everything-defaults/everything.ini
 COPY image/config/Plugins-1.5a.ini /opt/everything-defaults/Plugins-1.5a.ini
 
+# Copy all files to a persistent location that won't be overwritten by volume mounts
+# This allows us to copy them to /home/everything on first run
+RUN mkdir -p /opt/everything-files
+COPY image/bin/html/ /opt/everything-files/html/
+COPY image/bin/everything.chm /opt/everything-files/everything.chm
+COPY image/bin/everything.lng /opt/everything-files/everything.lng
+COPY image/bin/everything-1.4_x86.exe /opt/everything-files/everything-1.4.exe
+COPY image/bin/everything-1.5_x86.exe /opt/everything-files/everything-1.5.exe
+COPY image/bin/es_x86.exe /opt/everything-files/es.exe
+COPY image/bin/voidimageviewer_x86.exe /opt/everything-files/voidimageviewer.exe
+COPY image/bin/plugins/etp_server32.dll /opt/everything-files/plugins/etp_server.dll
+COPY image/bin/plugins/everything_server32.dll /opt/everything-files/plugins/everything_server.dll
+COPY image/bin/plugins/http_server32.dll /opt/everything-files/plugins/http_server.dll
+COPY image/bin/copy_unix_path.cmd /opt/everything-files/copy_unix_path.cmd
+
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh
 
