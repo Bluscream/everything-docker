@@ -16,13 +16,12 @@ services:
     - WINEDEBUG=-fixme-all
     - WINEARCH=${WINEARCH:-win64}
     - EVERYTHING_BINARY=${EVERYTHING_BINARY:-everything-1.5.exe}
-    - EVERYTHING_CONFIG=${EVERYTHING_CONFIG:-/home/everything/everything.ini}
-    - EVERYTHING_DATABASE=${EVERYTHING_DATABASE:-/home/everything/everything.db}
+    - EVERYTHING_CFG=${EVERYTHING_CFG:-cfg/everything.ini}
+    - EVERYTHING_DB=${EVERYTHING_DB:-data/everything.db}
     restart: on-failure:2
     container_name: everything-search
     mem_reservation: 1024M
     volumes:
     - ./.config:/config
     - ./data:/home/everything
-    - ./.wine:/home/everything/.wine
     - /mnt/user:/mnt/user:ro

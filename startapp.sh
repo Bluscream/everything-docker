@@ -23,13 +23,13 @@ fi
 
 # Set default binary if not specified
 EVERYTHING_BINARY="${EVERYTHING_BINARY:-everything-1.5.exe}"
-EVERYTHING_PATH="/bin/${EVERYTHING_BINARY}"
+EVERYTHING_PATH="${HOME}/${EVERYTHING_BINARY}"
 
 # Check if the specified binary exists
 if [ ! -f "$EVERYTHING_PATH" ]; then
     echo "Error: Everything binary not found at $EVERYTHING_PATH"
     echo "Available executables:"
-    ls -1 /bin/*.exe 2>/dev/null | sed 's|/bin/|  - |' || echo "  (none found)"
+    ls -1 ${HOME}/*.exe 2>/dev/null | sed "s|${HOME}/|  - |" || echo "  (none found)"
     exit 1
 fi
 
@@ -103,47 +103,42 @@ if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]
     # This makes the custom verb available system-wide in Wine, not just in Everything
     # For all file types (*)
     env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\bin\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\*\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\home\\everything\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
     
     # For directories
     env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath" /ve /t REG_SZ /d "Copy Linux Path" /f >/dev/null 2>&1 || true
-    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\bin\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
+    env WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine reg add "HKCR\\Directory\\shell\\CopyLinuxPath\\command" /ve /t REG_SZ /d "\"Z:\\home\\everything\\copy_unix_path.cmd\" \"%1\"" /f >/dev/null 2>&1 || true
     
     echo "Registry tweaks applied."
 fi
 
 # Ensure directories are writable
-chmod 755 /data 2>/dev/null || true
-chown $USER_ID:$GROUP_ID /data 2>/dev/null || true
+chmod 755 "${HOME}/data" 2>/dev/null || true
+chown $USER_ID:$GROUP_ID "${HOME}/data" 2>/dev/null || true
 
 # Get config and database paths from environment variables
-# Support full paths (e.g., /home/everything/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
-EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-/home/everything/everything.ini}"
-EVERYTHING_DATABASE="${EVERYTHING_DATABASE:-/home/everything/everything.db}"
+# Support relative paths (defaults to cfg/everything.ini and data/everything.db relative to home)
+# or full paths (e.g., /home/everything/cfg/everything.ini)
+EVERYTHING_CFG="${EVERYTHING_CFG:-cfg/everything.ini}"
+EVERYTHING_DB="${EVERYTHING_DB:-data/everything.db}"
 
 # If path is relative (doesn't start with /), assume it's relative to home directory
-if [ "${EVERYTHING_CONFIG#/}" = "${EVERYTHING_CONFIG}" ]; then
-    EVERYTHING_CONFIG="${HOME}/${EVERYTHING_CONFIG}"
+if [ "${EVERYTHING_CFG#/}" = "${EVERYTHING_CFG}" ]; then
+    EVERYTHING_CFG="${HOME}/${EVERYTHING_CFG}"
 fi
-if [ "${EVERYTHING_DATABASE#/}" = "${EVERYTHING_DATABASE}" ]; then
-    EVERYTHING_DATABASE="${HOME}/${EVERYTHING_DATABASE}"
+if [ "${EVERYTHING_DB#/}" = "${EVERYTHING_DB}" ]; then
+    EVERYTHING_DB="${HOME}/${EVERYTHING_DB}"
 fi
 
-# Convert Linux paths to Wine paths for command line options
-# Convert /home/everything/... to Z:\home\everything\... or /settings/... to Z:\settings\...
-CONFIG_WINE_PATH=$(echo "$EVERYTHING_CONFIG" | sed 's|^/|Z:\\|; s|/|\\|g')
-DATA_WINE_PATH=$(echo "$EVERYTHING_DATABASE" | sed 's|^/|Z:\\|; s|/|\\|g')
-
-# Run Everything from /bin directory with command line options
+# Run Everything from home directory with relative paths for config and database
 # NOTE: -noapp-data is NOT used as it forces Everything to run as admin
-# -config: Specify the config file location (Wine path - full path to file)
-# -db: Specify the database file location (Wine path - full path to file)
-#
-cd /bin
+# -config: Specify the config file location (relative path from home directory)
+# -db: Specify the database file location (relative path from home directory)
+cd "${HOME}"
 echo "Starting Everything Search..."
 echo "  Binary: $EVERYTHING_PATH"
-echo "  Config (Wine path): $CONFIG_WINE_PATH"
-echo "  Database (Wine path): $DATA_WINE_PATH"
+echo "  Config: cfg/everything.ini (relative to home)"
+echo "  Database: data/everything.db (relative to home)"
 echo "  Working directory: $(pwd)"
 echo "  Wine prefix: $WINEPREFIX"
 echo "  Home: $HOME"
@@ -151,14 +146,14 @@ echo "  Display: $DISPLAY"
 
 echo "Custom context menu available: right-click any file/folder, choose 'Explore Path' to copy the Linux path via Wine."
 
-
 # Run Everything with -startup to run in background, then keep the container alive
 # Everything will run as a background service, so we need to keep the script running
 # NOTE: Do NOT use -noapp-data as it forces Everything to run as admin
+# Use relative paths: cfg/everything.ini and data/everything.db (relative to current directory /home/everything)
 env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY=1 wine "$EVERYTHING_PATH" \
     -startup \
-    -config "${CONFIG_WINE_PATH}" \
-    -db "${DATA_WINE_PATH}" 2>&1
+    -config "cfg/everything.ini" \
+    -db "data/everything.db" 2>&1
 
 # Check if Everything started successfully
 EXIT_CODE=$?

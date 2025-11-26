@@ -44,36 +44,33 @@ RUN add-pkg wine xterm python3 python3-websockify git xvfb
 RUN useradd -m -u 99 -g 100 -d /home/everything -s /bin/sh everything || true
 
 # Create directory structure
-RUN mkdir -p /bin /config /data /home/everything/.wine
+RUN mkdir -p /home/everything/plugins /home/everything/html /home/everything/cfg /home/everything/.wine /home/everything/.config /config
 
-# Copy binaries and static files from image/bin to /bin
+# Copy binaries and static files to /home/everything/
 # Copy common files (html, chm, lng)
-COPY image/bin/html/ /bin/html/
-COPY image/bin/everything.chm /bin/everything.chm
-COPY image/bin/everything.lng /bin/everything.lng
+COPY image/bin/html/ /home/everything/html/
+COPY image/bin/everything.chm /home/everything/everything.chm
+COPY image/bin/everything.lng /home/everything/everything.lng
 
-# Copy and map i386-specific executables
-COPY image/bin/everything-1.4_x86.exe /bin/everything-1.4.exe
-COPY image/bin/everything-1.5_x86.exe /bin/everything-1.5.exe
-COPY image/bin/es_x86.exe /bin/es.exe
-COPY image/bin/voidimageviewer_x86.exe /bin/voidimageviewer.exe
+# Copy and map i386-specific executables (without arch suffix)
+COPY image/bin/everything-1.4_x86.exe /home/everything/everything-1.4.exe
+COPY image/bin/everything-1.5_x86.exe /home/everything/everything-1.5.exe
+COPY image/bin/es_x86.exe /home/everything/es.exe
+COPY image/bin/voidimageviewer_x86.exe /home/everything/voidimageviewer.exe
 
-# Copy and map i386-specific plugins
-RUN mkdir -p /bin/plugins
-COPY image/bin/plugins/etp_server32.dll /bin/plugins/etp_server.dll
-COPY image/bin/plugins/everything_server32.dll /bin/plugins/everything_server.dll
-COPY image/bin/plugins/http_server32.dll /bin/plugins/http_server.dll
+# Copy and map i386-specific plugins (without arch suffix)
+COPY image/bin/plugins/etp_server32.dll /home/everything/plugins/etp_server.dll
+COPY image/bin/plugins/everything_server32.dll /home/everything/plugins/everything_server.dll
+COPY image/bin/plugins/http_server32.dll /home/everything/plugins/http_server.dll
 
 # Copy helper scripts
-COPY image/bin/copy_unix_path.cmd /bin/copy_unix_path.cmd
+COPY image/bin/copy_unix_path.cmd /home/everything/copy_unix_path.cmd
 
 # Copy default config files to image location (for first-time initialization)
-# Note: /config is used by base image for VNC config, so we use /settings for Everything config
 # Store defaults in /opt/everything-defaults so we can copy them during init if volume is empty
-# Copy as everything.ini (default name, lowercase) - user can override via EVERYTHING_CONFIG env var
 RUN mkdir -p /opt/everything-defaults
 COPY image/config/everything.ini /opt/everything-defaults/everything.ini
-COPY image/config/Plugins-1.5a.ini /opt/everything-defaults/plugins.ini
+COPY image/config/Plugins-1.5a.ini /opt/everything-defaults/Plugins-1.5a.ini
 
 # Copy X app start script to correct location
 COPY --chmod=777 startapp.sh /startapp.sh
@@ -86,4 +83,4 @@ COPY --chmod=777 everything.sh /etc/cont-init.d/90-everything.sh
 #########################################
 
 # Place whatever volumes and ports you want exposed here:
-VOLUME ["/config", "/data"]
+VOLUME ["/config", "/home/everything"]
