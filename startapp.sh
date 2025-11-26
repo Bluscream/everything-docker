@@ -39,22 +39,31 @@ fi
 export WINEARCH="${WINEARCH:-win64}"
 
 # Check if Wine prefix exists and has the correct architecture
-# If we need win64 but prefix is 32-bit, remove it
-# Be aggressive: if prefix exists and we need win64, verify it's actually 64-bit
+# If we need win64 but prefix is 32-bit, we need to remove it (but it might be a mounted volume)
 if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]; then
     if [ "$WINEARCH" = "win64" ]; then
-        # Try to verify prefix is 64-bit by attempting to run wine64
-        # If it fails with architecture error, prefix is definitely 32-bit
-        if command -v wine64 >/dev/null 2>&1; then
+        # Check if prefix is 32-bit by examining the registry or trying wine64
+        ARCH_MISMATCH=false
+        
+        # Method 1: Check registry for wine vs wine64 references
+        if grep -q '"wine"' "/home/everything/.wine/system.reg" 2>/dev/null && ! grep -q '"wine64"' "/home/everything/.wine/system.reg" 2>/dev/null; then
+            # Registry mentions wine but not wine64 - likely 32-bit
+            ARCH_MISMATCH=true
+        fi
+        
+        # Method 2: Try to run wine64 - if it fails with architecture error, prefix is wrong
+        if [ "$ARCH_MISMATCH" = "false" ] && command -v wine64 >/dev/null 2>&1; then
             WINE_TEST=$(env WINEARCH=win64 WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine64 --version 2>&1)
             if echo "$WINE_TEST" | grep -qi "32-bit installation\|cannot support 64-bit"; then
-                echo "WARNING: Wine prefix is 32-bit but we need 64-bit. Removing old prefix..."
-                rm -rf "/home/everything/.wine"
+                ARCH_MISMATCH=true
             fi
-        else
-            # wine64 not available - can't verify, but if prefix exists and we need win64, remove it to be safe
-            echo "WARNING: wine64 not found but we need 64-bit prefix. Removing existing prefix to recreate..."
-            rm -rf "/home/everything/.wine"
+        fi
+        
+        if [ "$ARCH_MISMATCH" = "true" ]; then
+            echo "ERROR: Wine prefix at /home/everything/.wine is 32-bit but we need 64-bit."
+            echo "Please remove the .wine directory from the host and restart the container."
+            echo "On the host, run: rm -rf ./.wine (or the equivalent path in your docker-compose.yml)"
+            exit 1
         fi
     fi
 fi
@@ -63,7 +72,10 @@ fi
 if [ ! -d "/home/everything/.wine" ] || [ ! -f "/home/everything/.wine/system.reg" ]; then
     echo "Initializing Wine prefix at /home/everything/.wine with architecture $WINEARCH..."
     env WINEARCH="$WINEARCH" WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wineboot --init 2>&1 || {
-        echo "ERROR: Failed to initialize Wine prefix. This may indicate a missing Wine installation."
+        echo "ERROR: Failed to initialize Wine prefix. This may indicate:"
+        echo "  1. Missing Wine installation (wine32 required for win64)"
+        echo "  2. Existing 32-bit prefix that needs to be removed"
+        echo "  3. Permission issues with /home/everything/.wine"
         exit 1
     }
     

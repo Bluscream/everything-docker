@@ -33,8 +33,11 @@ ENV CLEAN_TMP_DIR=1
 ENV WINEARCH=win64
 
 # Install packages needed for app
-# For amd64, we only need 64-bit Wine support
-RUN add-pkg wine xterm python3 python3-websockify git xvfb
+# For amd64, we need both 64-bit and 32-bit Wine support (win64 requires wine32 and wine64)
+# Enable multiarch for i386 packages
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    add-pkg wine wine64 wine32 xterm python3 python3-websockify git xvfb
 
 #########################################
 ##    REPOSITORIES AND DEPENDENCIES    ##
