@@ -147,29 +147,16 @@ echo "  Display: $DISPLAY"
 
 echo "Custom context menu available: right-click any file/folder, choose 'Explore Path' to copy the Linux path via Wine."
 
-# Run Everything with -startup to run in background, then keep the container alive
-# Everything will run as a background service, so we need to keep the script running
+# Run Everything in foreground (without -startup flag)
+# Everything will run in the foreground and keep the container alive
 # NOTE: Do NOT use -noapp-data as it forces Everything to run as admin
 # Use relative paths: cfg/everything.ini and data/everything.db (relative to current directory /home/everything)
+echo "Everything Search is running in the foreground. Container will stay alive while Everything is running."
 env WINEARCH="${WINEARCH}" WINEPREFIX="${WINEPREFIX}" HOME="${HOME}" WINE_NO_ASYNC_DIRECTORY="${WINE_NO_ASYNC_DIRECTORY:-1}" wine "$EVERYTHING_PATH" \
-    -startup \
     -config "cfg/everything.ini" \
     -db "data/everything.db" 2>&1
 
-# Check if Everything started successfully
+# If Everything exits, the container will exit (Docker restart policy will handle restarts)
 EXIT_CODE=$?
-if [ $EXIT_CODE -ne 0 ]; then
-    echo "ERROR: Everything failed to start with exit code: $EXIT_CODE"
-    exit $EXIT_CODE
-fi
-
-# Everything is now running in the background, keep the container alive
-echo "Everything Search is running in the background. Keeping container alive..."
-# Wait indefinitely to keep the container alive
-# Everything runs as a background service with -startup, so we just need to keep the script running
-while true; do
-    sleep 300
-    # Simple health check: verify Everything HTTP server is still responding
-    # If it stops responding, the container will be restarted by Docker's restart policy
-    echo "Container health check: Everything Search is still running..."
-done
+echo "Everything Search exited with code: $EXIT_CODE"
+exit $EXIT_CODE
