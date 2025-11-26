@@ -5,11 +5,11 @@ This project runs the Everything Search software (Windows-only) inside a Docker 
 ## Features
 
 - Everything Search (Windows version) via Wine
-- Multi-arch support (amd64 and i386) with optimized architecture-specific images
-- Professional GUI base image with secure web access
+- Multi-arch support (amd64 and i386) using a single Dockerfile with Docker Buildx
+- jlesage/baseimage-gui base image for GUI applications
 - TigerVNC server with noVNC web interface
 - Everything HTTP Server, ETP Server, and Server components included
-- Each architecture image only contains files for that architecture (smaller images)
+- Architecture-specific binaries automatically selected during build (smaller images)
 
 ## Usage
 
@@ -18,7 +18,6 @@ This project runs the Everything Search software (Windows-only) inside a Docker 
 ```sh
 docker-compose build --no-cache
 docker-compose up
-
 ```
 
 ### 2. Access the UI
@@ -29,7 +28,7 @@ Open your browser and go to:
 http://localhost:5800
 ```
 
-You will see the Windows Everything Search UI running inside the container via a secure web interface.
+You will see the Windows Everything Search UI running inside the container via a secure web interface. The default VNC password is `vncpassword`.
 
 ### 3. Access the Everything HTTP Server
 
@@ -52,12 +51,12 @@ If you enable or start these servers from the VNC desktop, they will be accessib
 
 ### Architecture Selection
 
-This project uses Docker multi-arch builds with separate optimized images for each architecture. Docker automatically selects the correct image based on your system's architecture:
+This project uses a single Dockerfile with Docker Buildx for multi-arch builds. The Dockerfile automatically selects the correct binaries and Wine configuration based on the target architecture:
 
-- **amd64 (x64)**: Optimized image containing only 64-bit executables and plugins
-- **i386 (x86)**: Optimized image containing only 32-bit executables and plugins
+- **amd64 (x64)**: Uses 64-bit executables and plugins, Wine configured for win64
+- **i386 (x86)**: Uses 32-bit executables and plugins, Wine configured for win32
 
-Each image is smaller because it only contains files for its specific architecture. The default executable is `everything-1.5.exe`, but you can override it using the `EVERYTHING_BIN` environment variable:
+Docker automatically selects the correct image variant based on your system's architecture. Each image is optimized and only contains files for its specific architecture. The default executable is `everything-1.5.exe`, but you can override it using the `EVERYTHING_BIN` environment variable:
 
 - `everything-1.5.exe` (default) - Everything 1.5
 - `everything-1.4.exe` - Everything 1.4
@@ -69,6 +68,7 @@ Each image is smaller because it only contains files for its specific architectu
 
 - To change the VNC or web port, edit the `docker-compose.yml` file.
 - To use a different Everything executable, set the `EVERYTHING_BIN` environment variable (e.g., `EVERYTHING_BIN=everything-1.5_x86.exe`).
+- To change display resolution, set `DISPLAY_WIDTH` and `DISPLAY_HEIGHT` environment variables.
 
 ### Custom Context Menu: "Copy Linux Path"
 
@@ -76,48 +76,69 @@ This container includes a custom context menu item that converts Windows paths (
 
 **How it works:**
 - The "Copy Linux Path" custom verb is registered in Wine's registry and appears in the context menu for all files and folders
-- Additionally, the "Explore Path" context menu item is configured to run the same script
 - The `copy_unix_path.cmd` script converts paths like `Z:\mnt\user\appdata` to `/mnt/user/appdata` and copies it to the clipboard
 - The script uses Windows' built-in `clip.exe` utility (available in Wine)
 
 **Configuration:**
 - The custom verb is automatically registered in Wine's registry on container startup via `startapp.sh`
 - Registry entries are added for both all file types (`HKCR\*\shell\CopyLinuxPath`) and directories (`HKCR\Directory\shell\CopyLinuxPath`)
-- The "Explore Path" command is also pre-configured in `image/config/everything.ini` via `explore_path_command2`
-- The script `copy_unix_path.cmd` is included in the container at `/bin/copy_unix_path.cmd` (accessible as `Z:\bin\copy_unix_path.cmd` in Wine)
+- The script `copy_unix_path.cmd` is included in the container at `/home/everything/copy_unix_path.cmd` (accessible as `Z:\home\everything\copy_unix_path.cmd` in Wine)
 - No additional setup is required - it works out of the box
 
 **Usage:**
-You have two options to copy Linux paths:
-1. **Custom Verb (Recommended):** Right-click on any file or folder → Select "Copy Linux Path" from the context menu
-2. **Modified Explore Path:** Right-click on any file or folder → Select "Explore Path" from the context menu
+Right-click on any file or folder → Select "Copy Linux Path" from the context menu. The Linux path (e.g., `/mnt/user/appdata/...`) will be copied to your clipboard.
 
-Both methods will copy the Linux path (e.g., `/mnt/user/appdata/...`) to your clipboard.
+## Technical Details
+
+### Base Image
+
+This container uses **Debian Bullseye Slim** as the base image with:
+- Wine (with multiarch support for amd64)
+- Xvfb (virtual framebuffer X server)
+- x11vnc (VNC server)
+- noVNC (web-based VNC client)
+- Supervisor (process management)
+- Fluxbox (lightweight window manager)
+
+### Process Management
+
+The container uses **supervisor** to manage multiple processes:
+- `xvfb`: Virtual X server
+- `fluxbox`: Window manager
+- `x11vnc`: VNC server on port 5900
+- `websockify`: noVNC web interface on port 5800
+- `everything`: Everything Search application
+
+All processes are automatically restarted if they exit unexpectedly.
+
+### Wine Configuration
+
+- Wine prefix is located at `/home/everything/.wine`
+- Wine architecture is set at build time (win64 for amd64, win32 for i386)
+- Registry tweaks are applied on startup to prevent deadlocks and improve compatibility
+- Custom context menu items are registered automatically
 
 ## Notes
 
 - This container uses Wine to run Everything Search, which is a Windows application.
 - The UI is accessible via any modern web browser using noVNC.
 - **All data is persistent by default** and organized in the following structure:
-  - `./.data/` - Everything Search data directory (mounted to `/opt/everything` in container, gitignored)
-    - `Everything-1.5a.ini` - Settings and configuration (Everything 1.5a alpha format)
-    - `Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
-    - `Everything.db` - Index database
+  - `./data/` - Everything Search data directory (mounted to `/home/everything` in container)
+    - `cfg/everything.ini` - Settings and configuration
+    - `cfg/Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
+    - `data/everything.db` - Index database
     - `everything-1.5.exe` - Executable (copied from image on first run, default)
     - `plugins/` - Everything Search plugins (HTTP Server, ETP Server, etc.)
-  - `./.wine/` - Wine prefix (mounted directly to `/config/.wine` in container, gitignored)
-  - `./.config/` - Container configuration (mounted to `/config` in container, contains VNC passwords/certificates, gitignored)
-  - Note: For production use, you may want to use `./wine/` and `./config/` instead of `./.wine/` and `./.config/` by updating the docker-compose volume mounts
+    - `.wine/` - Wine prefix (persistent Wine configuration)
   - Note: In Unraid, the structure is:
     - `/mnt/user/appdata/everything-search/data/` - Everything data
-    - `/mnt/user/appdata/everything-search/.wine/` - Wine prefix (direct mount, not nested)
-    - `/mnt/user/appdata/everything-search/.config/` - Container config (VNC passwords, certificates)
+    - `/mnt/user/appdata/everything-search/.wine/` - Wine prefix
 
 ## Development
 
 | Step  | Docker Hub                                                              | GHCR                                                                            |
 | ----- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Build | `docker build -t everything-wine:latest .`                              | `docker build -t everything-wine:latest .`                                      |
+| Build | `docker build -t everything-wine:latest -f Dockerfile .`         | `docker buildx build --platform linux/amd64,linux/386 -t everything-wine:latest .`                 |
 | Repo  | https://hub.docker.com/repository/create                                | `gh repo create mygithubuser/everything-wine`                                   |
 | Tag   | `docker tag everything-wine:latest mydockeruser/everything-wine:latest` | `docker tag everything-wine:latest ghcr.io/mygithubuser/everything-wine:latest` |
 | Login | `docker login`                                                          | `echo <TOKEN> \| docker login ghcr.io -u mygithubuser --password-stdin`         |
@@ -129,3 +150,4 @@ Both methods will copy the Linux path (e.g., `/mnt/user/appdata/...`) to your cl
 - [Wine](https://www.winehq.org/)
 - [noVNC](https://github.com/novnc/noVNC)
 - [TigerVNC](https://tigervnc.org/)
+- [Supervisor](http://supervisord.org/)

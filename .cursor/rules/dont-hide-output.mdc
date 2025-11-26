@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Dont hide output of ran commands by using grep, select-string or similar. always run commands with as much verbosity as possible.

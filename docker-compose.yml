@@ -23,5 +23,5 @@ services:
     - EVERYTHING_DB=${EVERYTHING_DB:-data/everything.db}
     build:
       context: .
-      dockerfile: Dockerfile.amd64
+      dockerfile: Dockerfile
     mem_reservation: 1024M

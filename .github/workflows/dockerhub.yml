@@ -24,6 +24,4 @@ jobs:
           platforms: linux/amd64,linux/386
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/everything-wine:latest
-          file: |
-            linux/amd64:Dockerfile.amd64
-            linux/386:Dockerfile.i386
+          file: Dockerfile
