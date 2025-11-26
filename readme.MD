@@ -126,7 +126,7 @@ All processes are automatically restarted if they exit unexpectedly.
   - `./data/` - Everything Search data directory (mounted to `/home/everything` in container)
     - `cfg/everything.ini` - Settings and configuration
     - `cfg/Plugins-1.5a.ini` - Plugin configuration (ETP Server, Everything Server, HTTP Server)
-    - `data/everything.db` - Index database
+    - `db/everything.db` - Index database
     - `everything-1.5.exe` - Executable (copied from image on first run, default)
     - `plugins/` - Everything Search plugins (HTTP Server, ETP Server, etc.)
     - `.wine/` - Wine prefix (persistent Wine configuration)

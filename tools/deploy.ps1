@@ -9,7 +9,7 @@ param(
     [string]$MemorySwap = "8192m",
     [string]$EverythingBinary = "everything-1.5.exe",
     [string]$EverythingConfig = "cfg/everything.ini",
-    [string]$EverythingDatabase = "data/everything.db",
+    [string]$EverythingDatabase = "db/everything.db",
     [string]$Timezone = "Europe/Berlin",
     [string]$DisplayWidth = "1920",
     [string]$DisplayHeight = "945",

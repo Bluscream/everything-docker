@@ -13,7 +13,7 @@
   <Category>Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/bluscream/everything-docker/main/my-everything-search.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/bluscream/everything-docker/main/icon.png</Icon>
+  <Icon>https://www.voidtools.com/e2.png</Icon>
   <ExtraParams>--restart=on-failure:2 --memory=8192m --memory-reservation=1024m --memory-swap=8192m</ExtraParams>
   <PostArgs />
   <CPUset />
@@ -26,10 +26,11 @@
   <Config Name="HTTP Server Port" Target="14680" Default="14680" Mode="tcp" Description="Everything HTTP Server port for web-based search interface" Type="Port" Display="always" Required="false" Mask="false">14680</Config>
   <Config Name="ETP Server Port" Target="14620" Default="14620" Mode="tcp" Description="Everything ETP Server port for Everything Transfer Protocol" Type="Port" Display="always" Required="false" Mask="false">14620</Config>
   <Config Name="Everything Server Port" Target="14630" Default="14630" Mode="tcp" Description="Everything Server port for network access" Type="Port" Display="always" Required="false" Mask="false">14630</Config>
-  <Config Name="Everything Home Directory" Target="/home/everything" Default="/mnt/user/appdata/everything-search/" Mode="rw" Description="Everything Search home directory (contains executables, config, database, plugins, Wine prefix, and container config)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/</Config>
+  <Config Name="Everything Config Directory" Target="/home/everything/cfg" Default="/mnt/user/appdata/everything-search/cfg/" Mode="rw" Description="Everything Search config directory (contains everything.ini and Plugins-1.5a.ini)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/cfg/</Config>
+  <Config Name="Everything Database Directory" Target="/home/everything/db" Default="/mnt/user/appdata/everything-search/db/" Mode="rw" Description="Everything Search database directory (contains everything.db)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/everything-search/db/</Config>
   <Config Name="Container Config Directory" Target="/config" Default="/mnt/user/appdata/everything-search/.config/" Mode="rw" Description="Container configuration directory (VNC passwords, certificates) - base image requirement" Type="Path" Display="advanced-hide" Required="true" Mask="false">/mnt/user/appdata/everything-search/.config/</Config>
   <Config Name="Everything Config Path" Target="EVERYTHING_CFG" Default="cfg/everything.ini" Mode="" Description="Everything Search config file path (relative to /home/everything, e.g., cfg/everything.ini). Defaults to cfg/everything.ini" Type="Variable" Display="advanced" Required="true" Mask="false">cfg/everything.ini</Config>
-  <Config Name="Everything Database Path" Target="EVERYTHING_DB" Default="data/everything.db" Mode="" Description="Everything Search database file path (relative to /home/everything, e.g., data/everything.db). Defaults to data/everything.db" Type="Variable" Display="advanced" Required="true" Mask="false">data/everything.db</Config>
+  <Config Name="Everything Database Path" Target="EVERYTHING_DB" Default="db/everything.db" Mode="" Description="Everything Search database file path (relative to /home/everything, e.g., db/everything.db). Defaults to db/everything.db" Type="Variable" Display="advanced" Required="true" Mask="false">db/everything.db</Config>
   <Config Name="Unraid User Shares" Target="/mnt/user" Default="/mnt/user" Mode="ro" Description="Unraid user shares mount for indexing (read-only)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user</Config>
   <Config Name="Everything Binary" Target="EVERYTHING_BIN" Default="everything-1.5.exe" Mode="" Description="Everything Search executable to run (e.g., everything-1.5.exe, everything-1.4.exe, es.exe, voidimageviewer.exe)" Type="Variable" Display="always" Required="true" Mask="false">everything-1.5.exe</Config>
   <Config Name="Timezone" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone for the container (e.g., America/New_York, Europe/London)" Type="Variable" Display="always" Required="true" Mask="false">Europe/Berlin</Config>

@@ -113,15 +113,11 @@ if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]
     echo "Registry tweaks applied."
 fi
 
-# Ensure directories are writable
-chmod 755 "${HOME}/data" 2>/dev/null || true
-chown $USER_ID:$GROUP_ID "${HOME}/data" 2>/dev/null || true
-
 # Get config and database paths from environment variables
-# Support relative paths (defaults to cfg/everything.ini and data/everything.db relative to home)
+# Support relative paths (defaults to cfg/everything.ini and db/everything.db relative to home)
 # or full paths (e.g., /home/everything/cfg/everything.ini)
 EVERYTHING_CFG="${EVERYTHING_CFG:-cfg/everything.ini}"
-EVERYTHING_DB="${EVERYTHING_DB:-data/everything.db}"
+EVERYTHING_DB="${EVERYTHING_DB:-db/everything.db}"
 
 # Store original values for display
 EVERYTHING_CFG_ORIG="$EVERYTHING_CFG"

@@ -4,7 +4,7 @@ set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error.
 
 # Create directory structure
-mkdir -p /home/everything/plugins /home/everything/html /home/everything/cfg /home/everything/data /home/everything/.wine /home/everything/.config
+mkdir -p /home/everything/plugins /home/everything/html /home/everything/cfg /home/everything/.wine /home/everything/.config
 
 # Create everything user if it doesn't exist (should already exist from Dockerfile, but ensure it)
 if ! id -u everything >/dev/null 2>&1; then
