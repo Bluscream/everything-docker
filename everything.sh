@@ -20,15 +20,9 @@ chown -R $USER_ID:$GROUP_ID /home/everything 2>/dev/null || true
 chown -R $USER_ID:$GROUP_ID /config 2>/dev/null || true
 chown -R $USER_ID:$GROUP_ID /bin 2>/dev/null || true
 
-# Get config path from environment variable (default to ~/everything.ini)
-# Support full paths (e.g., ~/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
-EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-~/everything.ini}"
-
-# Expand ~ to home directory if present (portable method for /bin/sh)
-case "$EVERYTHING_CONFIG" in
-    ~/*) EVERYTHING_CONFIG="${HOME}${EVERYTHING_CONFIG#~}" ;;
-    ~) EVERYTHING_CONFIG="$HOME" ;;
-esac
+# Get config path from environment variable (default to /home/everything/everything.ini)
+# Support full paths (e.g., /home/everything/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
+EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-/home/everything/everything.ini}"
 
 # If path is relative (doesn't start with /), assume it's relative to home directory
 if [ "${EVERYTHING_CONFIG#/}" = "${EVERYTHING_CONFIG}" ]; then

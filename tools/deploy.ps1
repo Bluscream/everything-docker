@@ -8,8 +8,8 @@ param(
     [string]$MemoryReservation = "1024m",
     [string]$MemorySwap = "8192m",
     [string]$EverythingBinary = "everything-1.5.exe",
-    [string]$EverythingConfig = "~/everything.ini",
-    [string]$EverythingDatabase = "~/everything.db",
+    [string]$EverythingConfig = "/home/everything/everything.ini",
+    [string]$EverythingDatabase = "/home/everything/everything.db",
     [string]$Timezone = "Europe/Berlin",
     [string]$DisplayWidth = "1920",
     [string]$DisplayHeight = "945",
@@ -18,7 +18,8 @@ param(
     [string]$GroupId = "100",
     [string]$Umask = "000",
     [string]$Display = ":0",
-    [string]$WineDebug = "-fixme-all"
+    [string]$WineDebug = "-fixme-all",
+    [string]$WineArch = "win64"
 )
 
 $ErrorActionPreference = "Stop"
@@ -48,6 +49,7 @@ Write-Host "  GROUP_ID: $GroupId"
 Write-Host "  UMASK: $Umask"
 Write-Host "  DISPLAY: $Display"
 Write-Host "  WINEDEBUG: $WineDebug"
+Write-Host "  WINEARCH: $WineArch"
 Write-Host ""
 
 # Convert memory values for docker-compose (uppercase M)
@@ -115,6 +117,7 @@ else {
     $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_CONFIG=\$\{EVERYTHING_CONFIG:-[^}]+\}', "EVERYTHING_CONFIG=`${EVERYTHING_CONFIG:-$EverythingConfig}"
     $DockerComposeContent = $DockerComposeContent -replace 'EVERYTHING_DATABASE=\$\{EVERYTHING_DATABASE:-[^}]+\}', "EVERYTHING_DATABASE=`${EVERYTHING_DATABASE:-$EverythingDatabase}"
     $DockerComposeContent = $DockerComposeContent -replace 'TZ=[^\r\n]+', "TZ=$Timezone"
+    $DockerComposeContent = $DockerComposeContent -replace 'WINEARCH=\$\{WINEARCH:-[^}]+\}', "WINEARCH=`${WINEARCH:-$WineArch}"
     
     Set-Content -Path $DockerComposePath -Value $DockerComposeContent -NoNewline
 }
@@ -154,6 +157,7 @@ $ConfigMap = @{
     "UMASK"               = $Umask
     "DISPLAY"             = $Display
     "WINEDEBUG"           = $WineDebug
+    "WINEARCH"            = $WineArch
 }
 
 foreach ($Config in $XmlDoc.Container.Config) {

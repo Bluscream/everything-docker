@@ -39,5 +39,6 @@
   <Config Name="Umask" Target="UMASK" Default="000" Mode="" Description="Umask for file permissions" Type="Variable" Display="advanced-hide" Required="true" Mask="false">000</Config>
   <Config Name="Display" Target="DISPLAY" Default=":0" Mode="" Description="X11 display for GUI" Type="Variable" Display="advanced-hide" Required="true" Mask="false">:0</Config>
   <Config Name="Wine Debug" Target="WINEDEBUG" Default="-fixme-all" Mode="" Description="Wine debug settings" Type="Variable" Display="advanced-hide" Required="true" Mask="false">-fixme-all</Config>
+  <Config Name="Wine Architecture" Target="WINEARCH" Default="win64" Mode="" Description="Wine architecture (win64 for 64-bit, win32 for 32-bit)" Type="Variable" Display="advanced-hide" Required="true" Mask="false">win64</Config>
   <TailscaleStateDir />
 </Container>

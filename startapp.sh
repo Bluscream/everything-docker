@@ -12,6 +12,9 @@ export WINE_NO_ASYNC_DIRECTORY=1
 # Note: Architecture is fixed at build time (via Dockerfile), so Wine config
 # will always match the container's architecture. No need to check/remove it.
 
+echo "Container environment variables:"
+env | grep -E '^(DISPLAY|TZ|WINEPREFIX|WINEDEBUG|WINEARCH|EVERYTHING_BINARY|EVERYTHING_CONFIG|EVERYTHING_DATABASE)=' | sort
+
 # Check if wine is available
 if ! command -v wine >/dev/null 2>&1; then
     echo "Error: wine is not installed or not in PATH"
@@ -37,16 +40,21 @@ export WINEARCH="${WINEARCH:-win64}"
 
 # Check if Wine prefix exists and has the correct architecture
 # If we need win64 but prefix is 32-bit, remove it
+# Be aggressive: if prefix exists and we need win64, verify it's actually 64-bit
 if [ -d "/home/everything/.wine" ] && [ -f "/home/everything/.wine/system.reg" ]; then
     if [ "$WINEARCH" = "win64" ]; then
-        # Check if prefix is 32-bit by trying to run wine64 with a test
-        # The error message will contain "32-bit installation" if prefix is wrong
+        # Try to verify prefix is 64-bit by attempting to run wine64
+        # If it fails with architecture error, prefix is definitely 32-bit
         if command -v wine64 >/dev/null 2>&1; then
-            WINE_TEST_OUTPUT=$(env WINEARCH=win64 WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine64 cmd /c exit 2>&1)
-            if echo "$WINE_TEST_OUTPUT" | grep -qi "32-bit installation\|cannot support 64-bit"; then
+            WINE_TEST=$(env WINEARCH=win64 WINEPREFIX="/home/everything/.wine" HOME="/home/everything" wine64 --version 2>&1)
+            if echo "$WINE_TEST" | grep -qi "32-bit installation\|cannot support 64-bit"; then
                 echo "WARNING: Wine prefix is 32-bit but we need 64-bit. Removing old prefix..."
                 rm -rf "/home/everything/.wine"
             fi
+        else
+            # wine64 not available - can't verify, but if prefix exists and we need win64, remove it to be safe
+            echo "WARNING: wine64 not found but we need 64-bit prefix. Removing existing prefix to recreate..."
+            rm -rf "/home/everything/.wine"
         fi
     fi
 fi
@@ -87,19 +95,9 @@ chmod 755 /data 2>/dev/null || true
 chown $USER_ID:$GROUP_ID /data 2>/dev/null || true
 
 # Get config and database paths from environment variables
-# Support full paths (e.g., ~/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
-EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-~/everything.ini}"
-EVERYTHING_DATABASE="${EVERYTHING_DATABASE:-~/everything.db}"
-
-# Expand ~ to home directory if present (portable method for /bin/sh)
-case "$EVERYTHING_CONFIG" in
-    ~/*) EVERYTHING_CONFIG="${HOME}${EVERYTHING_CONFIG#~}" ;;
-    ~) EVERYTHING_CONFIG="$HOME" ;;
-esac
-case "$EVERYTHING_DATABASE" in
-    ~/*) EVERYTHING_DATABASE="${HOME}${EVERYTHING_DATABASE#~}" ;;
-    ~) EVERYTHING_DATABASE="$HOME" ;;
-esac
+# Support full paths (e.g., /home/everything/everything.ini, /settings/everything.ini) or just filenames (defaults to home dir)
+EVERYTHING_CONFIG="${EVERYTHING_CONFIG:-/home/everything/everything.ini}"
+EVERYTHING_DATABASE="${EVERYTHING_DATABASE:-/home/everything/everything.db}"
 
 # If path is relative (doesn't start with /), assume it's relative to home directory
 if [ "${EVERYTHING_CONFIG#/}" = "${EVERYTHING_CONFIG}" ]; then
