@@ -36,6 +36,7 @@ $RECYCLE.BIN/
 /.config/
 /.docs/
 /.wine/
+/.test/
 /opt/
 /data/
-/.test/
+/cfg/
